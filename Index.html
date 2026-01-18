@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiplikationsmästaren</title>
+    <style>
+        :root {
+            --primary: #4A90E2;
+            --accent: #FF6B6B;
+            --bg: #F5F7FA;
+            --card: #FFFFFF;
+            --text: #2C3E50;
+            --success: #2ECC71;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: var(--card);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        h1, h2 { margin-bottom: 1rem; color: var(--primary); }
+        
+        .hidden { display: none !important; }
+
+        /* Inputs & Controls */
+        input[type="text"], input[type="number"] {
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            font-size: 1rem;
+            width: 80%;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin: 5px;
+            transition: transform 0.1s;
+        }
+        .btn:hover { transform: scale(1.05); }
+        .btn:active { transform: scale(0.95); }
+        .btn-secondary { background-color: #95a5a6; }
+        .btn-accent { background-color: var(--accent); font-weight: bold; }
+
+        /* Grid for checkboxes */
+        .table-selector {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .checkbox-wrapper label {
+            display: block;
+            cursor: pointer;
+            padding: 5px;
+            border: 2px solid var(--primary);
+            border-radius: 5px;
+            transition: 0.2s;
+        }
+        .checkbox-wrapper input:checked + label {
+            background-color: var(--primary);
+            color: white;
+        }
+        .checkbox-wrapper input { display: none; }
+
+        /* Game Area */
+        .question-box {
+            font-size: 4rem;
+            font-weight: bold;
+            margin: 20px 0;
+            color: var(--text);
+        }
+        .answer-input {
+            font-size: 2.5rem !important;
+            width: 150px !important;
+            font-weight: bold;
+        }
+        .timer { font-size: 1.2rem; color: #7f8c8d; margin-bottom: 10px; }
+        .progress { height: 5px; background: #eee; width: 100%; margin-top: 20px; }
+        .progress-bar { height: 100%; background: var(--success); width: 0%; transition: width 0.3s; }
+
+        /* Highscore Table */
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 10px; border-bottom: 1px solid #eee; }
+        th { text-align: left; color: var(--primary); }
+        .rank-1 { color: gold; font-weight: bold; }
+        
+        .feedback {
+            height: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="app">
+        <div id="start-screen">
+            <h1>✖️ Multiplikationsmästaren ➗</h1>
+            
+            <input type="text" id="username" placeholder="Ditt namn" required>
+            
+            <h3>Välj tabeller att träna på:</h3>
+            <div class="table-selector">
+                </div>
+            
+            <div style="margin: 20px 0;">
+                <label>Antal frågor: <span id="q-count-display">20</span></label><br>
+                <input type="range" id="q-count" min="10" max="100" step="10" value="20" oninput="document.getElementById('q-count-display').innerText = this.value">
+            </div>
+
+            <button class="btn" onclick="startGame('practice')">Starta Övning</button>
+            <br>
+            <button class="btn btn-accent" onclick="startGame('challenge')">🏆 100-Utmaningen (Highscore)</button>
+            <br><br>
+            <button class="btn btn-secondary" onclick="showHighscores()">Visa Highscore</button>
+        </div>
+
+        <div id="game-screen" class="hidden">
+            <div class="timer" id="timer-display">00:00</div>
+            <div class="question-box" id="question">? x ?</div>
+            <input type="number" id="answer" class="answer-input" placeholder="?" autocomplete="off">
+            <div class="feedback" id="feedback-msg"></div>
+            <div class="progress"><div class="progress-bar" id="progress"></div></div>
+        </div>
+
+        <div id="result-screen" class="hidden">
+            <h2 id="result-title">Bra jobbat!</h2>
+            <p id="result-stats"></p>
+            <p id="algorithm-note" style="font-size: 0.9em; color: #e67e22;"></p>
+            <button class="btn" onclick="resetApp()">Spela igen</button>
+        </div>
+
+        <div id="highscore-screen" class="hidden">
+            <h2>🏆 Topplista (100 tal)</h2>
+            <table id="highscore-table">
+                <thead><tr><th>#</th><th>Namn</th><th>Tid</th><th>Datum</th></tr></thead>
+                <tbody></tbody>
+            </table>
+            <button class="btn btn-secondary" onclick="resetApp()">Tillbaka</button>
+        </div>
+    </div>
+
+<script>
+    // --- State & Config ---
+    let state = {
+        mode: null, // 'practice' or 'challenge'
+        questions: [],
+        currentIndex: 0,
+        startTime: 0,
+        questionStartTime: 0,
+        timerInterval: null,
+        correctCount: 0,
+        mistakeMatrix: JSON.parse(localStorage.getItem('mathMistakes')) || {} 
+    };
+
+    // --- Init ---
+    function init() {
+        const container = document.querySelector('.table-selector');
+        let html = '';
+        for(let i=1; i<=10; i++) {
+            html += `
+            <div class="checkbox-wrapper">
+                <input type="checkbox" id="t${i}" value="${i}" checked>
+                <label for="t${i}">${i}</label>
+            </div>`;
+        }
+        container.innerHTML = html;
+        
+        // Enter key listener
+        document.getElementById('answer').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') checkAnswer();
+        });
+    }
+    init();
+
+    // --- Core Logic ---
+
+    function getDifficultyWeight(a, b) {
+        const key = `${a}x${b}`;
+        // Default weight is 1. If user struggled before, weight is higher.
+        return state.mistakeMatrix[key] || 1;
+    }
+
+    function updateDifficulty(a, b, isCorrect, timeTaken) {
+        const key = `${a}x${b}`;
+        let current = state.mistakeMatrix[key] || 1;
+        
+        // Algoritm:
+        // Fel svar: Öka vikten rejält (kommer oftare).
+        // Rätt svar men långsamt (>6s): Öka vikten lite.
+        // Rätt svar och snabbt (<3s): Minska vikten (men aldrig under 1).
+        
+        if (!isCorrect) {
+            current += 3; 
+        } else if (timeTaken > 6000) {
+            current += 1;
+        } else if (timeTaken < 3000) {
+            current = Math.max(1, current - 1);
+        }
+        
+        state.mistakeMatrix[key] = current;
+        localStorage.setItem('mathMistakes', JSON.stringify(state.mistakeMatrix));
+    }
+
+    function generateQuestions(tables, count, isChallenge) {
+        let pool = [];
+        
+        // Challenge mode: Always use tables 1-10
+        const activeTables = isChallenge ? [1,2,3,4,5,6,7,8,9,10] : tables;
+
+        // Build a weighted pool
+        activeTables.forEach(t => {
+            for (let i = 1; i <= 10; i++) {
+                let weight = getDifficultyWeight(t, i);
+                // Add the question 'weight' number of times to the pool
+                for(let w=0; w < weight; w++) {
+                    pool.push({ a: t, b: i });
+                }
+                // Ensure at least one instance exists even if weight is 1
+                if(weight === 1 && pool.length === 0) pool.push({ a: t, b: i }); 
+            }
+        });
+
+        // Pick random questions from the weighted pool
+        let finalQuestions = [];
+        for (let i = 0; i < count; i++) {
+            // If pool is empty (shouldn't happen), refill
+            if(pool.length === 0) break; 
+            
+            const randIndex = Math.floor(Math.random() * pool.length);
+            finalQuestions.push(pool[randIndex]);
+            
+            // Optional: Don't remove from pool to allow repetition of hard ones? 
+            // Or remove to ensure variety? Let's simply pick random.
+        }
+        return finalQuestions;
+    }
+
+    // --- Game Flow ---
+
+    function startGame(mode) {
+        const username = document.getElementById('username').value.trim();
+        if (!username) { alert("Vänligen ange ett namn först!"); return; }
+
+        state.mode = mode;
+        state.currentIndex = 0;
+        state.correctCount = 0;
+
+        // Get settings
+        let selectedTables = [];
+        document.querySelectorAll('.table-selector input:checked').forEach(el => {
+            selectedTables.push(parseInt(el.value));
+        });
+
+        if (state.mode === 'practice' && selectedTables.length === 0) {
+            alert("Välj minst en tabell!");
+            return;
+        }
+
+        const count = state.mode === 'challenge' ? 100 : parseInt(document.getElementById('q-count').value);
+
+        state.questions = generateQuestions(selectedTables, count, state.mode === 'challenge');
+        
+        // Switch UI
+        document.getElementById('start-screen').classList.add('hidden');
+        document.getElementById('game-screen').classList.remove('hidden');
+        
+        state.startTime = Date.now();
+        startTimer();
+        showNextQuestion();
+    }
+
+    function showNextQuestion() {
+        if (state.currentIndex >= state.questions.length) {
+            endGame();
+            return;
+        }
+
+        const q = state.questions[state.currentIndex];
+        document.getElementById('question').innerText = `${q.a} × ${q.b}`;
+        document.getElementById('answer').value = '';
+        document.getElementById('answer').focus();
+        document.getElementById('feedback-msg').innerText = '';
+        
+        // Update progress bar
+        const pct = (state.currentIndex / state.questions.length) * 100;
+        document.getElementById('progress').style.width = pct + '%';
+        
+        state.questionStartTime = Date.now();
+    }
+
+    function checkAnswer() {
+        const input = document.getElementById('answer');
+        const val = parseInt(input.value);
+        const q = state.questions[state.currentIndex];
+        const correct = q.a * q.b;
+        const timeTaken = Date.now() - state.questionStartTime;
+
+        if (isNaN(val)) return;
+
+        // Smart Algorithm Update
+        const isRight = val === correct;
+        updateDifficulty(q.a, q.b, isRight, timeTaken);
+
+        if (isRight) {
+            state.correctCount++;
+            document.getElementById('feedback-msg').innerText = "Rätt!";
+            document.getElementById('feedback-msg').style.color = "var(--success)";
+            
+            // Short delay before next
+            state.currentIndex++;
+            setTimeout(showNextQuestion, 300); // 300ms delay for visual feedback
+        } else {
+            // Shake effect or feedback
+            document.getElementById('feedback-msg').innerText = `Fel! Rätt var ${correct}`;
+            document.getElementById('feedback-msg').style.color = "var(--accent)";
+            
+            // Let them see the right answer briefly
+            setTimeout(() => {
+                state.currentIndex++;
+                showNextQuestion();
+            }, 1500);
+        }
+    }
+
+    function startTimer() {
+        state.timerInterval = setInterval(() => {
+            const delta = Math.floor((Date.now() - state.startTime) / 1000);
+            const m = Math.floor(delta / 60).toString().padStart(2, '0');
+            const s = (delta % 60).toString().padStart(2, '0');
+            document.getElementById('timer-display').innerText = `${m}:${s}`;
+        }, 1000);
+    }
+
+    function stopTimer() {
+        clearInterval(state.timerInterval);
+    }
+
+    function endGame() {
+        stopTimer();
+        const totalTimeMs = Date.now() - state.startTime;
+        const totalSeconds = (totalTimeMs / 1000).toFixed(1);
+
+        document.getElementById('game-screen').classList.add('hidden');
+        document.getElementById('result-screen').classList.remove('hidden');
+
+        let msg = `Du fick ${state.correctCount} av ${state.questions.length} rätt på ${totalSeconds} sekunder.`;
+        document.getElementById('result-stats').innerText = msg;
+
+        // Algorithm feedback
+        const hardList = Object.entries(state.mistakeMatrix)
+            .filter(([k, v]) => v > 3)
+            .map(([k, v]) => k.replace('x', '×'))
+            .slice(0, 5); // Show top 5 hardest
+        
+        if (hardList.length > 0) {
+            document.getElementById('algorithm-note').innerText = 
+                "AI:n har märkt att vi ska träna mer på: " + hardList.join(', ');
+        } else {
+            document.getElementById('algorithm-note').innerText = "Bra flyt! AI:n ser inga specifika problemområden just nu.";
+        }
+
+        // Save Highscore if Challenge Mode
+        if (state.mode === 'challenge' && state.correctCount === 100) { // Must get all right? Or just finished? Let's say finished.
+            saveHighScore(totalSeconds);
+        }
+    }
+
+    // --- Highscore Logic ---
+
+    function saveHighScore(seconds) {
+        const username = document.getElementById('username').value;
+        const today = new Date().toISOString().split('T')[0];
+        
+        let scores = JSON.parse(localStorage.getItem('mathHighscores')) || [];
+        scores.push({ name: username, time: parseFloat(seconds), date: today });
+        
+        // Sort by time (lowest first)
+        scores.sort((a, b) => a.time - b.time);
+        
+        // Keep top 10
+        scores = scores.slice(0, 10);
+        
+        localStorage.setItem('mathHighscores', JSON.stringify(scores));
+        document.getElementById('result-title').innerText = "Utmaning klar!";
+    }
+
+    function showHighscores() {
+        document.getElementById('start-screen').classList.add('hidden');
+        document.getElementById('highscore-screen').classList.remove('hidden');
+        
+        const scores = JSON.parse(localStorage.getItem('mathHighscores')) || [];
+        const tbody = document.querySelector('#highscore-table tbody');
+        tbody.innerHTML = scores.map((s, i) => `
+            <tr class="${i===0 ? 'rank-1' : ''}">
+                <td>${i+1}</td>
+                <td>${s.name}</td>
+                <td>${s.time} s</td>
+                <td>${s.date}</td>
+            </tr>
+        `).join('');
+    }
+
+    function resetApp() {
+        document.getElementById('result-screen').classList.add('hidden');
+        document.getElementById('highscore-screen').classList.add('hidden');
+        document.getElementById('start-screen').classList.remove('hidden');
+        document.getElementById('timer-display').innerText = "00:00";
+        document.getElementById('progress').style.width = "0%";
+    }
+</script>
+
+</body>
+</html>
