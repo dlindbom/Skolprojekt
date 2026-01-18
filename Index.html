@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multiplikationsmästaren</title>
+    <title>Multiplikationsmästaren 2.0</title>
     <style>
         :root {
-            --primary: #4A90E2;
-            --accent: #FF6B6B;
-            --bg: #F5F7FA;
-            --card: #FFFFFF;
-            --text: #2C3E50;
-            --success: #2ECC71;
+            --primary: #2c3e50;
+            --accent: #e74c3c;
+            --highlight: #3498db;
+            --bg: #ecf0f1;
+            --card: #ffffff;
+            --success: #27ae60;
         }
 
         body {
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg);
-            color: var(--text);
+            color: var(--primary);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -27,272 +27,295 @@
 
         .container {
             background: var(--card);
-            padding: 2rem;
+            padding: 2.5rem;
             border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
             width: 100%;
-            max-width: 500px;
+            max-width: 550px;
             text-align: center;
-            transition: all 0.3s ease;
+            position: relative;
         }
 
-        h1, h2 { margin-bottom: 1rem; color: var(--primary); }
-        
+        h1 { color: var(--primary); margin-bottom: 0.5rem; }
+        h2 { color: var(--highlight); }
+        .subtitle { color: #7f8c8d; margin-bottom: 2rem; font-size: 0.9rem; }
+
         .hidden { display: none !important; }
 
         /* Inputs & Controls */
         input[type="text"], input[type="number"] {
-            padding: 10px;
+            padding: 12px;
             border-radius: 8px;
-            border: 2px solid #ddd;
-            font-size: 1rem;
-            width: 80%;
-            margin-bottom: 10px;
+            border: 2px solid #bdc3c7;
+            font-size: 1.1rem;
+            width: 70%;
+            margin-bottom: 15px;
             text-align: center;
+            outline: none;
+            transition: border 0.3s;
         }
+        input:focus { border-color: var(--highlight); }
 
-        .btn {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 50px;
-            font-size: 1rem;
-            cursor: pointer;
-            margin: 5px;
-            transition: transform 0.1s;
-        }
-        .btn:hover { transform: scale(1.05); }
-        .btn:active { transform: scale(0.95); }
-        .btn-secondary { background-color: #95a5a6; }
-        .btn-accent { background-color: var(--accent); font-weight: bold; }
-
-        /* Grid for checkboxes */
-        .table-selector {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
+        /* Mode Selectors */
+        .mode-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
             margin: 20px 0;
         }
-        .checkbox-wrapper label {
-            display: block;
-            cursor: pointer;
-            padding: 5px;
+        
+        .mode-btn {
+            background: #fff;
             border: 2px solid var(--primary);
-            border-radius: 5px;
-            transition: 0.2s;
+            color: var(--primary);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
         }
-        .checkbox-wrapper input:checked + label {
-            background-color: var(--primary);
+        
+        .mode-btn.active {
+            background: var(--primary);
             color: white;
+            transform: scale(1.05);
         }
-        .checkbox-wrapper input { display: none; }
+
+        /* Action Buttons */
+        .btn {
+            background-color: var(--highlight);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px 5px;
+            transition: transform 0.1s, background 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 8px rgba(0,0,0,0.15); }
+        .btn:active { transform: translateY(0); }
+        
+        .btn-secondary { background-color: #95a5a6; }
+        .btn-accent { background-color: var(--accent); }
+        .btn-success { background-color: var(--success); }
 
         /* Game Area */
         .question-box {
-            font-size: 4rem;
-            font-weight: bold;
-            margin: 20px 0;
-            color: var(--text);
+            font-size: 4.5rem;
+            font-weight: 800;
+            margin: 30px 0;
+            color: var(--primary);
         }
         .answer-input {
             font-size: 2.5rem !important;
-            width: 150px !important;
+            width: 180px !important;
             font-weight: bold;
+            letter-spacing: 2px;
         }
-        .timer { font-size: 1.2rem; color: #7f8c8d; margin-bottom: 10px; }
-        .progress { height: 5px; background: #eee; width: 100%; margin-top: 20px; }
-        .progress-bar { height: 100%; background: var(--success); width: 0%; transition: width 0.3s; }
+        .timer { font-size: 1.5rem; color: var(--accent); font-weight: bold; margin-bottom: 10px; font-family: monospace;}
+        
+        .progress-container { height: 8px; background: #eee; width: 100%; border-radius: 4px; overflow: hidden; margin-top: 20px; }
+        .progress-bar { height: 100%; background: var(--highlight); width: 0%; transition: width 0.3s linear; }
+
+        /* Results & Analysis */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 20px 0;
+            text-align: left;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        .stat-item { font-size: 0.9rem; }
+        .stat-value { font-weight: bold; font-size: 1.1rem; color: var(--primary); }
+
+        .analysis-box {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+        .analysis-box ul { margin: 5px 0 0 20px; padding: 0; }
 
         /* Highscore Table */
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { padding: 10px; border-bottom: 1px solid #eee; }
-        th { text-align: left; color: var(--primary); }
-        .rank-1 { color: gold; font-weight: bold; }
+        .tab-container { margin-bottom: 15px; }
+        .tab-btn { padding: 5px 15px; border: none; background: transparent; cursor: pointer; border-bottom: 2px solid transparent; opacity: 0.6; }
+        .tab-btn.active { border-bottom: 2px solid var(--highlight); font-weight: bold; opacity: 1; color: var(--highlight); }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9rem; }
+        th, td { padding: 8px; border-bottom: 1px solid #eee; text-align: left; }
+        th { color: var(--highlight); }
+        .rank-1 { color: #f1c40f; font-weight: bold; } /* Guld */
         
-        .feedback {
-            height: 20px;
-            font-weight: bold;
-            margin-top: 10px;
-        }
+        #feedback-msg { height: 25px; font-weight: bold; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="container" id="app">
+    <div class="container">
         <div id="start-screen">
-            <h1>✖️ Multiplikationsmästaren ➗</h1>
+            <h1>✖️ Multiplikationsmästaren</h1>
+            <p class="subtitle">Träna snabbhet och precision</p>
             
-            <input type="text" id="username" placeholder="Ditt namn" required>
+            <input type="text" id="username" placeholder="Ange ditt namn" autocomplete="off">
             
-            <h3>Välj tabeller att träna på:</h3>
-            <div class="table-selector">
-                </div>
-            
-            <div style="margin: 20px 0;">
-                <label>Antal frågor: <span id="q-count-display">20</span></label><br>
-                <input type="range" id="q-count" min="10" max="100" step="10" value="20" oninput="document.getElementById('q-count-display').innerText = this.value">
+            <p style="font-weight: bold; margin-bottom: 5px;">Välj antal frågor:</p>
+            <div class="mode-selector">
+                <div class="mode-btn active" onclick="selectMode(25, this)">25</div>
+                <div class="mode-btn" onclick="selectMode(50, this)">50</div>
+                <div class="mode-btn" onclick="selectMode(100, this)">100</div>
             </div>
 
-            <button class="btn" onclick="startGame('practice')">Starta Övning</button>
+            <button class="btn" onclick="startGame(false)">Starta Spelet</button>
             <br>
-            <button class="btn btn-accent" onclick="startGame('challenge')">🏆 100-Utmaningen (Highscore)</button>
-            <br><br>
             <button class="btn btn-secondary" onclick="showHighscores()">Visa Highscore</button>
         </div>
 
         <div id="game-screen" class="hidden">
-            <div class="timer" id="timer-display">00:00</div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span id="counter-display" style="color:#7f8c8d; font-weight:bold;">1 / 25</span>
+                <div class="timer" id="timer-display">0.0 s</div>
+            </div>
+            
             <div class="question-box" id="question">? x ?</div>
+            
             <input type="number" id="answer" class="answer-input" placeholder="?" autocomplete="off">
-            <div class="feedback" id="feedback-msg"></div>
-            <div class="progress"><div class="progress-bar" id="progress"></div></div>
+            <div id="feedback-msg"></div>
+            
+            <div class="progress-container"><div class="progress-bar" id="progress"></div></div>
         </div>
 
         <div id="result-screen" class="hidden">
             <h2 id="result-title">Bra jobbat!</h2>
-            <p id="result-stats"></p>
-            <p id="algorithm-note" style="font-size: 0.9em; color: #e67e22;"></p>
+            
+            <div class="stats-grid">
+                <div class="stat-item">Antal rätt:<br><span class="stat-value" id="res-score"></span></div>
+                <div class="stat-item">Total tid:<br><span class="stat-value" id="res-time"></span></div>
+                <div class="stat-item">Snitt/fråga:<br><span class="stat-value" id="res-avg"></span></div>
+                <div class="stat-item">Bästa svit:<br><span class="stat-value" id="res-streak"></span></div>
+            </div>
+
+            <div id="analysis-container" class="analysis-box hidden">
+                <strong>⚠️ Problemområden identifierade:</strong><br>
+                Följande tal var fel eller tog lång tid (>5s):
+                <ul id="slow-list"></ul>
+            </div>
+
+            <button id="retry-mistakes-btn" class="btn btn-accent hidden" onclick="startRepetition()">Repetera mina svåra tal</button>
             <button class="btn" onclick="resetApp()">Spela igen</button>
+            <br>
+            <button class="btn btn-secondary" onclick="showHighscores()">Se Highscore</button>
         </div>
 
         <div id="highscore-screen" class="hidden">
-            <h2>🏆 Topplista (100 tal)</h2>
+            <h2>🏆 Topplista</h2>
+            
+            <div class="tab-container">
+                <button class="tab-btn active" onclick="renderHighscoreTable(25, this)">25 Frågor</button>
+                <button class="tab-btn" onclick="renderHighscoreTable(50, this)">50 Frågor</button>
+                <button class="tab-btn" onclick="renderHighscoreTable(100, this)">100 Frågor</button>
+            </div>
+
             <table id="highscore-table">
                 <thead><tr><th>#</th><th>Namn</th><th>Tid</th><th>Datum</th></tr></thead>
                 <tbody></tbody>
             </table>
+            
+            <br>
             <button class="btn btn-secondary" onclick="resetApp()">Tillbaka</button>
         </div>
     </div>
 
 <script>
-    // --- State & Config ---
+    // --- Configuration & State ---
+    const CONFIG = {
+        slowThreshold: 5000, // 5 seconds is considered "slow"
+        penaltyTime: 0 // Optional: Add fake time penalty for wrong answers? Let's skip for pure time tracking.
+    };
+
     let state = {
-        mode: null, // 'practice' or 'challenge'
+        questionCount: 25,
+        isRepetitionMode: false, // True if we are re-playing mistakes
         questions: [],
         currentIndex: 0,
         startTime: 0,
-        questionStartTime: 0,
+        qStartTime: 0,
         timerInterval: null,
-        correctCount: 0,
-        mistakeMatrix: JSON.parse(localStorage.getItem('mathMistakes')) || {} 
+        
+        // Session Data tracking
+        results: [], // Array of objects { q: "6x7", correct: bool, time: ms, a:6, b:7 }
+        mistakesToRepeat: [], // Stores the hard questions for the repetition button
+        currentHighscoreTab: 25
     };
 
-    // --- Init ---
-    function init() {
-        const container = document.querySelector('.table-selector');
-        let html = '';
-        for(let i=1; i<=10; i++) {
-            html += `
-            <div class="checkbox-wrapper">
-                <input type="checkbox" id="t${i}" value="${i}" checked>
-                <label for="t${i}">${i}</label>
-            </div>`;
-        }
-        container.innerHTML = html;
-        
-        // Enter key listener
-        document.getElementById('answer').addEventListener('keypress', function (e) {
+    // --- Initialization ---
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('answer').addEventListener('keydown', function (e) {
             if (e.key === 'Enter') checkAnswer();
         });
-    }
-    init();
-
-    // --- Core Logic ---
-
-    function getDifficultyWeight(a, b) {
-        const key = `${a}x${b}`;
-        // Default weight is 1. If user struggled before, weight is higher.
-        return state.mistakeMatrix[key] || 1;
-    }
-
-    function updateDifficulty(a, b, isCorrect, timeTaken) {
-        const key = `${a}x${b}`;
-        let current = state.mistakeMatrix[key] || 1;
         
-        // Algoritm:
-        // Fel svar: Öka vikten rejält (kommer oftare).
-        // Rätt svar men långsamt (>6s): Öka vikten lite.
-        // Rätt svar och snabbt (<3s): Minska vikten (men aldrig under 1).
-        
-        if (!isCorrect) {
-            current += 3; 
-        } else if (timeTaken > 6000) {
-            current += 1;
-        } else if (timeTaken < 3000) {
-            current = Math.max(1, current - 1);
+        // Load username
+        const storedName = localStorage.getItem('mm_username');
+        if(storedName) document.getElementById('username').value = storedName;
+    });
+
+    function selectMode(count, btn) {
+        state.questionCount = count;
+        document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    // --- Game Logic ---
+
+    function generateQuestions(count) {
+        let qs = [];
+        // Weighted random generation could be added here, 
+        // but for highscore fairness we use pure random 1-10.
+        for(let i=0; i<count; i++) {
+            qs.push({
+                a: Math.floor(Math.random() * 10) + 1,
+                b: Math.floor(Math.random() * 10) + 1
+            });
         }
-        
-        state.mistakeMatrix[key] = current;
-        localStorage.setItem('mathMistakes', JSON.stringify(state.mistakeMatrix));
+        return qs;
     }
 
-    function generateQuestions(tables, count, isChallenge) {
-        let pool = [];
-        
-        // Challenge mode: Always use tables 1-10
-        const activeTables = isChallenge ? [1,2,3,4,5,6,7,8,9,10] : tables;
-
-        // Build a weighted pool
-        activeTables.forEach(t => {
-            for (let i = 1; i <= 10; i++) {
-                let weight = getDifficultyWeight(t, i);
-                // Add the question 'weight' number of times to the pool
-                for(let w=0; w < weight; w++) {
-                    pool.push({ a: t, b: i });
-                }
-                // Ensure at least one instance exists even if weight is 1
-                if(weight === 1 && pool.length === 0) pool.push({ a: t, b: i }); 
-            }
-        });
-
-        // Pick random questions from the weighted pool
-        let finalQuestions = [];
-        for (let i = 0; i < count; i++) {
-            // If pool is empty (shouldn't happen), refill
-            if(pool.length === 0) break; 
-            
-            const randIndex = Math.floor(Math.random() * pool.length);
-            finalQuestions.push(pool[randIndex]);
-            
-            // Optional: Don't remove from pool to allow repetition of hard ones? 
-            // Or remove to ensure variety? Let's simply pick random.
-        }
-        return finalQuestions;
-    }
-
-    // --- Game Flow ---
-
-    function startGame(mode) {
+    function startGame(isRepetition) {
         const username = document.getElementById('username').value.trim();
-        if (!username) { alert("Vänligen ange ett namn först!"); return; }
+        if (!username) { alert("Ange ett namn först!"); return; }
+        localStorage.setItem('mm_username', username);
 
-        state.mode = mode;
+        state.isRepetitionMode = isRepetition;
+        state.results = []; // Reset results for this run
         state.currentIndex = 0;
-        state.correctCount = 0;
 
-        // Get settings
-        let selectedTables = [];
-        document.querySelectorAll('.table-selector input:checked').forEach(el => {
-            selectedTables.push(parseInt(el.value));
-        });
-
-        if (state.mode === 'practice' && selectedTables.length === 0) {
-            alert("Välj minst en tabell!");
-            return;
+        if (isRepetition) {
+            // Use the stored mistakes
+            state.questions = [...state.mistakesToRepeat];
+            // Shuffle them slightly
+            state.questions.sort(() => Math.random() - 0.5);
+        } else {
+            // Generate new
+            state.questions = generateQuestions(state.questionCount);
+            state.mistakesToRepeat = []; // Clear old mistakes
         }
 
-        const count = state.mode === 'challenge' ? 100 : parseInt(document.getElementById('q-count').value);
-
-        state.questions = generateQuestions(selectedTables, count, state.mode === 'challenge');
-        
-        // Switch UI
+        // UI Updates
         document.getElementById('start-screen').classList.add('hidden');
+        document.getElementById('result-screen').classList.add('hidden');
+        document.getElementById('highscore-screen').classList.add('hidden');
         document.getElementById('game-screen').classList.remove('hidden');
-        
+
         state.startTime = Date.now();
-        startTimer();
+        startGlobalTimer();
         showNextQuestion();
     }
 
@@ -304,44 +327,53 @@
 
         const q = state.questions[state.currentIndex];
         document.getElementById('question').innerText = `${q.a} × ${q.b}`;
-        document.getElementById('answer').value = '';
-        document.getElementById('answer').focus();
-        document.getElementById('feedback-msg').innerText = '';
+        document.getElementById('counter-display').innerText = `${state.currentIndex + 1} / ${state.questions.length}`;
         
-        // Update progress bar
+        const input = document.getElementById('answer');
+        input.value = '';
+        input.focus();
+        document.getElementById('feedback-msg').innerText = '';
+
+        // Progress bar
         const pct = (state.currentIndex / state.questions.length) * 100;
         document.getElementById('progress').style.width = pct + '%';
-        
-        state.questionStartTime = Date.now();
+
+        state.qStartTime = Date.now();
     }
 
     function checkAnswer() {
         const input = document.getElementById('answer');
         const val = parseInt(input.value);
-        const q = state.questions[state.currentIndex];
-        const correct = q.a * q.b;
-        const timeTaken = Date.now() - state.questionStartTime;
-
         if (isNaN(val)) return;
 
-        // Smart Algorithm Update
-        const isRight = val === correct;
-        updateDifficulty(q.a, q.b, isRight, timeTaken);
+        const q = state.questions[state.currentIndex];
+        const correctVal = q.a * q.b;
+        const isCorrect = val === correctVal;
+        const timeTaken = Date.now() - state.qStartTime;
 
-        if (isRight) {
-            state.correctCount++;
-            document.getElementById('feedback-msg').innerText = "Rätt!";
-            document.getElementById('feedback-msg').style.color = "var(--success)";
+        // Save data point
+        state.results.push({
+            a: q.a,
+            b: q.b,
+            userAnswer: val,
+            correct: isCorrect,
+            time: timeTaken
+        });
+
+        // Feedback Logic
+        const fb = document.getElementById('feedback-msg');
+        if (isCorrect) {
+            fb.innerText = "Rätt!";
+            fb.style.color = "var(--success)";
             
-            // Short delay before next
+            // Auto advance fast if correct
             state.currentIndex++;
-            setTimeout(showNextQuestion, 300); // 300ms delay for visual feedback
+            setTimeout(showNextQuestion, 150); 
         } else {
-            // Shake effect or feedback
-            document.getElementById('feedback-msg').innerText = `Fel! Rätt var ${correct}`;
-            document.getElementById('feedback-msg').style.color = "var(--accent)";
+            fb.innerText = `Fel! ${q.a} × ${q.b} = ${correctVal}`;
+            fb.style.color = "var(--accent)";
             
-            // Let them see the right answer briefly
+            // Delay to let user see correct answer
             setTimeout(() => {
                 state.currentIndex++;
                 showNextQuestion();
@@ -349,92 +381,178 @@
         }
     }
 
-    function startTimer() {
+    // --- Timer ---
+    function startGlobalTimer() {
+        if(state.timerInterval) clearInterval(state.timerInterval);
         state.timerInterval = setInterval(() => {
-            const delta = Math.floor((Date.now() - state.startTime) / 1000);
-            const m = Math.floor(delta / 60).toString().padStart(2, '0');
-            const s = (delta % 60).toString().padStart(2, '0');
-            document.getElementById('timer-display').innerText = `${m}:${s}`;
-        }, 1000);
+            const delta = (Date.now() - state.startTime) / 1000;
+            document.getElementById('timer-display').innerText = delta.toFixed(1) + " s";
+        }, 100);
     }
 
-    function stopTimer() {
-        clearInterval(state.timerInterval);
-    }
+    // --- End Game & Analysis ---
 
     function endGame() {
-        stopTimer();
-        const totalTimeMs = Date.now() - state.startTime;
-        const totalSeconds = (totalTimeMs / 1000).toFixed(1);
+        clearInterval(state.timerInterval);
+        const totalTime = Date.now() - state.startTime;
+        const totalSeconds = (totalTime / 1000).toFixed(2);
+        
+        // Calculate Stats
+        const correctCount = state.results.filter(r => r.correct).length;
+        const avgTime = (totalTime / state.results.length / 1000).toFixed(2);
 
+        // Find best streak
+        let maxStreak = 0;
+        let currentStreak = 0;
+        state.results.forEach(r => {
+            if(r.correct) {
+                currentStreak++;
+                if(currentStreak > maxStreak) maxStreak = currentStreak;
+            } else {
+                currentStreak = 0;
+            }
+        });
+
+        // Identify Problem Areas (Wrong OR Slow)
+        // Filter unique problem questions to avoid duplicates in repetition list
+        let slowOrWrong = state.results.filter(r => !r.correct || r.time > CONFIG.slowThreshold);
+        
+        // Deduplicate for repetition list (if user answered 6x7 wrong twice, only add it once)
+        let uniqueMistakes = [];
+        const seen = new Set();
+        slowOrWrong.forEach(r => {
+            const key = `${r.a}x${r.b}`;
+            if(!seen.has(key)) {
+                seen.add(key);
+                uniqueMistakes.push({a: r.a, b: r.b});
+            }
+        });
+
+        state.mistakesToRepeat = uniqueMistakes;
+
+        // DOM Updates
         document.getElementById('game-screen').classList.add('hidden');
         document.getElementById('result-screen').classList.remove('hidden');
+        document.getElementById('progress').style.width = "100%";
 
-        let msg = `Du fick ${state.correctCount} av ${state.questions.length} rätt på ${totalSeconds} sekunder.`;
-        document.getElementById('result-stats').innerText = msg;
+        document.getElementById('res-score').innerText = `${correctCount} / ${state.results.length}`;
+        document.getElementById('res-time').innerText = totalSeconds + " s";
+        document.getElementById('res-avg').innerText = avgTime + " s";
+        document.getElementById('res-streak').innerText = maxStreak;
 
-        // Algorithm feedback
-        const hardList = Object.entries(state.mistakeMatrix)
-            .filter(([k, v]) => v > 3)
-            .map(([k, v]) => k.replace('x', '×'))
-            .slice(0, 5); // Show top 5 hardest
-        
-        if (hardList.length > 0) {
-            document.getElementById('algorithm-note').innerText = 
-                "AI:n har märkt att vi ska träna mer på: " + hardList.join(', ');
+        // Analysis Box
+        const analysisBox = document.getElementById('analysis-container');
+        const retryBtn = document.getElementById('retry-mistakes-btn');
+        const slowList = document.getElementById('slow-list');
+        slowList.innerHTML = '';
+
+        if (slowOrWrong.length > 0) {
+            analysisBox.classList.remove('hidden');
+            retryBtn.classList.remove('hidden');
+            
+            // Show top 5 worst
+            // Sort by time descending (slowest first)
+            slowOrWrong.sort((a,b) => b.time - a.time);
+            
+            slowOrWrong.slice(0, 5).forEach(item => {
+                const reason = !item.correct ? "Fel svar" : `${(item.time/1000).toFixed(1)}s`;
+                const li = document.createElement('li');
+                li.innerHTML = `<b>${item.a} × ${item.b}</b> (${reason})`;
+                slowList.appendChild(li);
+            });
+            
+            if(slowOrWrong.length > 5) {
+                const li = document.createElement('li');
+                li.innerText = `...och ${slowOrWrong.length - 5} till.`;
+                slowList.appendChild(li);
+            }
+            
+            document.getElementById('result-title').innerText = "Bra kämpat!";
         } else {
-            document.getElementById('algorithm-note').innerText = "Bra flyt! AI:n ser inga specifika problemområden just nu.";
+            analysisBox.classList.add('hidden');
+            retryBtn.classList.add('hidden');
+            document.getElementById('result-title').innerText = "Fantastiskt! 🌟";
         }
 
-        // Save Highscore if Challenge Mode
-        if (state.mode === 'challenge' && state.correctCount === 100) { // Must get all right? Or just finished? Let's say finished.
-            saveHighScore(totalSeconds);
+        // Save Highscore (Only if NOT repetition mode and score is perfect or near perfect? 
+        // Usually highscore is time based. Let's save if 100% correct, or penalize time for errors?
+        // Requirement says: "measure time... identifying slowest".
+        // Let's keep it simple: Save score if user finished a standard round (25/50/100).
+        
+        if (!state.isRepetitionMode && correctCount === state.results.length) {
+            saveHighscore(state.questionCount, totalSeconds);
         }
     }
 
-    // --- Highscore Logic ---
-
-    function saveHighScore(seconds) {
-        const username = document.getElementById('username').value;
-        const today = new Date().toISOString().split('T')[0];
-        
-        let scores = JSON.parse(localStorage.getItem('mathHighscores')) || [];
-        scores.push({ name: username, time: parseFloat(seconds), date: today });
-        
-        // Sort by time (lowest first)
-        scores.sort((a, b) => a.time - b.time);
-        
-        // Keep top 10
-        scores = scores.slice(0, 10);
-        
-        localStorage.setItem('mathHighscores', JSON.stringify(scores));
-        document.getElementById('result-title').innerText = "Utmaning klar!";
-    }
-
-    function showHighscores() {
-        document.getElementById('start-screen').classList.add('hidden');
-        document.getElementById('highscore-screen').classList.remove('hidden');
-        
-        const scores = JSON.parse(localStorage.getItem('mathHighscores')) || [];
-        const tbody = document.querySelector('#highscore-table tbody');
-        tbody.innerHTML = scores.map((s, i) => `
-            <tr class="${i===0 ? 'rank-1' : ''}">
-                <td>${i+1}</td>
-                <td>${s.name}</td>
-                <td>${s.time} s</td>
-                <td>${s.date}</td>
-            </tr>
-        `).join('');
+    function startRepetition() {
+        startGame(true); // true = start in repetition mode
     }
 
     function resetApp() {
         document.getElementById('result-screen').classList.add('hidden');
         document.getElementById('highscore-screen').classList.add('hidden');
         document.getElementById('start-screen').classList.remove('hidden');
-        document.getElementById('timer-display').innerText = "00:00";
-        document.getElementById('progress').style.width = "0%";
     }
-</script>
 
+    // --- Highscore System ---
+
+    function saveHighscore(category, timeSeconds) {
+        const username = document.getElementById('username').value;
+        const today = new Date().toISOString().split('T')[0];
+        
+        // Get existing object or create new
+        let db = JSON.parse(localStorage.getItem('mm_highscores_v2')) || { "25": [], "50": [], "100": [] };
+        
+        // Add new entry
+        db[category].push({ name: username, time: parseFloat(timeSeconds), date: today });
+        
+        // Sort (lowest time first) and slice top 10
+        db[category].sort((a, b) => a.time - b.time);
+        db[category] = db[category].slice(0, 10);
+        
+        localStorage.setItem('mm_highscores_v2', JSON.stringify(db));
+    }
+
+    function showHighscores() {
+        document.getElementById('start-screen').classList.add('hidden');
+        document.getElementById('result-screen').classList.add('hidden');
+        document.getElementById('highscore-screen').classList.remove('hidden');
+        
+        // Default to the mode user had selected, or 25
+        const tabToOpen = state.questionCount || 25;
+        // Find button for that tab
+        const buttons = document.querySelectorAll('.tab-btn');
+        buttons.forEach(b => {
+            if(b.innerText.includes(tabToOpen)) renderHighscoreTable(tabToOpen, b);
+        });
+    }
+
+    function renderHighscoreTable(category, btnElement) {
+        // Toggle active tab
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        if(btnElement) btnElement.classList.add('active');
+
+        state.currentHighscoreTab = category;
+        
+        const db = JSON.parse(localStorage.getItem('mm_highscores_v2')) || { "25": [], "50": [], "100": [] };
+        const list = db[category] || [];
+        const tbody = document.querySelector('#highscore-table tbody');
+        
+        if (list.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#999;">Inga resultat än för denna kategori.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = list.map((s, i) => `
+            <tr class="${i===0 ? 'rank-1' : ''}">
+                <td>${i+1}</td>
+                <td>${s.name}</td>
+                <td>${s.time.toFixed(2)} s</td>
+                <td>${s.date}</td>
+            </tr>
+        `).join('');
+    }
+
+</script>
 </body>
 </html>
