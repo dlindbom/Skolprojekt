@@ -6,7 +6,7 @@
     <title>Rymden & Fysik - Årskurs 6</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700&display=swap" rel="stylesheet">
     
     <style>
         body { font-family: 'Space Grotesk', sans-serif; }
@@ -17,7 +17,6 @@
         .backface-hidden { backface-visibility: hidden; }
         .rotate-y-180 { transform: rotateY(180deg); }
         
-        /* Dölj innehåll innan Alpine laddat */
         [x-cloak] { display: none !important; }
         
         /* Scrollbar styling */
@@ -34,7 +33,7 @@
     <header class="relative z-10 border-b border-slate-700 bg-slate-900/80 backdrop-blur-md sticky top-0">
         <div class="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-3">
-                <div class="bg-indigo-500 p-2 rounded-lg">
+                <div class="bg-indigo-500 p-2 rounded-lg shadow-lg shadow-indigo-500/50">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
                 </div>
                 <div>
@@ -43,12 +42,16 @@
                 </div>
             </div>
 
-            <div class="flex bg-slate-800 p-1 rounded-lg">
-                <button @click="mode = 'cards'" :class="{'bg-indigo-600 text-white shadow-lg': mode === 'cards', 'text-slate-400 hover:text-white': mode !== 'cards'}" class="px-6 py-2 rounded-md text-sm font-bold transition-all duration-300 flex items-center gap-2">
+            <div class="flex bg-slate-800 p-1 rounded-lg overflow-x-auto max-w-full">
+                <button @click="mode = 'text'" :class="{'bg-indigo-600 text-white shadow-lg': mode === 'text', 'text-slate-400 hover:text-white': mode !== 'text'}" class="px-4 md:px-6 py-2 rounded-md text-sm font-bold transition-all duration-300 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                    Fakta
+                </button>
+                <button @click="mode = 'cards'" :class="{'bg-indigo-600 text-white shadow-lg': mode === 'cards', 'text-slate-400 hover:text-white': mode !== 'cards'}" class="px-4 md:px-6 py-2 rounded-md text-sm font-bold transition-all duration-300 flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
                     Flashcards
                 </button>
-                <button @click="mode = 'quiz'" :class="{'bg-indigo-600 text-white shadow-lg': mode === 'quiz', 'text-slate-400 hover:text-white': mode !== 'quiz'}" class="px-6 py-2 rounded-md text-sm font-bold transition-all duration-300 flex items-center gap-2">
+                <button @click="mode = 'quiz'" :class="{'bg-indigo-600 text-white shadow-lg': mode === 'quiz', 'text-slate-400 hover:text-white': mode !== 'quiz'}" class="px-4 md:px-6 py-2 rounded-md text-sm font-bold transition-all duration-300 flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
                     Quiz
                 </button>
@@ -57,6 +60,138 @@
     </header>
 
     <main class="flex-grow container mx-auto px-4 py-8 relative z-10 max-w-4xl">
+
+        <div x-show="mode === 'text'" x-transition.opacity.duration.500ms class="space-y-8 pb-12">
+            
+            <div class="bg-slate-800/80 backdrop-blur rounded-2xl p-6 md:p-8 border border-slate-700 shadow-xl">
+                <h2 class="text-2xl font-bold text-indigo-400 mb-4 border-b border-slate-600 pb-2">Universums uppkomst och struktur</h2>
+                <div class="text-slate-200 space-y-4 leading-relaxed">
+                    <p>Enligt <strong>Big Bang-teorin</strong> bildades universum för cirka 14 miljarder år sedan genom en enorm explosion där allt spreds ut från en enda punkt. Universum utvidgas fortfarande, likt en ballong som blåses upp, vilket gör att galaxerna rör sig bort från varandra.</p>
+                    <p>En <strong>galax</strong> är en samling av miljarder stjärnor, gas och stoft. Vårt solsystem ligger i utkanten av en galax som heter <strong>Vintergatan</strong> (The Milky Way).</p>
+                    
+                    <div class="bg-slate-900/50 p-4 rounded-lg mt-4 border border-indigo-500/20">
+                        <h3 class="font-bold text-indigo-300 mb-2">Avstånd i rymden</h3>
+                        <p class="mb-2 text-sm">Mäts ofta i <strong>ljusår</strong> (sträckan ljuset hinner på ett år, ca 950 miljarder mil). Ljusets hastighet är 300 000 km/s.</p>
+                        <ul class="list-disc pl-5 space-y-1 text-sm text-slate-300">
+                            <li>Från månen till jorden: <strong>1,3 sekunder</strong>.</li>
+                            <li>Från solen till jorden: <strong>8 minuter</strong>.</li>
+                            <li>Till närmaste stjärna (Proxima Centauri): <strong>4,2 ljusår</strong>.</li>
+                            <li>Vi kan se objekt 10 miljarder ljusår bort.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-800/80 backdrop-blur rounded-2xl p-6 md:p-8 border border-slate-700 shadow-xl">
+                <h2 class="text-2xl font-bold text-purple-400 mb-4 border-b border-slate-600 pb-2">Stjärnor och deras livscykel</h2>
+                <div class="text-slate-200 space-y-4 leading-relaxed">
+                    <p>En stjärna är ett lysande klot av het gas (väte & helium). Energin skapas genom <strong>fusion</strong>. Stjärnor föds i <strong>nebulosor</strong> (stora moln av gas/stoft).</p>
+                    
+                    <div class="grid md:grid-cols-2 gap-4 mt-4">
+                        <div class="bg-slate-700/50 p-4 rounded-lg">
+                            <h3 class="font-bold text-yellow-200">Medelstora stjärnor (t.ex. Solen)</h3>
+                            <p class="text-sm mt-2">Sväller till en <em>röd jätte</em>. Kastar av yttre lager. Kärnan blir en <em>vit dvärg</em> som svalnar.</p>
+                        </div>
+                        <div class="bg-slate-700/50 p-4 rounded-lg">
+                            <h3 class="font-bold text-red-300">Massiva stjärnor</h3>
+                            <p class="text-sm mt-2">Sväller till <em>röd superjätte</em>. Exploderar i en <strong>supernova</strong>. Kan bli en <em>neutronstjärna</em> eller ett <strong>svart hål</strong>.</p>
+                        </div>
+                    </div>
+                    <p class="text-sm italic mt-2">Ett svart hål har så stark dragningskraft att inget, inte ens ljus, kan lämna det.</p>
+                </div>
+            </div>
+
+            <div class="bg-slate-800/80 backdrop-blur rounded-2xl p-6 md:p-8 border border-slate-700 shadow-xl">
+                <h2 class="text-2xl font-bold text-blue-400 mb-4 border-b border-slate-600 pb-2">Vårt Solsystem</h2>
+                <div class="text-slate-200 space-y-4">
+                    <p><strong>Solen:</strong> En medelstor stjärna, men enorm jämfört med jorden (rymmer en miljon jordklot). Ger oss ljus och värme.</p>
+                    
+                    <h3 class="font-bold text-lg text-indigo-200 mt-4">Planeterna</h3>
+                    <ul class="space-y-2">
+                        <li><span class="text-indigo-300 font-bold">Merkurius:</span> Närmast solen, saknar atmosfär.</li>
+                        <li><span class="text-indigo-300 font-bold">Venus:</span> Aftonstjärnan. Hett och tjockt molntäcke.</li>
+                        <li><span class="text-indigo-300 font-bold">Jorden (Tellus):</span> Den blå planeten med flytande vatten och liv.</li>
+                        <li><span class="text-indigo-300 font-bold">Mars:</span> Den röda planeten (rost). Is vid polerna.</li>
+                        <li><span class="text-indigo-300 font-bold">Jupiter:</span> Störst. Gasjätte.</li>
+                        <li><span class="text-indigo-300 font-bold">Saturnus:</span> Känd för sina ringar.</li>
+                        <li><span class="text-indigo-300 font-bold">Uranus & Neptunus:</span> Yttre gasjättar.</li>
+                    </ul>
+
+                    <h3 class="font-bold text-lg text-indigo-200 mt-4">Andra himlakroppar</h3>
+                    <ul class="list-disc pl-5 space-y-1 text-sm">
+                        <li><strong>Asteroider:</strong> Stenblock (t.ex. i asteroidbältet). Skapade Siljan-kratern.</li>
+                        <li><strong>Kometer:</strong> Is och sten. Får en "svans" nära solen. (T.ex. Halleys komet).</li>
+                        <li><strong>Meteorer:</strong> Rymdstenar som brinner upp (stjärnfall).</li>
+                        <li><strong>Meteoriter:</strong> Rymdstenar som träffar marken.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-slate-800/80 backdrop-blur rounded-2xl p-6 md:p-8 border border-slate-700 shadow-xl">
+                <h2 class="text-2xl font-bold text-green-400 mb-4 border-b border-slate-600 pb-2">Jorden, Månen och Tiden</h2>
+                <div class="grid md:grid-cols-2 gap-6 text-slate-200">
+                    <div>
+                        <h3 class="font-bold text-lg mb-2">Jorden & Tid</h3>
+                        <p class="text-sm mb-2">Ett dygn = Jorden roterar runt sin axel (24h).<br>Ett år = Jorden roterar runt solen (365 dagar).</p>
+                        <p class="text-sm"><strong>Skottår:</strong> Vart fjärde år (366 dagar) för att justera tiden.</p>
+                        <p class="text-sm mt-2"><strong>Årstider:</strong> Beror på att jordaxeln lutar. Lutning mot solen = sommar.</p>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2">Månen</h3>
+                        <p class="text-sm mb-2">Lyser inte själv, reflekterar solljus. Bildades troligen av en krock.</p>
+                        <p class="text-sm"><strong>Tidvatten:</strong> Månens gravitation drar i haven (ebb och flod).</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-800/80 backdrop-blur rounded-2xl p-6 md:p-8 border border-slate-700 shadow-xl">
+                <h2 class="text-2xl font-bold text-pink-400 mb-4 border-b border-slate-600 pb-2">Fysik: Krafter & Rörelse</h2>
+                <div class="text-slate-200 space-y-4">
+                    <p><strong>Kraft:</strong> Drar i eller skjuter på föremål. Enhet: <strong>Newton (N)</strong>.</p>
+                    
+                    <div class="space-y-3">
+                        <div class="bg-slate-900/40 p-3 rounded border-l-4 border-pink-500">
+                            <h3 class="font-bold">Gravitation (Tyngdkraft)</h3>
+                            <p class="text-sm">Kraften som drar kroppar mot varandra. Upptäcktes av Isaac Newton. Ju större massa, desto starkare kraft. Tyngdpunkt måste vara ovanför stödytan för balans.</p>
+                        </div>
+                        <div class="bg-slate-900/40 p-3 rounded border-l-4 border-pink-500">
+                            <h3 class="font-bold">Friktion</h3>
+                            <p class="text-sm">Kraft som bromsar när ytor gnids. Skapar värme. <em>Låg friktion:</em> is/olja. <em>Hög friktion:</em> bromsar/dubbdäck.</p>
+                        </div>
+                        <div class="bg-slate-900/40 p-3 rounded border-l-4 border-pink-500">
+                            <h3 class="font-bold">Rörelse</h3>
+                            <ul class="list-disc pl-5 text-sm">
+                                <li><strong>Fritt fall:</strong> Fall utan luftmotstånd. Allt faller lika snabbt (Galileo).</li>
+                                <li><strong>Cirkelrörelse:</strong> Kräver kraft inåt (centripetalkraft).</li>
+                                <li><strong>Kraft & Motkraft:</strong> För varje kraft finns en motkraft (t.ex. en raket).</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-800/80 backdrop-blur rounded-2xl p-6 md:p-8 border border-slate-700 shadow-xl">
+                <h2 class="text-2xl font-bold text-orange-400 mb-4 border-b border-slate-600 pb-2">Rymdhistoria & Världsbild</h2>
+                <div class="text-slate-200 space-y-4">
+                    <div>
+                        <h3 class="font-bold text-lg">Världsbild</h3>
+                        <p class="text-sm"><strong>Geocentrisk:</strong> Jorden i centrum (Gammal tro).<br><strong>Heliocentrisk:</strong> Solen i centrum (Bevisades av Copernicus & Galilei, 1500-1600-tal).</p>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg mt-2">Rymdkapplöpningen</h3>
+                        <ul class="list-disc pl-5 text-sm space-y-1">
+                            <li><strong>1957:</strong> Hunden Laika (Sputnik 2).</li>
+                            <li><strong>1961:</strong> Jurij Gagarin (Första människan).</li>
+                            <li><strong>1969:</strong> Apollo 11 landar på månen. Neil Armstrong.</li>
+                        </ul>
+                    </div>
+                     <div>
+                        <h3 class="font-bold text-lg mt-2">Djurhastigheter</h3>
+                        <p class="text-sm text-slate-400">Pilgrimsfalk (320 km/h) • Gepard (120 km/h) • Segelfisk (110 km/h)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div x-show="mode === 'cards'" x-transition.opacity.duration.500ms class="flex flex-col items-center justify-center min-h-[60vh]">
             
@@ -76,7 +211,7 @@
                         <div class="absolute top-6 left-12 w-3 h-3 rounded-full bg-yellow-500"></div>
                         
                         <span class="text-indigo-400 font-bold tracking-widest text-xs uppercase mb-6 bg-slate-900 px-3 py-1 rounded-full">Fråga</span>
-                        <h3 class="text-2xl md:text-4xl font-bold leading-tight" x-text="questions[cardIndex].q"></h3>
+                        <h3 class="text-xl md:text-3xl font-bold leading-tight" x-text="questions[cardIndex].q"></h3>
                         
                         <p class="absolute bottom-6 text-slate-500 text-sm animate-pulse flex items-center gap-2">
                             Klicka för att vända <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
@@ -85,7 +220,7 @@
 
                     <div class="absolute w-full h-full bg-gradient-to-br from-indigo-600 to-purple-700 rounded-3xl shadow-2xl backface-hidden rotate-y-180 flex flex-col items-center justify-center p-8 border border-indigo-400">
                         <span class="text-indigo-100 font-bold tracking-widest text-xs uppercase mb-6 bg-white/20 px-3 py-1 rounded-full">Svar</span>
-                        <p class="text-xl md:text-3xl font-medium leading-relaxed text-white" x-text="questions[cardIndex].a"></p>
+                        <p class="text-lg md:text-2xl font-medium leading-relaxed text-white" x-text="questions[cardIndex].a"></p>
                     </div>
                 </div>
             </div>
@@ -170,7 +305,7 @@
     <script>
         function studyApp() {
             return {
-                mode: 'cards', // 'cards' eller 'quiz'
+                mode: 'text', // Standardläge: Fakta
                 cardIndex: 0,
                 flipped: false,
                 score: 0,
