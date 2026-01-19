@@ -3,252 +3,269 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instuderingsportal: Rymden & Fysikens Historia</title>
+    <title>Rymden & Fysik - Årskurs 6</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+    
     <style>
-        .perspective { perspective: 1000px; }
+        body { font-family: 'Space Grotesk', sans-serif; }
+        
+        /* 3D Flip Animation Styles */
+        .perspective-1000 { perspective: 1000px; }
         .transform-style-3d { transform-style: preserve-3d; }
         .backface-hidden { backface-visibility: hidden; }
         .rotate-y-180 { transform: rotateY(180deg); }
+        
+        /* Dölj innehåll innan Alpine laddat */
         [x-cloak] { display: none !important; }
         
-        /* Smooth scrolling */
-        html { scroll-behavior: smooth; }
+        /* Scrollbar styling */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #4f46e5; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6366f1; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans" x-data="appData()">
+<body class="bg-[#0f172a] text-white min-h-screen flex flex-col" x-data="studyApp()">
 
-    <header class="bg-blue-900 text-white shadow-lg sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <div>
-                <h1 class="text-xl md:text-2xl font-bold">Fysik & Rymd</h1>
-                <p class="text-blue-200 text-xs md:text-sm">Instuderingsmaterial för ST-läkare & Studenter</p>
+    <div class="fixed inset-0 z-0 opacity-40 pointer-events-none" style="background-image: radial-gradient(white 1px, transparent 1px); background-size: 50px 50px;"></div>
+
+    <header class="relative z-10 border-b border-slate-700 bg-slate-900/80 backdrop-blur-md sticky top-0">
+        <div class="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-indigo-500 p-2 rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-wide">Fysik & Rymden</h1>
+                    <p class="text-slate-400 text-xs uppercase tracking-widest">Instudering Årskurs 6</p>
+                </div>
             </div>
-            <nav class="flex space-x-2 md:space-x-4">
-                <button @click="tab = 'visuals'" :class="{'bg-blue-700': tab === 'visuals'}" class="px-3 py-2 rounded hover:bg-blue-800 transition text-sm md:text-base font-medium">Översikt</button>
-                <button @click="tab = 'cards'" :class="{'bg-blue-700': tab === 'cards'}" class="px-3 py-2 rounded hover:bg-blue-800 transition text-sm md:text-base font-medium">Flashcards</button>
-                <button @click="tab = 'quiz'" :class="{'bg-blue-700': tab === 'quiz'}" class="px-3 py-2 rounded hover:bg-blue-800 transition text-sm md:text-base font-medium">Självtest</button>
-            </nav>
+
+            <div class="flex bg-slate-800 p-1 rounded-lg">
+                <button @click="mode = 'cards'" :class="{'bg-indigo-600 text-white shadow-lg': mode === 'cards', 'text-slate-400 hover:text-white': mode !== 'cards'}" class="px-6 py-2 rounded-md text-sm font-bold transition-all duration-300 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
+                    Flashcards
+                </button>
+                <button @click="mode = 'quiz'" :class="{'bg-indigo-600 text-white shadow-lg': mode === 'quiz', 'text-slate-400 hover:text-white': mode !== 'quiz'}" class="px-6 py-2 rounded-md text-sm font-bold transition-all duration-300 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
+                    Quiz
+                </button>
+            </div>
         </div>
     </header>
 
-    <main class="container mx-auto px-4 py-8 max-w-5xl min-h-screen">
+    <main class="flex-grow container mx-auto px-4 py-8 relative z-10 max-w-4xl">
 
-        <div x-show="tab === 'visuals'" x-transition.opacity class="space-y-8">
-            <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-blue-500">
-                <h2 class="text-2xl font-bold mb-4 text-slate-800">Visuell Översikt</h2>
-                <p class="mb-6 text-slate-600">Studera tidslinjen och sambanden innan du testar dina kunskaper.</p>
-                
-                <div class="grid md:grid-cols-1 gap-8">
-                    <div class="bg-slate-100 p-4 rounded-lg">
-                        <h3 class="font-bold text-lg mb-2 text-center">Jakten på Gravitationen</h3>
-                        <img src="unnamed 2.png" alt="Tidslinje över gravitationen" class="w-full h-auto rounded shadow hover:scale-[1.02] transition duration-300 cursor-zoom-in" onclick="window.open(this.src, '_blank')">
-                        <p class="text-center text-xs text-gray-500 mt-2">Klicka på bilden för att förstora</p>
-                    </div>
-
-                    <div class="bg-slate-100 p-4 rounded-lg">
-                        <h3 class="font-bold text-lg mb-2 text-center">Universum & Krafter</h3>
-                        <img src="unnamed.png" alt="Guide till universum" class="w-full h-auto rounded shadow hover:scale-[1.02] transition duration-300 cursor-zoom-in" onclick="window.open(this.src, '_blank')">
-                        <p class="text-center text-xs text-gray-500 mt-2">Klicka på bilden för att förstora</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div x-show="tab === 'cards'" x-cloak class="flex flex-col items-center justify-center min-h-[60vh]">
+        <div x-show="mode === 'cards'" x-transition.opacity.duration.500ms class="flex flex-col items-center justify-center min-h-[60vh]">
             
-            <div class="w-full max-w-2xl mb-6 flex justify-between items-center text-sm text-gray-600">
-                <span>Kort <span x-text="cardIndex + 1"></span> av <span x-text="questions.length"></span></span>
-                <button @click="shuffleCards()" class="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1">
+            <div class="w-full flex justify-between items-center mb-6 text-sm text-indigo-300 font-bold uppercase tracking-wider">
+                <span>Kort <span x-text="cardIndex + 1" class="text-white text-lg"></span> / <span x-text="questions.length"></span></span>
+                <button @click="shuffleDeck()" class="flex items-center gap-2 hover:text-white transition">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
-                    Blanda leken
+                    Blanda högen
                 </button>
             </div>
 
-            <div class="perspective w-full max-w-2xl h-80 cursor-pointer group" @click="flipped = !flipped">
-                <div class="relative w-full h-full text-center transition-transform duration-500 transform-style-3d shadow-xl rounded-2xl" :class="{'rotate-y-180': flipped}">
+            <div class="perspective-1000 w-full h-96 cursor-pointer group select-none" @click="flipCard()">
+                <div class="relative w-full h-full text-center transition-transform duration-500 transform-style-3d" :class="{'rotate-y-180': flipped}">
                     
-                    <div class="absolute w-full h-full bg-white rounded-2xl backface-hidden flex flex-col items-center justify-center p-8 border border-gray-200">
-                        <span class="text-blue-500 font-bold tracking-widest text-xs uppercase mb-4">Fråga</span>
-                        <h3 class="text-2xl md:text-3xl font-bold text-slate-800" x-text="questions[cardIndex].q"></h3>
-                        <p class="absolute bottom-4 text-gray-400 text-sm animate-pulse">Klicka för att vända</p>
+                    <div class="absolute w-full h-full bg-slate-800 rounded-3xl border border-slate-600 shadow-2xl backface-hidden flex flex-col items-center justify-center p-8 hover:border-indigo-500 transition-colors">
+                        <div class="absolute top-6 left-6 w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="absolute top-6 left-12 w-3 h-3 rounded-full bg-yellow-500"></div>
+                        
+                        <span class="text-indigo-400 font-bold tracking-widest text-xs uppercase mb-6 bg-slate-900 px-3 py-1 rounded-full">Fråga</span>
+                        <h3 class="text-2xl md:text-4xl font-bold leading-tight" x-text="questions[cardIndex].q"></h3>
+                        
+                        <p class="absolute bottom-6 text-slate-500 text-sm animate-pulse flex items-center gap-2">
+                            Klicka för att vända <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                        </p>
                     </div>
 
-                    <div class="absolute w-full h-full bg-blue-600 rounded-2xl backface-hidden rotate-y-180 flex flex-col items-center justify-center p-8 text-white">
-                        <span class="text-blue-200 font-bold tracking-widest text-xs uppercase mb-4">Svar</span>
-                        <p class="text-xl md:text-2xl font-medium leading-relaxed" x-text="questions[cardIndex].a"></p>
+                    <div class="absolute w-full h-full bg-gradient-to-br from-indigo-600 to-purple-700 rounded-3xl shadow-2xl backface-hidden rotate-y-180 flex flex-col items-center justify-center p-8 border border-indigo-400">
+                        <span class="text-indigo-100 font-bold tracking-widest text-xs uppercase mb-6 bg-white/20 px-3 py-1 rounded-full">Svar</span>
+                        <p class="text-xl md:text-3xl font-medium leading-relaxed text-white" x-text="questions[cardIndex].a"></p>
                     </div>
                 </div>
             </div>
 
-            <div class="flex gap-4 mt-8">
-                <button @click="prevCard()" class="px-6 py-3 bg-white border border-gray-300 rounded-full shadow hover:bg-gray-50 transition font-medium text-gray-700">← Föregående</button>
-                <button @click="nextCard()" class="px-6 py-3 bg-blue-900 text-white rounded-full shadow hover:bg-blue-800 transition font-medium">Nästa kort →</button>
+            <div class="flex gap-4 mt-10 w-full max-w-md">
+                <button @click="prevCard()" class="flex-1 py-4 bg-slate-800 border border-slate-600 rounded-2xl hover:bg-slate-700 hover:border-indigo-500 hover:text-indigo-300 transition font-bold shadow-lg">
+                    ← Föregående
+                </button>
+                <button @click="nextCard()" class="flex-1 py-4 bg-indigo-600 text-white rounded-2xl hover:bg-indigo-500 hover:scale-[1.02] transition font-bold shadow-lg shadow-indigo-900/50">
+                    Nästa fråga →
+                </button>
             </div>
-            
-            <div class="w-full max-w-2xl mt-8 bg-gray-200 rounded-full h-2.5">
-                <div class="bg-blue-600 h-2.5 rounded-full transition-all duration-300" :style="'width: ' + ((cardIndex + 1) / questions.length * 100) + '%'"></div>
+
+            <div class="w-full mt-8 h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                <div class="h-full bg-indigo-500 transition-all duration-300 ease-out" :style="`width: ${((cardIndex + 1) / questions.length) * 100}%`"></div>
             </div>
         </div>
 
-        <div x-show="tab === 'quiz'" x-cloak>
+        <div x-show="mode === 'quiz'" x-cloak>
             <div class="max-w-3xl mx-auto">
-                <div class="bg-white p-6 rounded-xl shadow-sm mb-6 border-b border-gray-100 text-center">
-                    <h2 class="text-2xl font-bold text-slate-800">Självtest</h2>
-                    <p class="text-gray-600">Testa dig själv. Markera om du kunde svaret eller inte för att få en poäng.</p>
-                    <div class="mt-4 text-xl font-bold text-blue-900">
-                        Poäng: <span x-text="score"></span> / <span x-text="answeredCount"></span>
+                
+                <div class="bg-slate-800/80 backdrop-blur border border-indigo-500/30 p-6 rounded-2xl shadow-xl mb-8 flex justify-between items-center sticky top-24 z-20">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Din Poäng</h2>
+                        <p class="text-slate-400 text-sm">Hur många sätter du?</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-4xl font-bold text-indigo-400" x-text="score"></span>
+                        <span class="text-slate-500 text-xl">/ <span x-text="questions.length"></span></span>
                     </div>
                 </div>
 
-                <div class="space-y-4">
+                <div class="space-y-6 pb-20">
                     <template x-for="(item, index) in questions" :key="index">
-                        <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-                            <div class="p-5 cursor-pointer bg-gray-50 hover:bg-gray-100 transition flex justify-between items-center" 
-                                 @click="item.showAnswer = !item.showAnswer">
-                                <h3 class="font-medium text-lg text-slate-800" x-text="(index + 1) + '. ' + item.q"></h3>
-                                <span class="text-blue-500 text-sm font-semibold" x-text="item.showAnswer ? 'Dölj svar' : 'Visa svar'"></span>
+                        <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden shadow-md transition-all duration-300 hover:border-indigo-500/50" :class="{'ring-2 ring-green-500 border-green-500 bg-green-900/10': item.correct === true, 'ring-2 ring-red-500 border-red-500 bg-red-900/10': item.correct === false}">
+                            
+                            <div class="p-6 cursor-pointer flex justify-between items-start gap-4" @click="item.showAnswer = !item.showAnswer">
+                                <div class="flex gap-4">
+                                    <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-slate-700 text-indigo-300 font-bold text-sm" x-text="index + 1"></span>
+                                    <h3 class="text-lg font-medium text-slate-100" x-text="item.q"></h3>
+                                </div>
+                                <button class="text-indigo-400 hover:text-white font-semibold text-sm whitespace-nowrap px-3 py-1 rounded bg-slate-900/50">
+                                    <span x-text="item.showAnswer ? 'Dölj svar' : 'Visa svar'"></span>
+                                </button>
                             </div>
 
-                            <div x-show="item.showAnswer" class="p-5 border-t border-gray-200 bg-white">
-                                <p class="text-lg text-gray-800 mb-4 font-serif italic" x-text="item.a"></p>
-                                
-                                <div x-show="!item.rated" class="flex gap-3">
-                                    <button @click="rateAnswer(index, false)" class="flex-1 py-2 px-4 bg-red-100 text-red-700 rounded hover:bg-red-200 font-medium transition">
-                                        Jag var osäker
+                            <div x-show="item.showAnswer" x-collapse class="px-6 pb-6 pt-0">
+                                <div class="p-4 bg-slate-900/50 rounded-lg border border-slate-700 mt-2 mb-4">
+                                    <p class="text-lg text-indigo-100 italic" x-text="item.a"></p>
+                                </div>
+
+                                <div x-show="item.correct === null" class="grid grid-cols-2 gap-3">
+                                    <button @click="rateQuestion(index, false)" class="py-3 rounded-lg bg-red-500/10 text-red-400 border border-red-500/50 hover:bg-red-500 hover:text-white font-bold transition">
+                                        Behöver öva mer
                                     </button>
-                                    <button @click="rateAnswer(index, true)" class="flex-1 py-2 px-4 bg-green-100 text-green-700 rounded hover:bg-green-200 font-medium transition">
-                                        Jag kunde det!
+                                    <button @click="rateQuestion(index, true)" class="py-3 rounded-lg bg-green-500/10 text-green-400 border border-green-500/50 hover:bg-green-500 hover:text-white font-bold transition">
+                                        Jag kunde den!
                                     </button>
                                 </div>
-                                
-                                <div x-show="item.rated" class="mt-2 text-sm font-bold">
-                                    <span x-show="item.correct" class="text-green-600 flex items-center gap-2">✓ Du satte den</span>
-                                    <span x-show="!item.correct" class="text-red-500 flex items-center gap-2">✕ Behöver övas</span>
+
+                                <div x-show="item.correct !== null" class="text-center font-bold text-lg animate-pulse">
+                                    <span x-show="item.correct" class="text-green-400">Bra jobbat! ⭐</span>
+                                    <span x-show="!item.correct" class="text-red-400">Ingen fara, öva igen! 📚</span>
                                 </div>
                             </div>
                         </div>
                     </template>
                 </div>
-                
-                <button @click="resetQuiz()" class="block mx-auto mt-12 text-gray-500 underline hover:text-gray-800">Nollställ quizet</button>
+
+                <div class="text-center">
+                    <button @click="resetQuiz()" class="text-slate-500 hover:text-white underline">Börja om testet</button>
+                </div>
             </div>
         </div>
 
     </main>
 
-    <footer class="bg-slate-800 text-slate-400 py-6 text-center text-sm">
-        <p>Skapad med NotebookLM & Gemini för Klinisk Utbildning.</p>
+    <footer class="text-center py-6 text-slate-600 text-sm relative z-10">
+        <p>Lycka till på provet!</p>
     </footer>
 
     <script>
-        function appData() {
+        function studyApp() {
             return {
-                tab: 'visuals',
+                mode: 'cards', // 'cards' eller 'quiz'
                 cardIndex: 0,
                 flipped: false,
                 score: 0,
-                answeredCount: 0,
                 
-                // RÅDATA FRÅN DIN FIL (Automatisk konvertering)
+                // DATA
                 questions: [
-                    { q: "Vad trodde Aristoteles att 'tunga' saker ville göra?", a: "Ta sig till sin 'naturliga plats' (mitten av universum/jorden)", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad bevisade Galileo Galilei genom sina experiment med fallande föremål?", a: "Att tunga och lätta saker faller lika snabbt (om man bortser från luftmotstånd)", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad trodde René Descartes styrde planeternas rörelser?", a: "Osynliga virvlar av partiklar i rymden", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad upptäckte Isaac Newton när han såg ett äpple falla?", a: "Att samma kraft som drar äpplet till marken håller månen i bana runt jorden", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad kallas den kraft som drar kroppar mot varandra?", a: "Gravitationskraft (eller tyngdkraft)", showAnswer: false, rated: false, correct: false },
-                    { q: "Hur beskrev Albert Einstein gravitationen i sin teori?", a: "Att tunga föremål kröker rummet (som en tung kula på en studsmatta)", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad kallas den teori om universums skapelse där allt startade från en punkt?", a: "The Big Bang", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad är ett vakuum?", a: "Ett tomrum där det inte finns någon luft eller materia", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad är en geocentrisk världsbild?", a: "Uppfattningen att jorden ligger i centrum och allt snurrar runt den", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad är en heliocentrisk världsbild?", a: "Uppfattningen att solen ligger i centrum", showAnswer: false, rated: false, correct: false },
-                    { q: "Vilken enhet mäts kraft i?", a: "Newton (N)", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad är skillnaden mellan massa och tyngd?", a: "Massa är hur mycket materia något innehåller (kg), tyngd är kraften gravitationen drar med (N)", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad är friktion?", a: "En kraft som bromsar rörelse när två ytor gnids mot varandra", showAnswer: false, rated: false, correct: false },
-                    { q: "Ge ett exempel på när man vill ha hög friktion.", a: "Vinterdäck på en bil, bromsar eller fotbollsskor", showAnswer: false, rated: false, correct: false },
-                    { q: "Ge ett exempel på när man vill ha låg friktion.", a: "Skridskoåkning, skidor med valla eller i en maskin med olja", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad är luftmotstånd?", a: "Friktionskraften som uppstår när ett föremål krockar med luftens molekyler", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad är tyngdpunkt?", a: "Den punkt i ett föremål där gravitationen verkar dra (mitten av massan)", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad krävs för att ett föremål ska stå stadigt och inte välta?", a: "Att tyngdpunkten befinner sig rakt ovanför stödytan", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad menas med 'fritt fall'?", a: "När ett föremål faller och bara påverkas av gravitationskraften (inget luftmotstånd)", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad händer med hastigheten hos ett föremål i fritt fall?", a: "Den ökar hela tiden (det accelererar)", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad är motkraft?", a: "En kraft som är lika stor och riktad åt motsatt håll (t.ex. vattnet som trycker båten framåt när man paddlar bakåt)", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad kallas kraften som håller kvar en bil i en kurva eller en slägga i en kastarring?", a: "Kraft in mot centrum (vid cirkelrörelse)", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad är ett dygn?", a: "Tiden det tar för jorden att snurra ett varv runt sin egen axel (24 timmar)", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad är ett år?", a: "Tiden det tar för jorden att snurra ett varv runt solen (ca 365 dygn)", showAnswer: false, rated: false, correct: false },
-                    { q: "Varför har vi årstider?", a: "För att jordaxeln lutar, vilket gör att solens ljus träffar jorden olika mycket under året", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad kallas det när solen aldrig går ner på sommaren i norr?", a: "Midnattssol", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad är en månad?", a: "Ungefär den tid det tar för månen att snurra ett varv runt jorden", showAnswer: false, rated: false, correct: false },
-                    { q: "Hur bildades månen enligt den vanligaste teorin?", a: "Genom en kollision mellan jorden och en annan himlakropp (stenblock)", showAnswer: false, rated: false, correct: false },
-                    { q: "Varför lyser månen?", a: "Den reflekterar ljuset från solen", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad orsakar tidvatten (ebb och flod)?", a: "Månens (och solens) gravitationskraft som drar i jordens hav", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad heter vår galax?", a: "Vintergatan (Milky Way)", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad är ett ljusår?", a: "Den sträcka ljuset hinner färdas på ett år (ca 950 miljarder mil)", showAnswer: false, rated: false, correct: false },
-                    { q: "Hur lång tid tar det för ljuset att gå från solen till jorden?", a: "8 ljusminuter", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad är en stjärna?", a: "Ett lysande klot av het gas (fusion sker i mitten)", showAnswer: false, rated: false, correct: false },
-                    { q: "Räkna upp planeterna i vårt solsystem i ordning från solen.", a: "Merkurius, Venus, Jorden, Mars, Jupiter, Saturnus, Uranus, Neptunus", showAnswer: false, rated: false, correct: false },
-                    { q: "Vilka är de fyra 'inre små planeterna'?", a: "Merkurius, Venus, Jorden, Mars", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad kännetecknar de yttre planeterna (Jupiter, Saturnus, Uranus, Neptunus)?", a: "De är gasjättar utan fast yta", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad finns i bältet mellan Mars och Jupiter?", a: "Asteroider (asteroidbältet)", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad är en komet?", a: "Ett stort klot av is och sten som får en svans när den kommer nära solen", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad är en meteor?", a: "En rymdsten som brinner upp i jordens atmosfär (stjärnfall)", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad är en meteorit?", a: "En rymdsten som är så stor att den slår ner på jordens yta", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad är en satellit?", a: "Något som rör sig runt en himlakropp (kan vara naturlig som månen eller konstgjord)", showAnswer: false, rated: false, correct: false },
-                    { q: "Nämn två användningsområden för konstgjorda satelliter.", a: "Väderobservationer, GPS, kommunikation eller spionage", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad heter Polstjärnan och varför var den viktig förr?", a: "Den ligger alltid i norr och hjälpte sjöfarare att navigera", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad heter de tre stjärnorna i mitten av stjärnbilden Orion?", a: "Orions bälte", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad kallas ett moln av stoft och gas där stjärnor bildas?", a: "Nebulosa", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad händer när en riktigt stor stjärna dör och kollapsar till en enda punkt?", a: "Den kan bli ett svart hål", showAnswer: false, rated: false, correct: false },
-                    { q: "Vad hette den första hunden i rymden?", a: "Laika", showAnswer: false, rated: false, correct: false },
-                    { q: "Vem var den första människan i rymden?", a: "Jurij Gagarin (1961)", showAnswer: false, rated: false, correct: false },
-                    { q: "När landade människan på månen första gången?", a: "1969 (Apollo 11)", showAnswer: false, rated: false, correct: false }
+                    { q: "Vad trodde Aristoteles att 'tunga' saker ville göra?", a: "Ta sig till sin 'naturliga plats' (mitten av universum/jorden)", showAnswer: false, correct: null },
+                    { q: "Vad bevisade Galileo Galilei med experimentet med fallande föremål?", a: "Att tunga och lätta saker faller lika snabbt (om man bortser från luftmotstånd)", showAnswer: false, correct: null },
+                    { q: "Vad trodde René Descartes styrde planeternas rörelser?", a: "Osynliga virvlar av partiklar i rymden", showAnswer: false, correct: null },
+                    { q: "Vad upptäckte Isaac Newton när han såg ett äpple falla?", a: "Att samma kraft som drar äpplet till marken håller månen i bana runt jorden", showAnswer: false, correct: null },
+                    { q: "Vad kallas kraften som drar kroppar mot varandra?", a: "Gravitationskraft (eller tyngdkraft)", showAnswer: false, correct: null },
+                    { q: "Hur beskrev Albert Einstein gravitationen?", a: "Att tunga föremål kröker rummet (som en tung kula på en studsmatta)", showAnswer: false, correct: null },
+                    { q: "Vad kallas teorin om hur universum skapades från en punkt?", a: "The Big Bang", showAnswer: false, correct: null },
+                    { q: "Vad är ett vakuum?", a: "Ett tomrum där det inte finns någon luft eller materia", showAnswer: false, correct: null },
+                    { q: "Vad betyder geocentrisk världsbild?", a: "Att man tror att jorden ligger i centrum och allt snurrar runt den", showAnswer: false, correct: null },
+                    { q: "Vad betyder heliocentrisk världsbild?", a: "Att solen ligger i centrum", showAnswer: false, correct: null },
+                    { q: "Vilken enhet mäter man kraft i?", a: "Newton (N)", showAnswer: false, correct: null },
+                    { q: "Vad är skillnaden mellan massa och tyngd?", a: "Massa = hur mycket materia (kg). Tyngd = kraften gravitationen drar med (N)", showAnswer: false, correct: null },
+                    { q: "Vad är friktion?", a: "En kraft som bromsar rörelse när två ytor gnids mot varandra", showAnswer: false, correct: null },
+                    { q: "Ge ett exempel på när man vill ha hög friktion.", a: "Vinterdäck, bromsar eller fotbollsskor", showAnswer: false, correct: null },
+                    { q: "Ge ett exempel på när man vill ha låg friktion.", a: "Skridskoåkning, skidor med valla eller i en motor med olja", showAnswer: false, correct: null },
+                    { q: "Vad är luftmotstånd?", a: "Friktion som uppstår när ett föremål krockar med luftens molekyler", showAnswer: false, correct: null },
+                    { q: "Vad är tyngdpunkt?", a: "Mitten av massan i ett föremål (där gravitationen drar)", showAnswer: false, correct: null },
+                    { q: "Hur ska tyngdpunkten vara för att man ska stå stadigt?", a: "Rakt ovanför stödytan", showAnswer: false, correct: null },
+                    { q: "Vad är 'fritt fall'?", a: "När något faller och bara påverkas av gravitationen (inget luftmotstånd)", showAnswer: false, correct: null },
+                    { q: "Vad händer med farten i fritt fall?", a: "Den ökar hela tiden (det accelererar)", showAnswer: false, correct: null },
+                    { q: "Vad är motkraft?", a: "En lika stor kraft riktad åt motsatt håll", showAnswer: false, correct: null },
+                    { q: "Vad kallas kraften in mot mitten i en cirkelrörelse?", a: "Centripetalkraft (kraft in mot centrum)", showAnswer: false, correct: null },
+                    { q: "Vad är ett dygn?", a: "Ett varv runt jordens egen axel (24 timmar)", showAnswer: false, correct: null },
+                    { q: "Vad är ett år?", a: "Ett varv runt solen (ca 365 dygn)", showAnswer: false, correct: null },
+                    { q: "Varför har vi årstider?", a: "För att jordaxeln lutar", showAnswer: false, correct: null },
+                    { q: "Vad är en månad?", a: "Ungefär tiden för månen att snurra ett varv runt jorden", showAnswer: false, correct: null },
+                    { q: "Hur bildades månen (troligtvis)?", a: "Genom en krock mellan jorden och en annan himlakropp", showAnswer: false, correct: null },
+                    { q: "Varför lyser månen?", a: "Den reflekterar solens ljus", showAnswer: false, correct: null },
+                    { q: "Vad orsakar tidvatten?", a: "Månens dragningskraft på haven", showAnswer: false, correct: null },
+                    { q: "Vad heter vår galax?", a: "Vintergatan (Milky Way)", showAnswer: false, correct: null },
+                    { q: "Vad är ett ljusår?", a: "Sträckan ljuset hinner på ett år (enhet för avstånd)", showAnswer: false, correct: null },
+                    { q: "Hur lång tid tar solljuset till jorden?", a: "8 minuter", showAnswer: false, correct: null },
+                    { q: "Vad är en stjärna?", a: "Ett lysande klot av het gas", showAnswer: false, correct: null },
+                    { q: "Räkna upp planeterna i ordning.", a: "Merkurius, Venus, Jorden, Mars, Jupiter, Saturnus, Uranus, Neptunus", showAnswer: false, correct: null },
+                    { q: "Vilka är de inre planeterna?", a: "Merkurius, Venus, Jorden, Mars (stenplaneter)", showAnswer: false, correct: null },
+                    { q: "Vad kännetecknar de yttre planeterna?", a: "De är gasjättar", showAnswer: false, correct: null },
+                    { q: "Vad är en komet?", a: "Ett klot av is och sten som får en svans nära solen", showAnswer: false, correct: null },
+                    { q: "Vad är en meteor?", a: "En rymdsten som brinner upp i atmosfären (stjärnfall)", showAnswer: false, correct: null },
+                    { q: "Vad är en meteorit?", a: "En rymdsten som slår ner på marken", showAnswer: false, correct: null },
+                    { q: "Vad är en satellit?", a: "Något som rör sig runt en himlakropp (t.ex. månen eller GPS-satelliter)", showAnswer: false, correct: null },
+                    { q: "Vad heter Polstjärnan?", a: "Nordstjärnan (ligger alltid i norr)", showAnswer: false, correct: null },
+                    { q: "Vad är en nebulosa?", a: "Ett moln av gas och stoft där stjärnor bildas", showAnswer: false, correct: null },
+                    { q: "Vad är ett svart hål?", a: "En kollapsad stjärna med så stark gravitation att inte ens ljus kommer ut", showAnswer: false, correct: null },
+                    { q: "Vem var Laika?", a: "Den första hunden i rymden", showAnswer: false, correct: null },
+                    { q: "Vem var Jurij Gagarin?", a: "Första människan i rymden (1961)", showAnswer: false, correct: null },
+                    { q: "När landade man på månen första gången?", a: "1969 (Neil Armstrong)", showAnswer: false, correct: null }
                 ],
 
+                // FUNKTIONER
+                flipCard() {
+                    this.flipped = !this.flipped;
+                },
+                
                 nextCard() {
                     this.flipped = false;
                     setTimeout(() => {
-                        if (this.cardIndex < this.questions.length - 1) {
-                            this.cardIndex++;
-                        } else {
-                            this.cardIndex = 0; // Loop back
-                        }
+                        this.cardIndex = (this.cardIndex + 1) % this.questions.length;
                     }, 200);
                 },
 
                 prevCard() {
                     this.flipped = false;
                     setTimeout(() => {
-                        if (this.cardIndex > 0) {
-                            this.cardIndex--;
-                        } else {
-                            this.cardIndex = this.questions.length - 1;
-                        }
+                        this.cardIndex = (this.cardIndex === 0) ? this.questions.length - 1 : this.cardIndex - 1;
                     }, 200);
                 },
 
-                shuffleCards() {
+                shuffleDeck() {
                     this.flipped = false;
-                    setTimeout(() => {
-                        this.questions.sort(() => Math.random() - 0.5);
-                        this.cardIndex = 0;
-                    }, 300);
+                    // Enkel Fisher-Yates shuffle
+                    for (let i = this.questions.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [this.questions[i], this.questions[j]] = [this.questions[j], this.questions[i]];
+                    }
+                    this.cardIndex = 0;
+                    // Reset quiz status too
+                    this.resetQuiz();
                 },
-                
-                rateAnswer(index, correct) {
-                    this.questions[index].rated = true;
-                    this.questions[index].correct = correct;
-                    this.answeredCount++;
-                    if(correct) this.score++;
+
+                rateQuestion(index, isCorrect) {
+                    this.questions[index].correct = isCorrect;
+                    if (isCorrect) this.score++;
                 },
-                
+
                 resetQuiz() {
                     this.score = 0;
-                    this.answeredCount = 0;
                     this.questions.forEach(q => {
                         q.showAnswer = false;
-                        q.rated = false;
-                        q.correct = false;
+                        q.correct = null;
                     });
                 }
             }
