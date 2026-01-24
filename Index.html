@@ -3,80 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Provöversikt - Januari 2026</title>
+    <title>Provportal - Januari 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700&display=swap" rel="stylesheet">
+    
     <style>
-        /* Grundläggande styling för layout och typografi */
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f4f4f9;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        /* Behållaren för innehållet (kortet) */
-        .container {
-            background-color: #ffffff;
-            width: 90%;
-            max-width: 400px;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-
-        h1 {
-            color: #333;
-            margin-bottom: 2rem;
-            font-size: 1.5rem;
-        }
-
-        /* Styling för länk-knapparna */
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 15px 0;
-            margin-bottom: 1rem;
-            text-decoration: none;
-            color: white;
-            font-weight: bold;
-            border-radius: 8px;
-            transition: transform 0.2s, opacity 0.2s;
-            box-sizing: border-box; /* Ser till att padding inte ökar bredden */
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            opacity: 0.9;
-        }
-
-        /* Specifika färger för ämnena för tydlighet */
-        .so { background-color: #e74c3c; } /* Röd för SO */
-        .no { background-color: #27ae60; } /* Grön för NO */
-        .matte { background-color: #2980b9; } /* Blå för Matte */
-
-        /* Footer text */
-        .footer {
-            margin-top: 1.5rem;
-            color: #888;
-            font-size: 0.8rem;
-        }
+        body { font-family: 'Space Grotesk', sans-serif; }
+        [x-cloak] { display: none !important; }
+        
+        /* Scrollbar styling från originalet */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #4f46e5; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6366f1; }
     </style>
 </head>
-<body>
+<body class="bg-[#0f172a] text-white min-h-screen flex flex-col relative" x-data>
 
-    <div class="container">
-        <h1>Prov Januari 2026</h1>
+    <div class="fixed inset-0 z-0 opacity-40 pointer-events-none" style="background-image: radial-gradient(white 1px, transparent 1px); background-size: 50px 50px;"></div>
+
+    <main class="flex-grow flex items-center justify-center p-4 relative z-10">
         
-        <a href="SOprovjan26.html" class="btn so">SO-prov</a>
-        <a href="NOprovjan26.html" class="btn no">NO-prov</a>
-        <a href="Mattejan26.html" class="btn matte">Matte</a>
+        <div class="w-full max-w-md">
+            
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center p-3 bg-indigo-500/20 rounded-full mb-4 ring-1 ring-indigo-400/50 shadow-[0_0_15px_rgba(99,102,241,0.5)]">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                    </svg>
+                </div>
+                <h1 class="text-4xl font-bold tracking-tight mb-2 bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">Prov Januari 2026</h1>
+                <p class="text-slate-400 uppercase tracking-widest text-xs font-bold">Välj ämne för att börja plugga</p>
+            </div>
 
-        <div class="footer">Lycka till!</div>
-    </div>
+            <div class="space-y-4">
+
+                <a href="SOProvjan26.html" class="block group relative">
+                    <div class="absolute -inset-0.5 bg-gradient-to-r from-red-600 to-orange-600 rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-500"></div>
+                    <div class="relative flex items-center p-6 bg-slate-800 border border-slate-700 rounded-2xl hover:bg-slate-800/80 transition transform group-hover:-translate-y-1">
+                        <div class="h-12 w-12 bg-red-500/20 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition">
+                            <span class="text-2xl">🌍</span>
+                        </div>
+                        <div class="flex-grow">
+                            <h3 class="text-xl font-bold text-white group-hover:text-red-300 transition">SO Prov</h3>
+                            <p class="text-slate-400 text-sm">Samhällsorientering</p>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-500 group-hover:text-white group-hover:translate-x-1 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </div>
+                </a>
+
+                <a href="NOprovjan26.html" class="block group relative">
+                    <div class="absolute -inset-0.5 bg-gradient-to-r from-green-600 to-teal-600 rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-500"></div>
+                    <div class="relative flex items-center p-6 bg-slate-800 border border-slate-700 rounded-2xl hover:bg-slate-800/80 transition transform group-hover:-translate-y-1">
+                        <div class="h-12 w-12 bg-green-500/20 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition">
+                            <span class="text-2xl">🌱</span>
+                        </div>
+                        <div class="flex-grow">
+                            <h3 class="text-xl font-bold text-white group-hover:text-green-300 transition">NO Prov</h3>
+                            <p class="text-slate-400 text-sm">Naturorientering</p>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-500 group-hover:text-white group-hover:translate-x-1 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </div>
+                </a>
+
+                <a href="Mattejan26.html" class="block group relative">
+                    <div class="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-500"></div>
+                    <div class="relative flex items-center p-6 bg-slate-800 border border-slate-700 rounded-2xl hover:bg-slate-800/80 transition transform group-hover:-translate-y-1">
+                        <div class="h-12 w-12 bg-blue-500/20 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition">
+                            <span class="text-2xl">📐</span>
+                        </div>
+                        <div class="flex-grow">
+                            <h3 class="text-xl font-bold text-white group-hover:text-blue-300 transition">Matteprov</h3>
+                            <p class="text-slate-400 text-sm">Matematik</p>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-500 group-hover:text-white group-hover:translate-x-1 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </main>
+
+    <footer class="text-center py-6 text-slate-600 text-sm relative z-10">
+        <p>&copy; 2026 Daniel</p>
+    </footer>
 
 </body>
 </html>
