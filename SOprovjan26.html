@@ -3,189 +3,282 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lag & Rätt - Instuderingsmaterial</title>
+    <title>Lag & Rätt - Modernt Instuderingsmaterial</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-blue: #002F5F; /* Police/Gov blue */
-            --highlight-yellow: #FECC02; /* Swedish flag yellow */
-            --light-bg: #f4f8fb;
-            --white: #ffffff;
-            --text-dark: #333333;
-            --correct-green: #2ecc71;
-            --wrong-red: #e74c3c;
+            /* Modern Palette */
+            --primary-dark: #0a2342; /* Deep Midnight Blue */
+            --primary-blue: #1a4a8d; /* Brighter Blue for interactives */
+            --accent-gold: #FFC800; /* Energetic Gold */
+            --accent-gold-light: #fff5cc;
+            --bg-main: #f4f7fa; /* Clean light gray/blue bg */
+            --bg-white: #ffffff;
+            --text-dark: #2c3e50;
+            --text-light: #546e7a;
+            --success: #10b981; /* Modern green */
+            --error: #ef4444; /* Modern red */
+            
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            --shadow-hover: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Open Sans', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: var(--light-bg);
+            background-color: var(--bg-main);
             color: var(--text-dark);
-            line-height: 1.6;
+            line-height: 1.7;
         }
 
-        /* HEADER */
+        h1, h2, h3, h4 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--primary-dark);
+            margin-top: 0;
+        }
+
+        /* MODERN HEADER */
         header {
-            background-color: var(--primary-blue);
-            color: var(--white);
-            padding: 2rem;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-blue));
+            color: var(--bg-white);
+            padding: 3rem 2rem;
             text-align: center;
-            border-bottom: 5px solid var(--highlight-yellow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: repeating-linear-gradient(45deg, var(--accent-gold), var(--accent-gold) 10px, transparent 10px, transparent 20px);
         }
 
         header h1 {
             margin: 0;
-            font-size: 2.5rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            color: var(--bg-white);
         }
 
         header p {
             margin-top: 10px;
-            font-size: 1.1rem;
-            opacity: 0.9;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--accent-gold);
         }
 
-        /* NAVIGATION TABS */
+        /* MODERN NAVIGATION (Pill-shape) */
+        .nav-container {
+            background: var(--bg-white);
+            box-shadow: var(--shadow-sm);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
         .tabs {
             display: flex;
             justify-content: center;
-            background-color: #001f3f;
             flex-wrap: wrap;
+            gap: 10px;
+            max-width: 900px;
+            margin: 0 auto;
         }
 
         .tab-btn {
             background-color: transparent;
-            border: none;
-            color: var(--white);
-            padding: 15px 30px;
+            border: 2px solid transparent;
+            color: var(--text-light);
+            padding: 12px 24px;
             cursor: pointer;
-            font-size: 1.1rem;
-            font-weight: bold;
+            font-size: 1rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
             transition: all 0.3s ease;
-            border-bottom: 4px solid transparent;
+            border-radius: 50px; /* Pill shape */
         }
 
         .tab-btn:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: var(--bg-main);
+            color: var(--primary-blue);
         }
 
         .tab-btn.active {
-            border-bottom-color: var(--highlight-yellow);
-            background-color: rgba(255, 255, 255, 0.15);
+            background-color: var(--primary-blue);
+            color: var(--bg-white);
+            box-shadow: var(--shadow-sm);
+            transform: translateY(-1px);
         }
 
-        /* CONTENT SECTIONS */
+        /* MAIN CONTAINER */
+        .main-content {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* CONTENT SECTIONS (Card style) */
         .content-section {
             display: none;
-            padding: 2rem;
-            max-width: 1000px;
-            margin: 0 auto;
-            animation: fadeIn 0.5s;
+            background: var(--bg-white);
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            animation: slideUp 0.4s ease-out;
         }
 
         .content-section.active {
             display: block;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         h2 {
-            color: var(--primary-blue);
-            border-bottom: 2px solid var(--highlight-yellow);
-            padding-bottom: 10px;
-            margin-top: 30px;
+            font-size: 2rem;
+            position: relative;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--accent-gold);
+            border-radius: 2px;
         }
 
-        /* TAB 1: STUDIETEKNIK */
+        /* TAB 1: STUDIETEKNIK MODERNIZED */
         .study-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
         }
 
         .study-card {
-            background: var(--white);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            border-left: 5px solid var(--primary-blue);
+            background: var(--bg-white);
+            padding: 25px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            border: 2px solid var(--bg-main);
+            border-top: 4px solid var(--primary-blue);
+            transition: all 0.3s ease;
         }
 
+        .study-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--accent-gold);
+        }
+
+        .study-card h4 { color: var(--primary-blue); font-size: 1.1rem; }
+
         .brain-box {
-            background-color: #e3f2fd;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border: 1px dashed var(--primary-blue);
+            background: linear-gradient(to right, #eef2f7, #ffffff);
+            padding: 30px;
+            border-radius: var(--radius-md);
+            margin-bottom: 30px;
+            border-left: 6px solid var(--accent-gold);
+            box-shadow: var(--shadow-sm);
         }
 
         .myth-box {
-            background-color: #ffebee;
-            padding: 20px;
-            border-radius: 8px;
-            border: 1px dashed var(--wrong-red);
+            background-color: #fff5f5;
+            padding: 25px;
+            border-radius: var(--radius-md);
+            border-left: 6px solid var(--error);
+        }
+        .myth-box ul li { margin-bottom: 10px; }
+
+        /* TAB 2: FAKTA (Modern Accordion) */
+        details {
+            background-color: var(--bg-white);
+            margin-bottom: 15px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
         }
 
-        /* TAB 2: FAKTA (ACCORDION) */
-        details {
-            background-color: var(--white);
-            margin-bottom: 10px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            overflow: hidden;
+        details[open] {
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary-blue);
         }
 
         summary {
-            padding: 15px;
+            padding: 20px;
             cursor: pointer;
-            font-weight: bold;
-            background-color: var(--white);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            color: var(--primary-dark);
+            background-color: var(--bg-white);
             list-style: none;
             position: relative;
-            padding-right: 40px;
+            padding-right: 50px;
+            transition: background 0.2s;
         }
+        
+        summary:hover { background-color: var(--bg-main); }
 
-        summary::-webkit-details-marker {
-            display: none;
-        }
+        summary::-webkit-details-marker { display: none; }
 
         summary::after {
-            content: '+';
+            content: '▼';
             position: absolute;
             right: 20px;
-            font-size: 1.5rem;
-            color: var(--primary-blue);
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.8rem;
+            color: var(--accent-gold);
+            transition: transform 0.3s ease;
         }
 
         details[open] summary::after {
-            content: '-';
+            transform: translateY(-50%) rotate(180deg);
         }
 
         details[open] summary {
-            background-color: #f0f4f8;
-            border-bottom: 1px solid #ddd;
+            background-color: #f8faff;
+            border-bottom: 1px solid #eee;
+            color: var(--primary-blue);
         }
 
         .details-content {
-            padding: 20px;
-            background-color: #fafafa;
+            padding: 25px;
+            background-color: #fff;
+            color: var(--text-light);
         }
 
-        /* TAB 3: FLASHCARDS */
+        /* TAB 3: FLASHCARDS MODERNIZED */
         .flashcard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
         }
 
         .flashcard {
             background-color: transparent;
             width: 100%;
-            height: 200px;
+            height: 220px;
             perspective: 1000px;
             cursor: pointer;
         }
@@ -195,10 +288,12 @@
             width: 100%;
             height: 100%;
             text-align: center;
-            transition: transform 0.6s;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
             transform-style: preserve-3d;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            border-radius: 10px;
+        }
+
+        .flashcard:hover .flashcard-inner {
+            box-shadow: var(--shadow-hover);
         }
 
         .flashcard.flipped .flashcard-inner {
@@ -214,98 +309,129 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 15px;
+            padding: 20px;
             box-sizing: border-box;
-            border-radius: 10px;
-            font-size: 1rem;
+            border-radius: var(--radius-lg);
+            font-size: 1.1rem;
+            font-weight: 600;
+            box-shadow: var(--shadow-md);
         }
 
         .flashcard-front {
-            background-color: var(--primary-blue);
-            color: var(--white);
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-dark));
+            color: var(--bg-white);
         }
+        
+        .flashcard-front p { border-bottom: 3px solid var(--accent-gold); padding-bottom: 10px; display: inline-block;}
 
         .flashcard-back {
-            background-color: var(--highlight-yellow);
-            color: var(--primary-blue);
+            background-color: var(--accent-gold);
+            color: var(--primary-dark);
             transform: rotateY(180deg);
-            font-weight: bold;
-            border: 2px solid var(--primary-blue);
+            font-weight: 800;
+            font-family: 'Montserrat', sans-serif;
+            border: 4px solid var(--primary-dark);
         }
 
-        /* TAB 4: QUIZ */
+        /* TAB 4: QUIZ MODERNIZED */
         .quiz-container {
-            background: var(--white);
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 0; /* Padding handled by content-section */
         }
 
         .question-block {
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #eee;
+            margin-bottom: 40px;
+            padding: 25px;
+            background: var(--bg-main);
+            border-radius: var(--radius-md);
+        }
+        
+        .question-block h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         .options label {
-            display: block;
-            margin: 10px 0;
-            padding: 10px 15px;
-            background: #f9f9f9;
-            border: 2px solid #ddd;
-            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            background: var(--bg-white);
+            border: 2px solid #e0e6ed;
+            border-radius: var(--radius-md);
             cursor: pointer;
-            transition: 0.2s;
+            transition: all 0.2s ease;
+            font-weight: 600;
         }
 
         .options label:hover {
-            background: #eef;
-            border-color: var(--primary-blue);
+            background: var(--accent-gold-light);
+            border-color: var(--accent-gold);
+            transform: translateX(5px);
         }
 
         .options input[type="radio"] {
-            margin-right: 10px;
+            margin-right: 15px;
+            transform: scale(1.3);
+            accent-color: var(--primary-blue);
         }
 
         .quiz-btn {
-            background-color: var(--primary-blue);
+            background: linear-gradient(to right, var(--primary-blue), var(--primary-dark));
             color: white;
-            padding: 15px 30px;
+            padding: 18px 40px;
             border: none;
-            border-radius: 5px;
+            border-radius: 50px;
             font-size: 1.2rem;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
             cursor: pointer;
             display: block;
-            margin: 20px auto;
+            margin: 40px auto 20px auto;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
         }
 
         .quiz-btn:hover {
-            background-color: #001f3f;
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+            background: linear-gradient(to right, var(--accent-gold), #e6b400);
+            color: var(--primary-dark);
         }
 
         .result-box {
             text-align: center;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: bold;
-            margin-top: 20px;
-            padding: 20px;
+            margin-top: 30px;
+            padding: 30px;
+            border-radius: var(--radius-md);
             display: none;
+            animation: slideUp 0.5s ease;
         }
 
         /* Footer */
         footer {
             text-align: center;
-            padding: 20px;
-            font-size: 0.8rem;
-            color: #666;
+            padding: 30px;
+            font-size: 0.9rem;
+            color: var(--text-light);
             margin-top: 50px;
+            border-top: 1px solid #eee;
         }
 
-        /* Responsive */
-        @media (max-width: 600px) {
-            header h1 { font-size: 1.8rem; }
-            .tabs { flex-direction: column; }
-            .tab-btn { width: 100%; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        /* Responsive Tweaks */
+        @media (max-width: 700px) {
+            header h1 { font-size: 2rem; }
+            header { padding: 2rem 1rem; }
+            .tab-btn { padding: 10px 16px; font-size: 0.9rem; flex: 1 1 auto; text-align: center; }
+            .content-section { padding: 25px 15px; }
+            h2 { font-size: 1.6rem; }
+            .flashcard { height: 200px; }
         }
     </style>
 </head>
@@ -313,170 +439,176 @@
 
 <header>
     <h1>Lag & Rätt</h1>
-    <p>Samhällskunskap åk 6 - Instuderingsmaterial</p>
+    <p>Samhällskunskap åk 6 | Instuderingsmaterial</p>
 </header>
 
-<div class="tabs">
-    <button class="tab-btn active" onclick="openTab(event, 'studieteknik')">🧠 Studieteknik</button>
-    <button class="tab-btn" onclick="openTab(event, 'fakta')">📚 Faktabanken</button>
-    <button class="tab-btn" onclick="openTab(event, 'kort')">🃏 30 Övningskort</button>
-    <button class="tab-btn" onclick="openTab(event, 'quiz')">✍️ Stora Quizet</button>
+<div class="nav-container">
+    <div class="tabs">
+        <button class="tab-btn active" onclick="openTab(event, 'studieteknik')">🧠 Studieteknik</button>
+        <button class="tab-btn" onclick="openTab(event, 'fakta')">📚 Faktabanken</button>
+        <button class="tab-btn" onclick="openTab(event, 'kort')">🃏 30 Övningskort</button>
+        <button class="tab-btn" onclick="openTab(event, 'quiz')">✍️ Stora Quizet</button>
+    </div>
 </div>
 
-<div id="studieteknik" class="content-section active">
-    <h2>Så hackar du din hjärna (Evidensbaserad teknik)</h2>
-    
-    <div class="brain-box">
-        <h3>🌴 Hjärnan är som en djungel</h3>
-        <p>Tänk dig att din hjärna är en tät djungel. Första gången du lär dig något nytt hugger du upp en liten stig. Det är jobbigt! Om du inte går på stigen igen växer den igen (du glömmer). Men om du repeterar ofta blir stigen till slut en bred <strong>motorväg</strong>. Då går tankarna supersnabbt!</p>
-    </div>
+<div class="main-content">
+    <div id="studieteknik" class="content-section active">
+        <h2>Så hackar du din hjärna <span style="font-size: 0.7em; color: var(--text-light);">(Evidensbaserad teknik)</span></h2>
+        
+        <div class="brain-box">
+            <h3 style="color: var(--primary-blue);">🌴 Hjärnan är som en djungel</h3>
+            <p>Tänk dig att din hjärna är en tät djungel. Första gången du lär dig något nytt hugger du upp en liten stig. Det är jobbigt! Om du inte går på stigen igen växer den igen (du glömmer). Men om du repeterar ofta blir stigen till slut en bred <strong>motorväg</strong>. Då går tankarna supersnabbt!</p>
+        </div>
 
-    <h3>✅ De 5 bästa sätten att plugga</h3>
-    <div class="study-grid">
-        <div class="study-card">
-            <h4>1. Hämta ur minnet (Retrieval Practice)</h4>
-            <p>Det absolut bästa sättet! Läs inte bara texten. Stäng boken och försök minnas. <br>
-            👉 <strong>Gör så här:</strong> Skriv ner allt du minns på ett tomt papper ("Brain dump") eller använd flashcards.</p>
+        <h3>✅ De 5 bästa sätten att plugga</h3>
+        <div class="study-grid">
+            <div class="study-card">
+                <h4>1. Hämta ur minnet (Retrieval Practice)</h4>
+                <p>Det absolut bästa sättet! Läs inte bara texten. Stäng boken och försök minnas. <br>
+                👉 <strong>Gör så här:</strong> Skriv ner allt du minns på ett tomt papper ("Brain dump") eller använd flashcards.</p>
+            </div>
+            <div class="study-card">
+                <h4>2. Sprid ut plugget (Spaced Practice)</h4>
+                <p>Hjärnan behöver sova för att spara minnen. "Korvstoppning" kvällen innan funkar inte bra.<br>
+                👉 <strong>Gör så här:</strong> Plugga 15 minuter varje dag istället för 2 timmar dagen innan.</p>
+            </div>
+            <div class="study-card">
+                <h4>3. Blanda uppgifter (Interleaving)</h4>
+                <p>Gör inte bara samma sak hela tiden. Blanda! Det tvingar hjärnan att tänka till.<br>
+                👉 <strong>Gör så här:</strong> Blanda frågor om grundlagar med frågor om brott och straff.</p>
+            </div>
+            <div class="study-card">
+                <h4>4. Bild + Text (Dual Coding)</h4>
+                <p>Hjärnan gillar när man kombinerar ord och bild.<br>
+                👉 <strong>Gör så här:</strong> Rita en tidslinje över hur ett brott blir till en dom. Rita enkla gubbar!</p>
+            </div>
+            <div class="study-card">
+                <h4>5. Fråga "Varför?" (Elaboration)</h4>
+                <p>Koppla det nya till sådant du redan kan.<br>
+                👉 <strong>Gör så här:</strong> Förklara begrepp högt för dig själv (eller ett syskon) med egna ord.</p>
+            </div>
         </div>
-        <div class="study-card">
-            <h4>2. Sprid ut plugget (Spaced Practice)</h4>
-            <p>Hjärnan behöver sova för att spara minnen. "Korvstoppning" kvällen innan funkar inte bra.<br>
-            👉 <strong>Gör så här:</strong> Plugga 15 minuter varje dag istället för 2 timmar dagen innan.</p>
-        </div>
-        <div class="study-card">
-            <h4>3. Blanda uppgifter (Interleaving)</h4>
-            <p>Gör inte bara samma sak hela tiden. Blanda! Det tvingar hjärnan att tänka till.<br>
-            👉 <strong>Gör så här:</strong> Blanda frågor om grundlagar med frågor om brott och straff.</p>
-        </div>
-        <div class="study-card">
-            <h4>4. Bild + Text (Dual Coding)</h4>
-            <p>Hjärnan gillar när man kombinerar ord och bild.<br>
-            👉 <strong>Gör så här:</strong> Rita en tidslinje över hur ett brott blir till en dom. Rita enkla gubbar!</p>
-        </div>
-        <div class="study-card">
-            <h4>5. Fråga "Varför?" (Elaboration)</h4>
-            <p>Koppla det nya till sådant du redan kan.<br>
-            👉 <strong>Gör så här:</strong> Förklara begrepp högt för dig själv (eller ett syskon) med egna ord.</p>
-        </div>
-    </div>
 
-    <h3>🚫 Slösa inte tid på detta (Myter)</h3>
-    <div class="myth-box">
-        <ul>
-            <li><strong>Läsa om texten gång på gång:</strong> Det känns som man kan det, men man lurar sig själv.</li>
-            <li><strong>"Jag är en visuell inlärare":</strong> Falskt! Alla lär sig bäst av variation.</li>
-            <li><strong>Lärandepyramiden:</strong> Att man minns 10% av vad man läser är en påhittad siffra.</li>
+        <h3 style="margin-top: 40px;">🚫 Slösa inte tid på detta (Myter)</h3>
+        <div class="myth-box">
+            <ul>
+                <li><strong>Läsa om texten gång på gång:</strong> Det känns som man kan det, men man lurar sig själv.</li>
+                <li><strong>"Jag är en visuell inlärare":</strong> Falskt! Alla lär sig bäst av variation.</li>
+                <li><strong>Lärandepyramiden:</strong> Att man minns 10% av vad man läser är en påhittad siffra.</li>
+            </ul>
+        </div>
+
+        <h3 style="margin-top: 40px;">⚡ Viktigt inför provet</h3>
+        <ul style="font-weight: 600; color: var(--primary-blue);">
+            <li>😴 Sömn: Du behöver 9–11 timmar. Sov ordentligt!</li>
+            <li>📱 Mobilen: Lägg bort den. Varje "pling" stör koncentrationen.</li>
+            <li>🥑 Mat: Ät ordentligt för att orka fokusera.</li>
         </ul>
     </div>
 
-    <h3>⚡ Viktigt inför provet</h3>
-    <ul>
-        <li><strong>Sömn:</strong> Du behöver 9–11 timmar. Sov ordentligt!</li>
-        <li><strong>Mobilen:</strong> Lägg bort den. Varje "pling" stör koncentrationen.</li>
-        <li><strong>Mat:</strong> Ät ordentligt för att orka fokusera.</li>
-    </ul>
-</div>
+    <div id="fakta" class="content-section">
+        <h2>Samhällskunskap – Faktabanken</h2>
+        <p style="margin-bottom: 30px; color: var(--text-light);">Klicka på rubrikerna för att fälla ut och läsa mer.</p>
 
-<div id="fakta" class="content-section">
-    <h2>Samhällskunskap – Faktabanken</h2>
-    <p>Klicka på rubrikerna för att läsa mer.</p>
+        <details>
+            <summary>📜 Lagar, Regler & Normer</summary>
+            <div class="details-content">
+                <p><strong>Regler:</strong> Gäller inom vissa områden (t.ex. fotbollsregler eller skolregler).</p>
+                <p><strong>Lagar:</strong> Gäller alla i hela Sverige. Stiftas av Riksdagen. Finns ca 900 lagar i "Sveriges rikes lag".</p>
+                <p><strong>Normer:</strong> Oskrivna regler om hur man "ska" bete sig (t.ex. stå i kö, tacka för maten).</p>
+            </div>
+        </details>
 
-    <details>
-        <summary>📜 Lagar, Regler & Normer</summary>
-        <div class="details-content">
-            <p><strong>Regler:</strong> Gäller inom vissa områden (t.ex. fotbollsregler eller skolregler).</p>
-            <p><strong>Lagar:</strong> Gäller alla i hela Sverige. Stiftas av Riksdagen. Finns ca 900 lagar i "Sveriges rikes lag".</p>
-            <p><strong>Normer:</strong> Oskrivna regler om hur man "ska" bete sig (t.ex. stå i kö, tacka för maten).</p>
-        </div>
-    </details>
+        <details>
+            <summary>👑 De 4 Grundlagarna (Superviktiga!)</summary>
+            <div class="details-content">
+                <p>Grundlagarna skyddar vår demokrati och står över alla andra lagar.</p>
+                <ol style="font-weight: 600; color: var(--primary-dark);">
+                    <li>Regeringsformen (RF): <span style="font-weight: 400; color: var(--text-dark);">Hur Sverige ska styras. "All makt utgår från folket".</span></li>
+                    <li>Tryckfrihetsförordningen (TF): <span style="font-weight: 400; color: var(--text-dark);">Rätten att skriva åsikter i tidningar/böcker utan censur.</span></li>
+                    <li>Yttrandefrihetsgrundlagen (YGL): <span style="font-weight: 400; color: var(--text-dark);">Rätten att prata fritt i Radio/TV/Internet.</span></li>
+                    <li>Successionsordningen (SO): <span style="font-weight: 400; color: var(--text-dark);">Reglerna för vem som ska vara Kung/Drottning.</span></li>
+                </ol>
+                <div style="background: var(--accent-gold-light); padding: 15px; border-radius: 8px; margin-top: 15px;">
+                    <em>👉 För att ändra en grundlag krävs två riksdagsbeslut med ett val emellan.</em>
+                </div>
+            </div>
+        </details>
 
-    <details>
-        <summary>👑 De 4 Grundlagarna (Superviktiga!)</summary>
-        <div class="details-content">
-            <p>Grundlagarna skyddar vår demokrati och står över alla andra lagar.</p>
-            <ol>
-                <li><strong>Regeringsformen (RF):</strong> Hur Sverige ska styras. "All makt utgår från folket".</li>
-                <li><strong>Tryckfrihetsförordningen (TF):</strong> Rätten att skriva åsikter i tidningar/böcker utan censur.</li>
-                <li><strong>Yttrandefrihetsgrundlagen (YGL):</strong> Rätten att prata fritt i Radio/TV/Internet.</li>
-                <li><strong>Successionsordningen (SO):</strong> Reglerna för vem som ska vara Kung/Drottning.</li>
-            </ol>
-            <p><em>För att ändra en grundlag krävs två riksdagsbeslut med ett val emellan.</em></p>
-        </div>
-    </details>
+        <details>
+            <summary>⚖️ Rättsprocessen – Från brott till dom</summary>
+            <div class="details-content">
+                <ol>
+                    <li><strong>Brott sker & Anmälan:</strong> Polisen kontaktas.</li>
+                    <li><strong>Förundersökning:</strong> Polisen utreder, letar bevis och förhör vittnen.</li>
+                    <li><strong>Gripande/Häktning:</strong> Om någon är misstänkt kan de låsas in (häktas) så de inte förstör bevis.</li>
+                    <li><strong>Åtal:</strong> Åklagaren bestämmer om bevisen räcker för rättegång.</li>
+                    <li><strong>Rättegång:</strong> Hålls i Tingsrätten. Domare och nämndemän lyssnar.</li>
+                    <li><strong>Dom:</strong> Frikänd (oskyldig) eller Fälld (skyldig + straff).</li>
+                </ol>
+                <p style="font-weight: bold; color: var(--primary-blue);">Viktigt: I Sverige är man oskyldig tills motsatsen bevisats.</p>
+            </div>
+        </details>
 
-    <details>
-        <summary>⚖️ Rättsprocessen – Från brott till dom</summary>
-        <div class="details-content">
-            <ol>
-                <li><strong>Brott sker & Anmälan:</strong> Polisen kontaktas.</li>
-                <li><strong>Förundersökning:</strong> Polisen utreder, letar bevis och förhör vittnen.</li>
-                <li><strong>Gripande/Häktning:</strong> Om någon är misstänkt kan de låsas in (häktas) så de inte förstör bevis.</li>
-                <li><strong>Åtal:</strong> Åklagaren bestämmer om bevisen räcker för rättegång.</li>
-                <li><strong>Rättegång:</strong> Hålls i Tingsrätten. Domare och nämndemän lyssnar.</li>
-                <li><strong>Dom:</strong> Frikänd (oskyldig) eller Fälld (skyldig + straff).</li>
-            </ol>
-            <p><strong>Viktigt:</strong> I Sverige är man oskyldig tills motsatsen bevisats.</p>
-        </div>
-    </details>
+        <details>
+            <summary>👮 Brott & Straff</summary>
+            <div class="details-content">
+                <p><strong>Exempel på brott:</strong></p>
+                <ul>
+                    <li><strong>Snatteri (Ringa stöld):</strong> Ta något litet i butik.</li>
+                    <li><strong>Häleri:</strong> Köpa/sälja stulna saker.</li>
+                    <li><strong>Fyndförseelse:</strong> Behålla något man hittat istället för att lämna in det.</li>
+                    <li><strong>Olaga hot:</strong> Säga att man ska skada någon.</li>
+                    <li><strong>Misshandel:</strong> Slå eller sparka någon.</li>
+                </ul>
+                <p style="background: var(--bg-main); padding: 10px; border-radius: 8px;"><strong>Straffmyndig:</strong> Man blir straffmyndig vid <strong>15 år</strong>. Är man yngre kopplas Socialtjänsten in.</p>
+            </div>
+        </details>
 
-    <details>
-        <summary>👮 Brott & Straff</summary>
-        <div class="details-content">
-            <p><strong>Olika brott:</strong></p>
-            <ul>
-                <li><strong>Snatteri (Ringa stöld):</strong> Ta något litet i butik.</li>
-                <li><strong>Häleri:</strong> Köpa/sälja stulna saker.</li>
-                <li><strong>Fyndförseelse:</strong> Behålla något man hittat istället för att lämna in det.</li>
-                <li><strong>Olaga hot:</strong> Säga att man ska skada någon.</li>
-                <li><strong>Misshandel:</strong> Slå eller sparka någon.</li>
-            </ul>
-            <p><strong>Straffmyndig:</strong> Man blir straffmyndig vid <strong>15 år</strong>. Är man yngre kopplas Socialtjänsten in.</p>
-        </div>
-    </details>
+        <details>
+            <summary>🌍 Mänskliga Rättigheter & Barnkonventionen</summary>
+            <div class="details-content">
+                <p><strong>Mänskliga rättigheter (FN):</strong> Gäller alla människor i världen. Alla är födda fria och lika värda.</p>
+                <p><strong>Barnkonventionen:</strong> Lag i Sverige sedan 2020. Gäller alla under 18 år. Barn har rätt till lek, skola, sjukvård och skydd mot våld. <em>Barnets bästa ska alltid komma först.</em></p>
+            </div>
+        </details>
 
-    <details>
-        <summary>🌍 Mänskliga Rättigheter & Barnkonventionen</summary>
-        <div class="details-content">
-            <p><strong>Mänskliga rättigheter:</strong> Gäller alla människor i världen (FN). Alla är födda fria och lika värda.</p>
-            <p><strong>Barnkonventionen:</strong> Lag i Sverige. Gäller alla under 18 år. Barn har rätt till lek, skola, sjukvård och skydd mot våld. Barnets bästa ska alltid komma först.</p>
-        </div>
-    </details>
+         <details>
+            <summary>🚫 Diskriminering</summary>
+            <div class="details-content">
+                <p>Det är förbjudet att behandla någon sämre på grund av de 7 diskrimineringsgrunderna:</p>
+                <ul style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-weight: 600;">
+                    <li>1. Kön</li>
+                    <li>2. Könsidentitet</li>
+                    <li>3. Etnicitet (ursprung)</li>
+                    <li>4. Religion</li>
+                    <li>5. Funktionsnedsättning</li>
+                    <li>6. Sexuell läggning</li>
+                    <li>7. Ålder</li>
+                </ul>
+            </div>
+        </details>
+    </div>
 
-     <details>
-        <summary>🚫 Diskriminering</summary>
-        <div class="details-content">
-            <p>Det är förbjudet att behandla någon sämre på grund av de 7 diskrimineringsgrunderna:</p>
-            <ul>
-                <li>Kön</li>
-                <li>Könsidentitet</li>
-                <li>Etnicitet (ursprung)</li>
-                <li>Religion</li>
-                <li>Funktionsnedsättning</li>
-                <li>Sexuell läggning</li>
-                <li>Ålder</li>
-            </ul>
-        </div>
-    </details>
-</div>
+    <div id="kort" class="content-section">
+        <h2>Öva dig själv! (Flashcards)</h2>
+        <p style="color: var(--text-light); margin-bottom: 30px;">Klicka på korten för att vända dem. Försök säga svaret högt INNAN du vänder! (Aktiv framplockning).</p>
+        <div class="flashcard-grid" id="flashcard-container">
+            </div>
+    </div>
 
-<div id="kort" class="content-section">
-    <h2>Öva dig själv!</h2>
-    <p>Klicka på korten för att se svaret. Försök svara INNAN du vänder (Aktiv framplockning!).</p>
-    <div class="flashcard-grid" id="flashcard-container">
-        </div>
-</div>
-
-<div id="quiz" class="content-section">
-    <h2>Det stora provet</h2>
-    <p>30 frågor. Klarar du alla? Välj ett alternativ per fråga.</p>
-    <div id="quiz-container" class="quiz-container">
-        </div>
-    <div id="result-box" class="result-box"></div>
-    <button onclick="calculateScore()" class="quiz-btn">Rätta provet</button>
+    <div id="quiz" class="content-section">
+        <h2>Det stora provet</h2>
+        <p style="color: var(--text-light); margin-bottom: 30px;">30 frågor. Klarar du alla? Välj ett alternativ per fråga.</p>
+        <div id="quiz-container" class="quiz-container">
+            </div>
+        <div id="result-box" class="result-box"></div>
+        <button onclick="calculateScore()" class="quiz-btn">Rätta provet nu!</button>
+    </div>
 </div>
 
 <footer>
-    <p>Skapat för årskurs 6 | Tema: Svensk Lag och Ordning | 2024</p>
+    <p>Skapat för årskurs 6 | Tema: Svensk Lag och Ordning | Modern Design 2024</p>
 </footer>
 
 <script>
@@ -564,6 +696,7 @@
         document.getElementById(tabName).style.display = "block";
         setTimeout(() => document.getElementById(tabName).classList.add("active"), 10);
         evt.currentTarget.className += " active";
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function initFlashcards() {
@@ -613,8 +746,12 @@
         const resultBox = document.getElementById('result-box');
         const labels = document.querySelectorAll('.options label');
         
-        // Reset colors
-        labels.forEach(l => l.style.background = '#f9f9f9');
+        // Reset colors using modern variables
+        labels.forEach(l => {
+            l.style.background = 'var(--bg-white)';
+            l.style.borderColor = '#e0e6ed';
+            l.style.color = 'var(--text-dark)';
+        });
 
         quizData.forEach((item, index) => {
             const selected = document.querySelector(`input[name="q${index}"]:checked`);
@@ -624,23 +761,30 @@
                 const val = parseInt(selected.value);
                 if (val === item.correct) {
                     score++;
-                    selected.parentElement.style.background = 'var(--correct-green)';
+                    selected.parentElement.style.background = 'var(--success)';
+                    selected.parentElement.style.borderColor = 'var(--success)';
                     selected.parentElement.style.color = 'white';
                 } else {
-                    selected.parentElement.style.background = 'var(--wrong-red)';
+                    selected.parentElement.style.background = 'var(--error)';
+                    selected.parentElement.style.borderColor = 'var(--error)';
                     selected.parentElement.style.color = 'white';
                     // Show correct answer
-                    allOptions[item.correct].parentElement.style.background = 'var(--correct-green)';
+                    allOptions[item.correct].parentElement.style.background = 'var(--success)';
+                    allOptions[item.correct].parentElement.style.borderColor = 'var(--success)';
                     allOptions[item.correct].parentElement.style.color = 'white';
                 }
             } else {
                  // Mark correct answer even if nothing selected
-                 allOptions[item.correct].parentElement.style.background = 'var(--correct-green)';
+                 allOptions[item.correct].parentElement.style.background = 'var(--success)';
+                 allOptions[item.correct].parentElement.style.borderColor = 'var(--success)';
                  allOptions[item.correct].parentElement.style.color = 'white';
             }
         });
 
         resultBox.style.display = 'block';
+        resultBox.style.background = score > 25 ? 'var(--accent-gold-light)' : (score > 15 ? '#eef2f7' : '#fff5f5');
+        resultBox.style.color = var(--primary-dark);
+
         let msg = "";
         if(score === 30) msg = "🏆 HELA RÄTT! Du är en lag-expert!";
         else if(score > 25) msg = "🌟 Mycket bra jobbat!";
