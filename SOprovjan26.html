@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lag & Rätt - Instuderingsmaterial</title>
+    <style>
+        :root {
+            --primary-blue: #002F5F; /* Police/Gov blue */
+            --highlight-yellow: #FECC02; /* Swedish flag yellow */
+            --light-bg: #f4f8fb;
+            --white: #ffffff;
+            --text-dark: #333333;
+            --correct-green: #2ecc71;
+            --wrong-red: #e74c3c;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* HEADER */
+        header {
+            background-color: var(--primary-blue);
+            color: var(--white);
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 5px solid var(--highlight-yellow);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        header p {
+            margin-top: 10px;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* NAVIGATION TABS */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            background-color: #001f3f;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background-color: transparent;
+            border: none;
+            color: var(--white);
+            padding: 15px 30px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border-bottom: 4px solid transparent;
+        }
+
+        .tab-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .tab-btn.active {
+            border-bottom-color: var(--highlight-yellow);
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* CONTENT SECTIONS */
+        .content-section {
+            display: none;
+            padding: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            animation: fadeIn 0.5s;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: var(--primary-blue);
+            border-bottom: 2px solid var(--highlight-yellow);
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+
+        /* TAB 1: STUDIETEKNIK */
+        .study-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .study-card {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-left: 5px solid var(--primary-blue);
+        }
+
+        .brain-box {
+            background-color: #e3f2fd;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px dashed var(--primary-blue);
+        }
+
+        .myth-box {
+            background-color: #ffebee;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px dashed var(--wrong-red);
+        }
+
+        /* TAB 2: FAKTA (ACCORDION) */
+        details {
+            background-color: var(--white);
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        summary {
+            padding: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            background-color: var(--white);
+            list-style: none;
+            position: relative;
+            padding-right: 40px;
+        }
+
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        summary::after {
+            content: '+';
+            position: absolute;
+            right: 20px;
+            font-size: 1.5rem;
+            color: var(--primary-blue);
+        }
+
+        details[open] summary::after {
+            content: '-';
+        }
+
+        details[open] summary {
+            background-color: #f0f4f8;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .details-content {
+            padding: 20px;
+            background-color: #fafafa;
+        }
+
+        /* TAB 3: FLASHCARDS */
+        .flashcard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .flashcard {
+            background-color: transparent;
+            width: 100%;
+            height: 200px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 10px;
+        }
+
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            box-sizing: border-box;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+        .flashcard-front {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .flashcard-back {
+            background-color: var(--highlight-yellow);
+            color: var(--primary-blue);
+            transform: rotateY(180deg);
+            font-weight: bold;
+            border: 2px solid var(--primary-blue);
+        }
+
+        /* TAB 4: QUIZ */
+        .quiz-container {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .question-block {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .options label {
+            display: block;
+            margin: 10px 0;
+            padding: 10px 15px;
+            background: #f9f9f9;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .options label:hover {
+            background: #eef;
+            border-color: var(--primary-blue);
+        }
+
+        .options input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .quiz-btn {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: block;
+            margin: 20px auto;
+        }
+
+        .quiz-btn:hover {
+            background-color: #001f3f;
+        }
+
+        .result-box {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 20px;
+            padding: 20px;
+            display: none;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 50px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.8rem; }
+            .tabs { flex-direction: column; }
+            .tab-btn { width: 100%; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Lag & Rätt</h1>
+    <p>Samhällskunskap åk 6 - Instuderingsmaterial</p>
+</header>
+
+<div class="tabs">
+    <button class="tab-btn active" onclick="openTab(event, 'studieteknik')">🧠 Studieteknik</button>
+    <button class="tab-btn" onclick="openTab(event, 'fakta')">📚 Faktabanken</button>
+    <button class="tab-btn" onclick="openTab(event, 'kort')">🃏 30 Övningskort</button>
+    <button class="tab-btn" onclick="openTab(event, 'quiz')">✍️ Stora Quizet</button>
+</div>
+
+<div id="studieteknik" class="content-section active">
+    <h2>Så hackar du din hjärna (Evidensbaserad teknik)</h2>
+    
+    <div class="brain-box">
+        <h3>🌴 Hjärnan är som en djungel</h3>
+        <p>Tänk dig att din hjärna är en tät djungel. Första gången du lär dig något nytt hugger du upp en liten stig. Det är jobbigt! Om du inte går på stigen igen växer den igen (du glömmer). Men om du repeterar ofta blir stigen till slut en bred <strong>motorväg</strong>. Då går tankarna supersnabbt!</p>
+    </div>
+
+    <h3>✅ De 5 bästa sätten att plugga</h3>
+    <div class="study-grid">
+        <div class="study-card">
+            <h4>1. Hämta ur minnet (Retrieval Practice)</h4>
+            <p>Det absolut bästa sättet! Läs inte bara texten. Stäng boken och försök minnas. <br>
+            👉 <strong>Gör så här:</strong> Skriv ner allt du minns på ett tomt papper ("Brain dump") eller använd flashcards.</p>
+        </div>
+        <div class="study-card">
+            <h4>2. Sprid ut plugget (Spaced Practice)</h4>
+            <p>Hjärnan behöver sova för att spara minnen. "Korvstoppning" kvällen innan funkar inte bra.<br>
+            👉 <strong>Gör så här:</strong> Plugga 15 minuter varje dag istället för 2 timmar dagen innan.</p>
+        </div>
+        <div class="study-card">
+            <h4>3. Blanda uppgifter (Interleaving)</h4>
+            <p>Gör inte bara samma sak hela tiden. Blanda! Det tvingar hjärnan att tänka till.<br>
+            👉 <strong>Gör så här:</strong> Blanda frågor om grundlagar med frågor om brott och straff.</p>
+        </div>
+        <div class="study-card">
+            <h4>4. Bild + Text (Dual Coding)</h4>
+            <p>Hjärnan gillar när man kombinerar ord och bild.<br>
+            👉 <strong>Gör så här:</strong> Rita en tidslinje över hur ett brott blir till en dom. Rita enkla gubbar!</p>
+        </div>
+        <div class="study-card">
+            <h4>5. Fråga "Varför?" (Elaboration)</h4>
+            <p>Koppla det nya till sådant du redan kan.<br>
+            👉 <strong>Gör så här:</strong> Förklara begrepp högt för dig själv (eller ett syskon) med egna ord.</p>
+        </div>
+    </div>
+
+    <h3>🚫 Slösa inte tid på detta (Myter)</h3>
+    <div class="myth-box">
+        <ul>
+            <li><strong>Läsa om texten gång på gång:</strong> Det känns som man kan det, men man lurar sig själv.</li>
+            <li><strong>"Jag är en visuell inlärare":</strong> Falskt! Alla lär sig bäst av variation.</li>
+            <li><strong>Lärandepyramiden:</strong> Att man minns 10% av vad man läser är en påhittad siffra.</li>
+        </ul>
+    </div>
+
+    <h3>⚡ Viktigt inför provet</h3>
+    <ul>
+        <li><strong>Sömn:</strong> Du behöver 9–11 timmar. Sov ordentligt!</li>
+        <li><strong>Mobilen:</strong> Lägg bort den. Varje "pling" stör koncentrationen.</li>
+        <li><strong>Mat:</strong> Ät ordentligt för att orka fokusera.</li>
+    </ul>
+</div>
+
+<div id="fakta" class="content-section">
+    <h2>Samhällskunskap – Faktabanken</h2>
+    <p>Klicka på rubrikerna för att läsa mer.</p>
+
+    <details>
+        <summary>📜 Lagar, Regler & Normer</summary>
+        <div class="details-content">
+            <p><strong>Regler:</strong> Gäller inom vissa områden (t.ex. fotbollsregler eller skolregler).</p>
+            <p><strong>Lagar:</strong> Gäller alla i hela Sverige. Stiftas av Riksdagen. Finns ca 900 lagar i "Sveriges rikes lag".</p>
+            <p><strong>Normer:</strong> Oskrivna regler om hur man "ska" bete sig (t.ex. stå i kö, tacka för maten).</p>
+        </div>
+    </details>
+
+    <details>
+        <summary>👑 De 4 Grundlagarna (Superviktiga!)</summary>
+        <div class="details-content">
+            <p>Grundlagarna skyddar vår demokrati och står över alla andra lagar.</p>
+            <ol>
+                <li><strong>Regeringsformen (RF):</strong> Hur Sverige ska styras. "All makt utgår från folket".</li>
+                <li><strong>Tryckfrihetsförordningen (TF):</strong> Rätten att skriva åsikter i tidningar/böcker utan censur.</li>
+                <li><strong>Yttrandefrihetsgrundlagen (YGL):</strong> Rätten att prata fritt i Radio/TV/Internet.</li>
+                <li><strong>Successionsordningen (SO):</strong> Reglerna för vem som ska vara Kung/Drottning.</li>
+            </ol>
+            <p><em>För att ändra en grundlag krävs två riksdagsbeslut med ett val emellan.</em></p>
+        </div>
+    </details>
+
+    <details>
+        <summary>⚖️ Rättsprocessen – Från brott till dom</summary>
+        <div class="details-content">
+            <ol>
+                <li><strong>Brott sker & Anmälan:</strong> Polisen kontaktas.</li>
+                <li><strong>Förundersökning:</strong> Polisen utreder, letar bevis och förhör vittnen.</li>
+                <li><strong>Gripande/Häktning:</strong> Om någon är misstänkt kan de låsas in (häktas) så de inte förstör bevis.</li>
+                <li><strong>Åtal:</strong> Åklagaren bestämmer om bevisen räcker för rättegång.</li>
+                <li><strong>Rättegång:</strong> Hålls i Tingsrätten. Domare och nämndemän lyssnar.</li>
+                <li><strong>Dom:</strong> Frikänd (oskyldig) eller Fälld (skyldig + straff).</li>
+            </ol>
+            <p><strong>Viktigt:</strong> I Sverige är man oskyldig tills motsatsen bevisats.</p>
+        </div>
+    </details>
+
+    <details>
+        <summary>👮 Brott & Straff</summary>
+        <div class="details-content">
+            <p><strong>Olika brott:</strong></p>
+            <ul>
+                <li><strong>Snatteri (Ringa stöld):</strong> Ta något litet i butik.</li>
+                <li><strong>Häleri:</strong> Köpa/sälja stulna saker.</li>
+                <li><strong>Fyndförseelse:</strong> Behålla något man hittat istället för att lämna in det.</li>
+                <li><strong>Olaga hot:</strong> Säga att man ska skada någon.</li>
+                <li><strong>Misshandel:</strong> Slå eller sparka någon.</li>
+            </ul>
+            <p><strong>Straffmyndig:</strong> Man blir straffmyndig vid <strong>15 år</strong>. Är man yngre kopplas Socialtjänsten in.</p>
+        </div>
+    </details>
+
+    <details>
+        <summary>🌍 Mänskliga Rättigheter & Barnkonventionen</summary>
+        <div class="details-content">
+            <p><strong>Mänskliga rättigheter:</strong> Gäller alla människor i världen (FN). Alla är födda fria och lika värda.</p>
+            <p><strong>Barnkonventionen:</strong> Lag i Sverige. Gäller alla under 18 år. Barn har rätt till lek, skola, sjukvård och skydd mot våld. Barnets bästa ska alltid komma först.</p>
+        </div>
+    </details>
+
+     <details>
+        <summary>🚫 Diskriminering</summary>
+        <div class="details-content">
+            <p>Det är förbjudet att behandla någon sämre på grund av de 7 diskrimineringsgrunderna:</p>
+            <ul>
+                <li>Kön</li>
+                <li>Könsidentitet</li>
+                <li>Etnicitet (ursprung)</li>
+                <li>Religion</li>
+                <li>Funktionsnedsättning</li>
+                <li>Sexuell läggning</li>
+                <li>Ålder</li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+<div id="kort" class="content-section">
+    <h2>Öva dig själv!</h2>
+    <p>Klicka på korten för att se svaret. Försök svara INNAN du vänder (Aktiv framplockning!).</p>
+    <div class="flashcard-grid" id="flashcard-container">
+        </div>
+</div>
+
+<div id="quiz" class="content-section">
+    <h2>Det stora provet</h2>
+    <p>30 frågor. Klarar du alla? Välj ett alternativ per fråga.</p>
+    <div id="quiz-container" class="quiz-container">
+        </div>
+    <div id="result-box" class="result-box"></div>
+    <button onclick="calculateScore()" class="quiz-btn">Rätta provet</button>
+</div>
+
+<footer>
+    <p>Skapat för årskurs 6 | Tema: Svensk Lag och Ordning | 2024</p>
+</footer>
+
+<script>
+    // --- DATA: FLASHCARDS (30 st) ---
+    const flashcardsData = [
+        { q: "Vad kallas reglerna som gäller alla i hela Sverige?", a: "Lagar" },
+        { q: "Vem beslutar om (stiftar) lagarna i Sverige?", a: "Riksdagen" },
+        { q: "Hur många grundlagar har Sverige?", a: "Fyra (4)" },
+        { q: "Vilken grundlag handlar om hur Sverige ska styras?", a: "Regeringsformen" },
+        { q: "Vilken grundlag skyddar rätten att skriva åsikter i tidningar?", a: "Tryckfrihetsförordningen" },
+        { q: "Vad kallas det när man köper något som är stulet?", a: "Häleri" },
+        { q: "Vid vilken ålder blir man straffmyndig?", a: "15 år" },
+        { q: "Vad händer om en 13-åring begår ett brott?", a: "Socialtjänsten kopplas in (ej straff)" },
+        { q: "Vad heter boken där alla lagar är samlade?", a: "Sveriges Rikes Lag" },
+        { q: "Vad kallas det att ta något litet i en butik?", a: "Ringa stöld (Snatteri)" },
+        { q: "Vilken grundlag bestämmer vem som ska vara kung/drottning?", a: "Successionsordningen" },
+        { q: "Vad krävs för att ändra en grundlag?", a: "Två riksdagsbeslut med ett val emellan" },
+        { q: "Vem leder förundersökningen vid allvarliga brott?", a: "Åklagaren" },
+        { q: "Vad kallas det när domstolen bestämmer straffet?", a: "Dom" },
+        { q: "Vilka hjälper domaren att döma i tingsrätten?", a: "Nämndemän (oftast 3 st)" },
+        { q: "Vad betyder det att en domstol är 'självständig'?", a: "Politiker får inte bestämma hur de ska döma" },
+        { q: "Vad kallas brottet om man behåller en hittad plånbok?", a: "Fyndförseelse" },
+        { q: "Vilket år blev Barnkonventionen lag i Sverige?", a: "År 2020" },
+        { q: "Vad innebär 'Yttrandefrihet'?", a: "Rätten att säga sin åsikt (i tal/radio/TV)" },
+        { q: "Vad är ett undantag från yttrandefriheten?", a: "Hets mot folkgrupp / Förtal / Statshemligheter" },
+        { q: "Vad kallas den som blivit utsatt för ett brott?", a: "Målsägande (Brottsoffer)" },
+        { q: "Vad heter det när polisen låser in en misstänkt innan rättegång?", a: "Häktning" },
+        { q: "Vilken lag förbjuder orättvis behandling pga t.ex. kön?", a: "Diskrimineringslagen" },
+        { q: "Vad heter myndigheten som elever kan vända sig till vid mobbning?", a: "BEO (Barn- och elevombudet)" },
+        { q: "Får man aga (slå) barn i Sverige?", a: "Nej, det förbjöds 1979" },
+        { q: "Vad innebär 'Aktiv framplockning' vid plugg?", a: "Att tvinga hjärnan minnas utan facit" },
+        { q: "Varför ska man sprida ut plugget över tid?", a: "För att minnet behöver sömn för att lagras" },
+        { q: "Hur många timmar bör en 12-åring sova?", a: "9-11 timmar" },
+        { q: "Vad är en 'förundersökning'?", a: "När polisen utreder brottet och samlar bevis" },
+        { q: "Vad kan man göra för att påverka lagar?", a: "Rösta, demonstrera, kontakta politiker" }
+    ];
+
+    // --- DATA: QUIZ (30 st) ---
+    const quizData = [
+        { q: "Vad är skillnaden på en regel och en lag?", options: ["Ingen skillnad", "Lagar gäller alla och står i lagboken", "Regler bestäms av kungen"], correct: 1 },
+        { q: "Vem har makten att stifta lagar i Sverige?", options: ["Polisen", "Riksdagen", "Statsministern"], correct: 1 },
+        { q: "Varför är det svårt att ändra en grundlag?", options: ["För att skydda demokratin från snabba beslut", "För att riksdagen har semester", "För att kungen måste godkänna det"], correct: 0 },
+        { q: "Vilket av följande är INTE en grundlag?", options: ["Regeringsformen", "Skollagen", "Tryckfrihetsförordningen"], correct: 1 },
+        { q: "Du hittar en mobiltelefon på bussen och behåller den. Vad kallas brottet?", options: ["Stöld", "Fyndförseelse", "Häleri"], correct: 1 },
+        { q: "Vad innebär 'nödvärn'?", options: ["Att man får slåss hur som helst", "Att man får försvara sig om man blir attackerad", "Att polisen får använda vapen"], correct: 1 },
+        { q: "Vad händer när en 14-åring begår ett brott?", options: ["Fängelse", "Böter", "Socialtjänsten kopplas in"], correct: 2 },
+        { q: "Vad är en åklagare?", options: ["Den som försvarar den misstänkte", "Den som för statens talan och väcker åtal", "Domarens assistent"], correct: 1 },
+        { q: "Vad gör en försvarsadvokat?", options: ["Dömer i målet", "Hjälper den som är misstänkt", "Skriver ner allt som sägs"], correct: 1 },
+        { q: "Vad kallas det register där man hamnar om man begått brott?", options: ["Belastningsregistret", "Brottsboken", "Svarta listan"], correct: 0 },
+        { q: "Vilken påföljd (straff) är vanligast för ungdomar 15-18 år?", options: ["Fängelse", "Ungdomsvård/Samhällstjänst", "Livstid"], correct: 1 },
+        { q: "Vad innebär religionsfrihet?", options: ["Man måste vara med i kyrkan", "Man får tro på vad man vill (eller inget alls)", "Man får inte prata om religion"], correct: 1 },
+        { q: "Varför infördes rökförbud på krogen?", options: ["Ny teknik", "Ny kunskap om hälsa", "Nya politiska partier"], correct: 1 },
+        { q: "När blev det förbjudet att slå barn i Sverige?", options: ["1950", "1979", "2000"], correct: 1 },
+        { q: "Vilket av dessa är en diskrimineringsgrund?", options: ["Musiksmak", "Funktionsnedsättning", "Skostorlek"], correct: 1 },
+        { q: "Vad innebär likabehandling i skolan?", options: ["Alla ska få exakt samma betyg", "Alla ska ha samma förutsättningar oavsett behov", "Alla ska läsa samma böcker"], correct: 1 },
+        { q: "Enligt studieteknik, vad är 'myelinisering'?", options: ["När man glömmer saker", "När nervtrådarna isoleras och signalerna blir snabbare", "När man blir trött"], correct: 1 },
+        { q: "Vad är en 'Brain dump'?", options: ["Att skriva ner allt man minns på ett tomt papper", "Att glömma allt inför provet", "Att kasta sina anteckningar"], correct: 0 },
+        { q: "Vilket påstående om lärande är en MYT?", options: ["Vi lär oss olika snabbt", "Vi använder bara 10% av hjärnan", "Sömn är viktigt"], correct: 1 },
+        { q: "Vad är 'Interleaving'?", options: ["Att läsa texten högt", "Att blanda olika typer av uppgifter", "Att stryka under text"], correct: 1 },
+        { q: "Vad gör polisen vid en förundersökning?", options: ["Dömer den skyldige", "Förhör vittnen och säkrar bevis", "Bestämmer straffet"], correct: 1 },
+        { q: "Vad innebär mened?", options: ["Att ljuga i domstol när man vittnar", "Att stjäla en cykel", "Att hota någon"], correct: 0 },
+        { q: "Vad är hets mot folkgrupp?", options: ["Att kritisera en politiker", "Att uttrycka hat mot en grupp pga t.ex. etnicitet", "Att skrika på fotbollsmatch"], correct: 1 },
+        { q: "Vad menas med att lagar är 'dynamiska'?", options: ["De ändras när samhället utvecklas", "De är skrivna med dynamit", "De gäller bara ibland"], correct: 0 },
+        { q: "Vem är målsägande?", options: ["Den som begått brottet", "Den som blivit utsatt för brottet", "Vittnet"], correct: 1 },
+        { q: "Vad är en norm?", options: ["En skriven lag", "En oskriven regel om beteende", "Ett straff"], correct: 1 },
+        { q: "Vad händer om man överklagar en dom?", options: ["Man slipper straff", "Fallet tas upp i en högre domstol (t.ex. Hovrätten)", "Man får dubbelt straff"], correct: 1 },
+        { q: "Vad är Brottsofferjouren?", options: ["En del av polisen", "En organisation som stöttar offer", "En domstol"], correct: 1 },
+        { q: "Hur påverkas samhället av brott?", options: ["Det blir billigare", "Det skapar otrygghet och kostar pengar", "Det påverkar inte alls"], correct: 1 },
+        { q: "Vilken är den bästa strategin för att minnas länge?", options: ["Läsa texten 10 gånger", "Förhöra sig själv (Testa sig)", "Stryka under med färgpennor"], correct: 1 }
+    ];
+
+    // --- FUNCTIONS ---
+
+    function openTab(evt, tabName) {
+        var i, content, tablinks;
+        content = document.getElementsByClassName("content-section");
+        for (i = 0; i < content.length; i++) {
+            content[i].style.display = "none";
+            content[i].classList.remove("active");
+        }
+        tablinks = document.getElementsByClassName("tab-btn");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(tabName).style.display = "block";
+        setTimeout(() => document.getElementById(tabName).classList.add("active"), 10);
+        evt.currentTarget.className += " active";
+    }
+
+    function initFlashcards() {
+        const container = document.getElementById('flashcard-container');
+        flashcardsData.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'flashcard';
+            card.onclick = function() { this.classList.toggle('flipped'); };
+            card.innerHTML = `
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <p>${item.q}</p>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>${item.a}</p>
+                    </div>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function initQuiz() {
+        const container = document.getElementById('quiz-container');
+        quizData.forEach((item, index) => {
+            const qDiv = document.createElement('div');
+            qDiv.className = 'question-block';
+            let optionsHtml = '';
+            item.options.forEach((opt, i) => {
+                optionsHtml += `
+                    <label>
+                        <input type="radio" name="q${index}" value="${i}">
+                        ${opt}
+                    </label>
+                `;
+            });
+            qDiv.innerHTML = `
+                <h3>Fråga ${index + 1}: ${item.q}</h3>
+                <div class="options">${optionsHtml}</div>
+            `;
+            container.appendChild(qDiv);
+        });
+    }
+
+    function calculateScore() {
+        let score = 0;
+        const resultBox = document.getElementById('result-box');
+        const labels = document.querySelectorAll('.options label');
+        
+        // Reset colors
+        labels.forEach(l => l.style.background = '#f9f9f9');
+
+        quizData.forEach((item, index) => {
+            const selected = document.querySelector(`input[name="q${index}"]:checked`);
+            const allOptions = document.getElementsByName(`q${index}`);
+            
+            if (selected) {
+                const val = parseInt(selected.value);
+                if (val === item.correct) {
+                    score++;
+                    selected.parentElement.style.background = 'var(--correct-green)';
+                    selected.parentElement.style.color = 'white';
+                } else {
+                    selected.parentElement.style.background = 'var(--wrong-red)';
+                    selected.parentElement.style.color = 'white';
+                    // Show correct answer
+                    allOptions[item.correct].parentElement.style.background = 'var(--correct-green)';
+                    allOptions[item.correct].parentElement.style.color = 'white';
+                }
+            } else {
+                 // Mark correct answer even if nothing selected
+                 allOptions[item.correct].parentElement.style.background = 'var(--correct-green)';
+                 allOptions[item.correct].parentElement.style.color = 'white';
+            }
+        });
+
+        resultBox.style.display = 'block';
+        let msg = "";
+        if(score === 30) msg = "🏆 HELA RÄTT! Du är en lag-expert!";
+        else if(score > 25) msg = "🌟 Mycket bra jobbat!";
+        else if(score > 15) msg = "👍 Godkänt, men repetera lite till.";
+        else msg = "📚 Dags att plugga lite mer på flippkorten!";
+        
+        resultBox.innerHTML = `Du fick ${score} av 30 rätt.<br>${msg}`;
+        resultBox.scrollIntoView({behavior: "smooth"});
+    }
+
+    // Initialize on load
+    window.onload = function() {
+        initFlashcards();
+        initQuiz();
+    };
+
+</script>
+
+</body>
+</html>
