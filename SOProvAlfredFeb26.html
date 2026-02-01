@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SO Prov Alfred feb</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-brown: #5D4037;
+            --secondary-brown: #8D6E63;
+            --light-beige: #D7CCC8;
+            --paper-bg: #FBE9E7;
+            --accent-gold: #FFD700;
+            --text-dark: #3E2723;
+            --info-box-bg: #EFEBE9;
+            --info-box-border: #A1887F;
+        }
+
+        body {
+            font-family: 'Roboto Slab', serif;
+            background-color: var(--primary-brown);
+            /* Mönster inspirerat av vikingatida flätverk */
+            background-image: url('data:image/svg+xml,%3Csvg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M20 20.5V18c0-1.1-0.9-2-2-2s-2 0.9-2 2v2.5C10 20.5 4 16 4 16s6 12 16 12 16-12 16-12-6 4.5-12 4.5zM20 38c-1.1 0-2-0.9-2-2v-2.5C12 33.5 6 38 6 38s4.5-6 4.5-12C10.5 18 6 13.5 6 13.5S12 18 18 18v-2.5c0-1.1 0.9-2 2-2s2 0.9 2 2V18c6 0 10.5-4.5 10.5-4.5S29.5 18 29.5 26c0 6 4.5 12 4.5 12s-6-4.5-12-4.5V36c0 1.1-0.9 2-2 2z" fill="%238d6e63" fill-opacity="0.15" fill-rule="evenodd"/%3E%3C/svg%3E');
+            color: var(--text-dark);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Cinzel Decorative', cursive;
+            color: var(--text-dark);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.8em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            color: var(--accent-gold);
+            margin-bottom: 10px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: var(--paper-bg);
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            overflow: hidden;
+            border: 4px solid var(--secondary-brown);
+        }
+
+        /* Navigation Tabs */
+        .tabs {
+            display: flex;
+            background-color: var(--secondary-brown);
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 20px;
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 1.3em;
+            border: none;
+            background-color: var(--secondary-brown);
+            color: var(--light-beige);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 5px solid transparent;
+        }
+
+        .tab-button:hover {
+            background-color: var(--primary-brown);
+            color: var(--accent-gold);
+        }
+
+        .tab-button.active {
+            background-color: var(--paper-bg);
+            color: var(--text-dark);
+            border-bottom: 5px solid var(--accent-gold);
+        }
+
+        /* Content Areas */
+        .tab-content {
+            display: none;
+            padding: 40px;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Text Styling */
+        .summary-section {
+            margin-bottom: 50px;
+            border-bottom: 2px dashed var(--secondary-brown);
+            padding-bottom: 30px;
+        }
+        
+        .summary-section:last-child {
+            border-bottom: none;
+        }
+
+        p {
+            font-size: 1.15em;
+            margin-bottom: 15px;
+        }
+
+        /* Visual Info Box */
+        .visual-info-box {
+            background-color: var(--info-box-bg);
+            border: 2px solid var(--info-box-border);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+            position: relative;
+            box-shadow: 3px 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .visual-info-box::before {
+            content: '👁️ Så såg det ut (från bilderna):';
+            display: block;
+            font-weight: bold;
+            font-family: 'Cinzel Decorative', cursive;
+            color: var(--primary-brown);
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            border-bottom: 1px solid var(--secondary-brown);
+            padding-bottom: 5px;
+        }
+
+        .visual-info-box ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .visual-info-box li {
+            margin-bottom: 8px;
+        }
+
+        /* Fact Highlight */
+        .highlight-box {
+            background-color: #FFF8E1;
+            padding: 15px;
+            border-left: 5px solid var(--accent-gold);
+            margin: 20px 0;
+            font-style: italic;
+        }
+
+        /* Quiz Styling */
+        .quiz-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        .card {
+            background-color: transparent;
+            height: 200px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border-radius: 12px;
+        }
+
+        .card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            box-sizing: border-box;
+            border-radius: 12px;
+            border: 3px solid var(--primary-brown);
+        }
+
+        .card-front {
+            background-color: var(--secondary-brown);
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.1em;
+            background-image: linear-gradient(135deg, var(--secondary-brown) 0%, var(--primary-brown) 100%);
+        }
+
+        .card-back {
+            background-color: #fff;
+            color: var(--text-dark);
+            transform: rotateY(180deg);
+            font-weight: bold;
+            font-size: 1em;
+            overflow-y: auto;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--light-beige);
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Vikingatiden</h1>
+        <h3 style="color: var(--light-beige);">SO-Prov Alfred</h3>
+    </header>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-button active" onclick="openTab('summary')">Berättelsen & Fakta</button>
+            <button class="tab-button" onclick="openTab('quiz')">100 Frågor Quiz</button>
+        </div>
+
+        <div id="summary" class="tab-content active">
+            
+            <div class="summary-section">
+                <h2>Vikingarna: Myt och Verklighet</h2>
+                <p>Vikingatiden är den sista delen av järnåldern. Den varade i ungefär 250 år. Trots att perioden var kort har den blivit känd över hela världen, mycket tack vare berättelser som skapades långt senare på 1800-talet. Då ville man skapa en "skrytsam" bild av Norden.</p>
+                
+                <div class="visual-info-box">
+                    <ul>
+                        <li><strong>Inga horn:</strong> I verkligheten hade vikingarnas hjälmar <em>inte</em> horn. De var grå hjälmar med nässkydd och skydd för ögonen (som liknade glasögon).</li>
+                        <li><strong>Dagens bild:</strong> Idag klär barn ofta ut sig till vikingar med horn på hjälmen, men det är alltså bara en saga.</li>
+                        <li><strong>Skeppen:</strong> På bilderna ser vi att skeppen ofta hade röd- och vitrandiga segel.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="summary-section">
+                <h2>Livet i Vikingabyn</h2>
+                <p>De flesta människor var bönder som bodde i byar eller på ensamma gårdar. Släkten, som kallades för <strong>ätten</strong>, var det viktigaste skyddsnätet man hade. Tillsammans skyddade man sig mot fiender och tog hand om sjuka.</p>
+                
+                <div class="visual-info-box">
+                    <strong>Så var byn uppbyggd (från översiktsbilden):</strong>
+                    <p>Husen var långhus med grästak. Runt åkrarna satte man upp flätade staket (gärdsgårdar) för att inte djuren skulle äta upp skörden. Uppe på höjderna fanns ofta en befästning där byborna kunde gömma sig om fiender anföll. Där fanns också en "vårdkase" – en stor hög med ved som man tände eld på för att varna andra byar.</p>
+                </div>
+
+                <p><strong>Vem bestämde?</strong> Husbonden ägde gården, men det var <strong>husfrun</strong> som hade ansvar för skötseln. Hon bar nycklarna till alla förråd i sin dräkt, vilket visade att hon hade makten över maten och gården.</p>
+                
+                <div class="highlight-box">
+                    På gården fanns också <strong>trälar</strong> (slavar). De bodde ofta i enklare hyddor och gjorde det tyngsta arbetet.
+                </div>
+            </div>
+
+            <div class="summary-section">
+                <h2>Handel och Staden Birka</h2>
+                <p>Alla vikingar var inte bönder. Vissa var hantverkare eller köpmän. På ön Björkö i Mälaren låg <strong>Birka</strong>, som brukar kallas Sveriges första stad. Här trängdes mellan 500 och 1000 personer.</p>
+
+                <div class="visual-info-box">
+                    <strong>Livet i Birka (Föremål och modeller):</strong>
+                    <ul>
+                        <li><strong>Skydd:</strong> Utanför hamnen i vattnet hade man kört ner rader av vassa pålar. Det hindrade fiendens skepp från att attackera staden.</li>
+                        <li><strong>Vinternöjen:</strong> Man har hittat <em>isläggar</em> i Birka. Det är skridskor gjorda av djurben som barn knöt fast på fötterna med läderremmar.</li>
+                        <li><strong>Fynd:</strong> Arkeologer har hittat arabiskt silver, pärlor och glasbägare. Det visar att folk reste långt!</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="summary-section">
+                <h2>Skeppen som tog dem ut i världen</h2>
+                <p>Vikingarna kunde resa långt tack vare sina fantastiska skepp. De reste österut (mot Ryssland) och västerut (mot England och Frankrike) för att handla, men också för att plundra.</p>
+
+                <div class="visual-info-box">
+                    <strong>Långskeppet (Drakskeppet):</strong>
+                    <ul>
+                        <li><strong>Drakhuvudet:</strong> I fören (längst fram) var skeppet format som ett drakhuvud för att skrämmas.</li>
+                        <li><strong>Sköldarna:</strong> Längs sidorna hängde krigarnas sköldar på rad.</li>
+                        <li><strong>Platt botten:</strong> Skeppet hade ingen köl (det var platt undertill). Det gjorde att de kunde segla på mycket grunt vatten och till och med rulla skeppen på stockar mellan floder.</li>
+                        <li><strong>Ingen hytt:</strong> Det fanns inget tak. Vikingarna sov under bar himmel.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="summary-section">
+                <h2>Tron på Asagudarna</h2>
+                <p>Innan kristendomen kom trodde man på asagudarna. Naturen sågs som en kamp mellan goda gudar och onda jättar.</p>
+
+                <div class="visual-info-box">
+                    <strong>Gudarna i konsten (från bilderna):</strong>
+                    <ul>
+                        <li><strong>Oden:</strong> Avbildades ridande på sin häst Sleipner, som hade åtta ben.</li>
+                        <li><strong>Tor:</strong> Åkte i en vagn dragen av bockar och svingade sin hammare (Mjölner) som skapade blixtar.</li>
+                        <li><strong>Frej:</strong> Fruktbarhetsguden red på en guldfärgad gris.</li>
+                        <li><strong>Völvan:</strong> En spåkvinna som avbildas med en speciell stav i handen.</li>
+                    </ul>
+                </div>
+                <p>I slutet av vikingatiden började kristendomen ta över. Kungar som Olof Skötkonung lät döpa sig. Man har hittat mynt med kristna kors och runstenar (som Jellingestenen) som målades i starka färger för att berätta om den nya tron.</p>
+            </div>
+
+        </div>
+
+
+        <div id="quiz" class="tab-content">
+            <h2>Testa dina kunskaper, Alfred!</h2>
+            <p style="text-align: center;">Klicka på korten för att vända dem.</p>
+            
+            <div class="quiz-grid" id="quiz-container">
+                </div>
+        </div>
+
+    </div>
+    
+    <footer>
+        <p>Lycka till på provet!</p>
+    </footer>
+
+    <script>
+        // --- FLIK-FUNKTIONER ---
+        function openTab(tabName) {
+            let i;
+            let tabContent = document.getElementsByClassName("tab-content");
+            let tabButtons = document.getElementsByClassName("tab-button");
+
+            for (i = 0; i < tabContent.length; i++) {
+                tabContent[i].classList.remove("active");
+            }
+            for (i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove("active");
+            }
+            document.getElementById(tabName).classList.add("active");
+            event.currentTarget.classList.add("active");
+        }
+
+        // --- QUIZ DATA ---
+        // 100 frågor baserade på texten och bildinformationen
+        const quizData = [
+            {q: "Mellan vilka år varade vikingatiden?", a: "Ca år 800 – 1050."},
+            {q: "Hade vikingahjälmar horn på riktigt?", a: "Nej, det är en myt från 1800-talet."},
+            {q: "Vad kallas vikingarnas släkt som gav trygghet?", a: "Ätten."},
+            {q: "Vad arbetade de flesta med?", a: "De var bönder (jordbruk/fiske)."},
+            {q: "Vad hette vikingarnas slavar?", a: "Trälar."},
+            {q: "Vem bar nycklarna och bestämde på gården?", a: "Husfrun."},
+            {q: "Vad hette mötet där man bestämde lagar?", a: "Tinget."},
+            {q: "Vad kallas högen med ved som tändes för att varna vid fara?", a: "Vårdkase."},
+            {q: "Varför hade man flätade staket runt åkrarna?", a: "För att skydda mot djur."},
+            {q: "Vad hette staden på Björkö?", a: "Birka."},
+            {q: "Vad skyddade Birka i vattnet utanför hamnen?", a: "Vassa pålar."},
+            {q: "Vad var 'isläggar' gjorda av?", a: "Djurben (användes som skridskor)."},
+            {q: "Vad hängde på sidorna av långskeppen?", a: "Sköldar."},
+            {q: "Vad föreställde ofta fören (framdelen) på skeppen?", a: "Ett drakhuvud."},
+            {q: "Hur sov vikingarna på skeppen?", a: "Under bar himmel (inget tak)."},
+            {q: "Vad tätade man skeppen med?", a: "Ull och tjära."},
+            {q: "Vad hette vikingarnas religion?", a: "Asatro."},
+            {q: "Vem var krigsguden?", a: "Oden."},
+            {q: "Vad hette Odens häst med 8 ben?", a: "Sleipner."},
+            {q: "Vem var åskguden?", a: "Tor."},
+            {q: "Vad drog Tors vagn?", a: "Bockar."},
+            {q: "Vad red guden Frej på?", a: "En gris (gylta)."},
+            {q: "Vad hette platsen dit krigare kom efter döden?", a: "Valhall."},
+            {q: "Vad kallas det när man offrade till gudarna?", a: "Blota."},
+            {q: "Vart reste vikingarna i österled?", a: "Mot Ryssland."},
+            {q: "Vad kallades vikingarna i Ryssland?", a: "Ruser."},
+            {q: "Vart reste vikingarna i västerled?", a: "Mot England/Frankrike."},
+            {q: "Vad hette ön Erik Röde upptäckte?", a: "Grönland."},
+            {q: "Vad kallade Leif Eriksson Amerika?", a: "Vinland."},
+            {q: "Vad betyder ordet 'viking' troligen?", a: "Från ordet 'vik' (bukt)."},
+            {q: "Vilken veckodag är Odens dag?", a: "Onsdag."},
+            {q: "Vilken veckodag är Tors dag?", a: "Torsdag."},
+            {q: "Vad hette missionären som kom till Birka?", a: "Ansgar."},
+            {q: "Vem var Olof Skötkonung?", a: "En av de första kristna kungarna."},
+            {q: "Vad kallas bokstäverna man ristade i sten?", a: "Runor."},
+            {q: "Vad kallas en expert på gamla skelett?", a: "Osteolog."},
+            {q: "Vad kallas en forskare som gräver i jorden?", a: "Arkeolog."},
+            {q: "Vad hette grisen man åt i Valhall?", a: "Särimner."},
+            {q: "Vad är en 'völva'?", a: "En spåkvinna."},
+            {q: "Vad hette staden som idag heter Istanbul?", a: "Miklagård."},
+            {q: "Vad bytte vikingarna till sig i Miklagård?", a: "Siden, glas och kryddor."},
+            {q: "Vad sålde vikingarna ofta?", a: "Pälsar, järn och trälar."},
+            {q: "Vad hände med klostret Lindisfarne år 793?", a: "Det plundrades av vikingar."},
+            {q: "Vem var Ibn Fadlan?", a: "En arabisk resenär som skrev om vikingar."},
+            {q: "Vad hade vikingarna INTE på sina skepp?", a: "En köl (de var platta under)."},
+            {q: "Vad gjorde man med maten för att spara den?", a: "Torkade, rökte eller saltade."},
+            {q: "Vad är 'gravad' mat?", a: "Mat nedgrävd i jorden."},
+            {q: "Vad drack man ur vid fest?", a: "Horn eller bägare."},
+            {q: "Vad är mjöd gjort av?", a: "Honung."},
+            {q: "Vilka var vikingarnas fiender i mytologin?", a: "Jättarna."},
+            {q: "Vem var Freja?", a: "Fruktbarhetsgudinnan."},
+            {q: "Vad hände om man blev 'landsförvisad'?", a: "Man tvingades lämna landet."},
+            {q: "Vad hette området i Frankrike vikingarna fick?", a: "Normandie."},
+            {q: "Vilka tre länder bildades mot slutet?", a: "Sverige, Norge, Danmark."},
+            {q: "Vad är Jellingestenen?", a: "En känd dansk runsten."},
+            {q: "Vilken färg hade ofta runstenarna då?", a: "Starka färger (rött, blått, gult)."},
+            {q: "Vad betyder ordet 'fönster' (window) ursprungligen?", a: "Vindöga."},
+            {q: "Hur styrde man skeppen?", a: "Med en styråra i aktern."},
+            {q: "Vad var Anundshög?", a: "En stor gravhög och tingsplats."},
+            {q: "Vad trodde man om åska?", a: "Att Tor slog med hammaren."},
+            {q: "Vad gjorde barnen på dagarna?", a: "Arbetade med de vuxna."},
+            {q: "Vad var en 'husbonde'?", a: "Mannen som ägde gården."},
+            {q: "Fanns det pengar i början av vikingatiden?", a: "Nej, man bytte varor."},
+            {q: "När kom de första mynten till Sverige?", a: "Med Olof Skötkonung (år 1000)."},
+            {q: "Vad visar fyndet av 'Kata' i Varnhem?", a: "Att det fanns kristna tidigt i Sverige."},
+            {q: "Vad är en 'skröna' eller myt?", a: "Något som inte är sant (t.ex. hornen)."},
+            {q: "Vad använde man för att fiska med spets?", a: "Ett ljuster."},
+            {q: "Varför gav sig vikingarna av hemifrån?", a: "Matbrist eller äventyrslust."},
+            {q: "Vad hette vikingarnas 'paradis' för krigare?", a: "Valhall."},
+            {q: "Vem var Frigg?", a: "Odens fru."},
+            {q: "Vad hette jaktens gudinna?", a: "Skade."},
+            {q: "Vad offrade man vid blot?", a: "Djur (och mat)."},
+            {q: "När hade man 'midvinterblot'?", a: "När det var som mörkast."},
+            {q: "Vad kallas spår vi kan ta på?", a: "Föremålskällor."},
+            {q: "Vad kallas brev och dagböcker?", a: "Skrivna källor."},
+            {q: "Är isländska sagor alltid sanna?", a: "Nej, de blandar fakta och fantasi."},
+            {q: "Vem skrev Heimskringla?", a: "Snorre Sturlasson."},
+            {q: "Vad är DNA-teknik?", a: "Sätt att se släktskap i gamla ben."},
+            {q: "Vad var en 'smed'?", a: "En som tillverkade verktyg av järn."},
+            {q: "Vad kallas gravarna med stora stenblock?", a: "Megalitgravar."},
+            {q: "Vad hittade man i Vendel?", a: "En fin hjälm (utan horn)."},
+            {q: "Varifrån kom stenen formad som en älg?", a: "Troligen Karelen/Ryssland."},
+            {q: "Vad gjorde en 'runristare'?", a: "Han var proffs på att hugga runor."},
+            {q: "Vad stod det ofta på runstenar?", a: "Vem som dött och vem som reste stenen."},
+            {q: "Varför reste man runstenar vid vägar?", a: "För att många skulle se dem."},
+            {q: "Vad kallas vikingarnas plundringståg?", a: "Vikingatåg."},
+            {q: "Vad betyder ordet 'strandhugg'?", a: "Att gå iland och plundra/handla."},
+            {q: "Vad hette de svenska vikingarna i öster?", a: "Varjager (eller ruser)."},
+            {q: "Vilken stad var huvudstad i Gårdarike (Ryssland)?", a: "Novgorod eller Kiev."},
+            {q: "Vilka djur drog Frejas vagn?", a: "Katter."},
+            {q: "Vad hette trädet som bar upp världen?", a: "Yggdrasil."},
+            {q: "Vad är en 'bautasten'?", a: "En rest sten utan runor."},
+            {q: "Hur många år sedan är det vikingatiden slutade?", a: "Ca 1000 år sedan."},
+            {q: "Varför tog vikingatiden slut?", a: "Länderna blev kristna kungariken."},
+            {q: "Vad gjorde man med döda i början av tiden?", a: "Brände dem på bål."},
+            {q: "Vad gjorde man med döda när man blev kristen?", a: "Begravde dem i kistor i jorden."},
+            {q: "Vilken metall var viktigast för vapen?", a: "Järn."},
+            {q: "Vad kallades en rik bonde?", a: "Stormann."},
+            {q: "Vad är en 'trälkvinna'?", a: "En kvinnlig slav."},
+            {q: "Vilket land kom munken Ansgar ifrån?", a: "Tyskland (Frankerriket)."}
+        ];
+
+        function generateQuiz() {
+            const container = document.getElementById('quiz-container');
+            quizData.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.onclick = function() { this.classList.toggle('flipped'); };
+
+                const inner = document.createElement('div');
+                inner.className = 'card-inner';
+
+                const front = document.createElement('div');
+                front.className = 'card-front';
+                front.innerHTML = `<div>FRÅGA ${index + 1}</div><div style="font-size: 0.9em; margin-top:10px; font-weight:normal;">${item.q}</div>`;
+
+                const back = document.createElement('div');
+                back.className = 'card-back';
+                back.innerHTML = `<div>SVAR:</div><div style="color:var(--primary-brown); margin-top:5px;">${item.a}</div>`;
+
+                inner.appendChild(front);
+                inner.appendChild(back);
+                card.appendChild(inner);
+                container.appendChild(card);
+            });
+        }
+
+        // Starta
+        window.onload = generateQuiz;
+
+    </script>
+</body>
+</html>
