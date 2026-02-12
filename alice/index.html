@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alice — Årskurs 6</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                },
+            },
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans min-h-screen">
+
+    <header class="bg-white border-b border-gray-100">
+        <div class="max-w-5xl mx-auto px-6 py-6">
+            <a href="../index.html" class="inline-flex items-center text-sm text-gray-500 hover:text-gray-900 transition mb-3">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                Tillbaka
+            </a>
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-lg font-bold">A</div>
+                <div>
+                    <h1 class="text-2xl font-extrabold tracking-tight">Alice</h1>
+                    <p class="text-sm text-gray-500">Årskurs 6</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-6 py-12">
+        <h2 class="text-lg font-bold mb-6">Prov & uppgifter</h2>
+
+        <div class="space-y-8">
+
+            <!-- Januari 2026 -->
+            <div>
+                <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Januari 2026</p>
+                <div class="space-y-3">
+                    <a href="prov/so-lag-ratt-jan26.html" class="group flex items-center gap-4 bg-white rounded-xl border border-gray-100 p-5 shadow-sm hover:shadow-md hover:border-blue-200 transition-all">
+                        <div class="w-10 h-10 bg-red-50 rounded-lg flex items-center justify-center text-lg flex-shrink-0">&#9878;</div>
+                        <div class="flex-grow min-w-0">
+                            <h3 class="font-semibold text-gray-900 group-hover:text-blue-600 transition">SO — Lag & Rätt</h3>
+                            <p class="text-sm text-gray-400">Samhällskunskap</p>
+                        </div>
+                        <svg class="w-5 h-5 text-gray-300 group-hover:text-blue-500 group-hover:translate-x-0.5 transition flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </a>
+                    <a href="prov/no-rymden-fysik-jan26.html" class="group flex items-center gap-4 bg-white rounded-xl border border-gray-100 p-5 shadow-sm hover:shadow-md hover:border-blue-200 transition-all">
+                        <div class="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center text-lg flex-shrink-0">&#128640;</div>
+                        <div class="flex-grow min-w-0">
+                            <h3 class="font-semibold text-gray-900 group-hover:text-blue-600 transition">NO — Rymden & Fysik</h3>
+                            <p class="text-sm text-gray-400">Naturorientering</p>
+                        </div>
+                        <svg class="w-5 h-5 text-gray-300 group-hover:text-blue-500 group-hover:translate-x-0.5 transition flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="max-w-5xl mx-auto px-6 py-8">
+        <p class="text-xs text-gray-400 text-center">Studieportalen &mdash; plugga smart inför proven</p>
+    </footer>
+
+</body>
+</html>

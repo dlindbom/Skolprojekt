@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rymden & Fysik - Årskurs 6</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Space Grotesk', sans-serif; }
+        
+        /* 3D Flip Animation Styles */
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        
+        [x-cloak] { display: none !important; }
+        
+        /* Scrollbar styling */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #4f46e5; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6366f1; }
+    </style>
+</head>
+<body class="bg-[#0f172a] text-white min-h-screen flex flex-col" x-data="studyApp()">
+
+    <div class="fixed inset-0 z-0 opacity-40 pointer-events-none" style="background-image: radial-gradient(white 1px, transparent 1px); background-size: 50px 50px;"></div>
+
+    <header class="relative z-10 border-b border-slate-700 bg-slate-900/80 backdrop-blur-md sticky top-0">
+        <div class="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-indigo-500 p-2 rounded-lg shadow-lg shadow-indigo-500/50">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-wide">Fysik & Rymden</h1>
+                    <p class="text-slate-400 text-xs uppercase tracking-widest">Instudering Årskurs 6</p>
+                </div>
+            </div>
+
+            <div class="flex bg-slate-800 p-1 rounded-lg overflow-x-auto max-w-full">
+                <button @click="mode = 'text'" :class="{'bg-indigo-600 text-white shadow-lg': mode === 'text', 'text-slate-400 hover:text-white': mode !== 'text'}" class="px-4 md:px-6 py-2 rounded-md text-sm font-bold transition-all duration-300 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                    Fakta
+                </button>
+                <button @click="mode = 'cards'" :class="{'bg-indigo-600 text-white shadow-lg': mode === 'cards', 'text-slate-400 hover:text-white': mode !== 'cards'}" class="px-4 md:px-6 py-2 rounded-md text-sm font-bold transition-all duration-300 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
+                    Flashcards
+                </button>
+                <button @click="mode = 'quiz'" :class="{'bg-indigo-600 text-white shadow-lg': mode === 'quiz', 'text-slate-400 hover:text-white': mode !== 'quiz'}" class="px-4 md:px-6 py-2 rounded-md text-sm font-bold transition-all duration-300 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
+                    Quiz
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-4 py-8 relative z-10 max-w-4xl">
+
+        <div x-show="mode === 'text'" x-transition.opacity.duration.500ms class="space-y-8 pb-12">
+            
+            <div class="bg-slate-800/80 backdrop-blur rounded-2xl p-6 md:p-8 border border-slate-700 shadow-xl">
+                <h2 class="text-2xl font-bold text-indigo-400 mb-4 border-b border-slate-600 pb-2">Universums uppkomst och struktur</h2>
+                <div class="text-slate-200 space-y-4 leading-relaxed">
+                    <p>Enligt <strong>Big Bang-teorin</strong> bildades universum för cirka 14 miljarder år sedan genom en enorm explosion där allt spreds ut från en enda punkt. Universum utvidgas fortfarande, likt en ballong som blåses upp, vilket gör att galaxerna rör sig bort från varandra. Större delen av universum består av tomrum, så kallat vakuum, där det inte ens finns luft.</p>
+                    <p>Universum innehåller miljarder galaxer. En <strong>galax</strong> är en samling av miljarder stjärnor, gas och stoft. Vårt solsystem ligger i utkanten av galaxen <strong>Vintergatan</strong> (The Milky Way), som syns som ett vitt band på stjärnhimlen.</p>
+                    
+                    <div class="bg-slate-900/50 p-4 rounded-lg mt-4 border border-indigo-500/20">
+                        <h3 class="font-bold text-indigo-300 mb-2">Avstånd i rymden</h3>
+                        <p class="mb-2 text-sm">Avstånd mäts ofta i <strong>ljusår</strong> – den sträcka ljuset hinner färdas på ett år (ca 950 miljarder mil). Ljusets hastighet är 300 000 km/s.</p>
+                        <ul class="list-disc pl-5 space-y-1 text-sm text-slate-300">
+                            <li>Från månen tar det <strong>1,3 sekunder</strong> för ljuset att nå jorden.</li>
+                            <li>Från solen tar det <strong>8 minuter</strong>.</li>
+                            <li>Till närmaste stjärna (förutom solen) är det <strong>4,2 ljusår</strong>.</li>
+                            <li>Vi kan se himlakroppar som ligger <strong>10 miljarder ljusår</strong> bort.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-800/80 backdrop-blur rounded-2xl p-6 md:p-8 border border-slate-700 shadow-xl">
+                <h2 class="text-2xl font-bold text-purple-400 mb-4 border-b border-slate-600 pb-2">Stjärnor och deras livscykel</h2>
+                <div class="text-slate-200 space-y-4 leading-relaxed">
+                    <p>En stjärna är ett lysande klot av het gas, främst väte och helium. Energin skapas genom <strong>fusion</strong>, där väte slås ihop till helium och frigör energi. Stjärnor föds i <strong>nebulosor</strong> (stora moln av stoft och gas). När molnet dras ihop bildas en stjärna.</p>
+                    
+                    <div class="grid md:grid-cols-2 gap-4 mt-4">
+                        <div class="bg-slate-700/50 p-4 rounded-lg border-l-4 border-yellow-400">
+                            <h3 class="font-bold text-yellow-200">1. Medelstora stjärnor (t.ex. Solen)</h3>
+                            <p class="text-sm mt-2">Sväller upp till en <strong>röd jätte</strong> när bränslet tar slut. Därefter kastar den av sig sina yttre lager och kärnan krymper till en liten <strong>vit dvärg</strong> som sakta svalnar.</p>
+                        </div>
+                        <div class="bg-slate-700/50 p-4 rounded-lg border-l-4 border-red-500">
+                            <h3 class="font-bold text-red-300">2. Massiva stjärnor</h3>
+                            <p class="text-sm mt-2">Sväller till en <strong>röd superjätte</strong> och exploderar sedan i en <strong>supernova</strong>. Resterna kan bli en <strong>neutronstjärna</strong> (liten men extremt kompakt) eller ett <strong>svart hål</strong>.</p>
+                        </div>
+                    </div>
+                    <p class="text-sm italic mt-2 bg-black/20 p-2 rounded">Ett svart hål har så stark dragningskraft att inget, inte ens ljus, kan lämna det.</p>
+                    
+                    <p class="mt-4">På himlen ser vi stjärnor i mönster som kallas <strong>stjärnbilder</strong> (t.ex. Orion, Karlavagnen, Lilla Björnen). <strong>Polstjärnan</strong> finns i norr och har historiskt använts av sjöfarare för navigering eftersom den alltid syns i samma väderstreck.</p>
+                </div>
+            </div>
+
+            <div class="bg-slate-800/80 backdrop-blur rounded-2xl p-6 md:p-8 border border-slate-700 shadow-xl">
+                <h2 class="text-2xl font-bold text-blue-400 mb-4 border-b border-slate-600 pb-2">Vårt Solsystem</h2>
+                <div class="text-slate-200 space-y-4">
+                    <p>Solsystemet består av solen, åtta planeter, deras månar, samt asteroider, kometer och meteorer.</p>
+                    <p><strong>Solen:</strong> En medelstor stjärna men enorm jämfört med jorden (det krävs en miljon jordklot för att fylla solen). Den ger oss ljus och värme. På natten är det mörkt för att jorden skuggar sig själv.</p>
+                    
+                    <h3 class="font-bold text-lg text-indigo-200 mt-4 border-b border-indigo-500/30 inline-block">Planeterna</h3>
+                    <div class="grid md:grid-cols-2 gap-x-8 gap-y-2 mt-2">
+                        <div>
+                            <p class="text-sm text-indigo-300 font-bold mb-1 uppercase tracking-wide">Inre små planeter (Sten & Metall)</p>
+                            <ul class="space-y-1 text-sm list-disc pl-5">
+                                <li><strong>Merkurius:</strong> Närmast solen, saknar atmosfär, stora temperaturskillnader.</li>
+                                <li><strong>Venus:</strong> Aftonstjärnan/Morgonstjärnan. Mycket hett och tjockt molntäcke.</li>
+                                <li><strong>Jorden (Tellus):</strong> Den blå planeten. Har flytande vatten och liv.</li>
+                                <li><strong>Mars:</strong> Den röda planeten (p.g.a. rost/järnoxid). Har is vid polerna.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <p class="text-sm text-indigo-300 font-bold mb-1 uppercase tracking-wide">Yttre stora planeter (Gasjättar)</p>
+                            <ul class="space-y-1 text-sm list-disc pl-5">
+                                <li><strong>Jupiter:</strong> Solsystemets största planet. Gasjätte utan fast yta.</li>
+                                <li><strong>Saturnus:</strong> Känd för sina ringar av is och stenblock.</li>
+                                <li><strong>Uranus & Neptunus:</strong> Yttre gasjättar.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3 class="font-bold text-lg text-indigo-200 mt-4 border-b border-indigo-500/30 inline-block">Andra himlakroppar</h3>
+                    <ul class="list-none space-y-3 text-sm mt-2">
+                        <li class="bg-slate-900/40 p-3 rounded"><strong class="text-indigo-300">Asteroider:</strong> Stenblock som kretsar kring solen, flest i asteroidbältet mellan Mars och Jupiter. En asteroid krockade med jorden för 400 miljoner år sedan och skapade <em>Siljan-kratern</em> i Dalarna.</li>
+                        <li class="bg-slate-900/40 p-3 rounded"><strong class="text-indigo-300">Kometer:</strong> Klot av is och sten i ovala banor. När de närmar sig solen förångas isen och bildar en svans som alltid pekar bort från solen. <em>Halleys komet</em> är den mest kända (syns vart 76:e år).</li>
+                        <li class="bg-slate-900/40 p-3 rounded"><strong class="text-indigo-300">Meteorer & Meteoriter:</strong> Rymdstenar som faller mot jorden. Om de brinner upp i atmosfären kallas de <em>meteorer</em> (stjärnfall). Om de når marken kallas de <em>meteoriter</em>.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-slate-800/80 backdrop-blur rounded-2xl p-6 md:p-8 border border-slate-700 shadow-xl">
+                <h2 class="text-2xl font-bold text-green-400 mb-4 border-b border-slate-600 pb-2">Jorden, Månen och Tiden</h2>
+                <div class="space-y-6 text-slate-200">
+                    <div>
+                        <h3 class="font-bold text-lg text-green-200">Jorden & Årstider</h3>
+                        <p class="text-sm mt-1">70 % av ytan är vatten. Atmosfären skyddar oss. Jorden roterar runt sin egen axel (ett dygn, 24 h) och runt solen (ett år, 365 dygn). <strong>Skottår</strong> sker vart fjärde år (366 dagar, 29 februari läggs till) för att justera tiden.</p>
+                        <p class="text-sm mt-2">Vi har årstider för att <strong>jordaxeln lutar</strong>. När norra halvklotet lutar mot solen är det sommar. Vid polerna råder då midnattssol. På vintern lutar vi bort från solen.</p>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg text-green-200">Månen</h3>
+                        <p class="text-sm mt-1">Bildades troligen genom en krock mellan jorden och en annan himlakropp. Den lyser inte själv utan reflekterar solljus. Vi ser olika faser (nymåne, fullmåne) beroende på banan.</p>
+                        <p class="text-sm mt-2 bg-green-900/20 p-2 rounded border border-green-500/20"><strong>Tidvatten:</strong> Månen påverkar jorden genom sin dragningskraft, vilket skapar ebb och flod. Vattnet stiger och sjunker två gånger per dygn. Skillnaden kan vara över 10 meter.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-800/80 backdrop-blur rounded-2xl p-6 md:p-8 border border-slate-700 shadow-xl">
+                <h2 class="text-2xl font-bold text-orange-400 mb-4 border-b border-slate-600 pb-2">Människan i Rymden</h2>
+                
+                <h3 class="font-bold text-lg text-orange-200">Historia och Rymdkapplöpning</h3>
+                <p class="text-sm mb-4">Tävling mellan USA och Sovjetunionen.</p>
+                <div class="space-y-2 mb-6">
+                    <div class="flex items-start gap-3">
+                        <span class="font-mono text-orange-400 font-bold bg-slate-900 px-2 py-1 rounded text-xs">1957</span>
+                        <p class="text-sm">Sovjet skickar upp <strong>Sputnik 2</strong> med hunden <strong>Lajka</strong>, första levande varelsen i rymden.</p>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <span class="font-mono text-orange-400 font-bold bg-slate-900 px-2 py-1 rounded text-xs">1961</span>
+                        <p class="text-sm"><strong>Jurij Gagarin</strong> (Sovjet) blir första människan i rymden (ett varv runt jorden).</p>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <span class="font-mono text-orange-400 font-bold bg-slate-900 px-2 py-1 rounded text-xs">1969</span>
+                        <p class="text-sm">USA landar på månen med <strong>Apollo 11</strong>. <strong>Neil Armstrong</strong> tar första steget: <em>"Ett litet steg för en människa, men ett stort steg för mänskligheten"</em>.</p>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-slate-700/30 p-4 rounded">
+                        <h4 class="font-bold text-orange-200 mb-2">Begrepp & Personer</h4>
+                        <ul class="list-disc pl-5 text-sm space-y-1">
+                            <li><strong>Astronaut:</strong> Rymdfarare (USA).</li>
+                            <li><strong>Kosmonaut:</strong> Rymdfarare (Ryssland).</li>
+                            <li><strong>Christer Fuglesang:</strong> Första svensken i rymden (besökte ISS).</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-700/30 p-4 rounded">
+                        <h4 class="font-bold text-orange-200 mb-2">Satelliter</h4>
+                        <p class="text-xs mb-2">Människan skickar upp satelliter som kretsar runt jorden för:</p>
+                        <ul class="list-disc pl-5 text-sm space-y-1">
+                            <li><strong>Väder:</strong> Prognoser (moln, temp).</li>
+                            <li><strong>Kommunikation:</strong> TV, data, telefoni.</li>
+                            <li><strong>GPS:</strong> Navigering (kräver flera satelliter).</li>
+                            <li><strong>Miljö:</strong> Övervaka isar och skog.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-800/80 backdrop-blur rounded-2xl p-6 md:p-8 border border-slate-700 shadow-xl">
+                <h2 class="text-2xl font-bold text-pink-400 mb-4 border-b border-slate-600 pb-2">Vetenskapshistoria & Världsbild</h2>
+                <ul class="space-y-3 text-sm text-slate-200">
+                    <li><strong class="text-pink-200">Geocentrisk världsbild:</strong> Förr trodde man att jorden låg stilla i centrum och solen/planeterna kretsade runt oss (Antiken till 1500-talet).</li>
+                    <li><strong class="text-pink-200">Heliocentrisk världsbild:</strong> 1500-tal. <strong>Nicolaus Copernicus</strong> lanserade idén att solen är i centrum. Bevisades av <strong>Johannes Kepler</strong> och <strong>Galileo Galilei</strong> (kikare). Kyrkan dömde Galilei till husarrest (bad om ursäkt 1992).</li>
+                    <li><strong class="text-pink-200">Jordens form:</strong> Redan på 200-talet f.Kr. räknade greken <strong>Eratosthenes</strong> ut jordens omkrets och visade att den var rund.</li>
+                </ul>
+            </div>
+
+            <div class="bg-slate-800/80 backdrop-blur rounded-2xl p-6 md:p-8 border border-slate-700 shadow-xl">
+                <h2 class="text-2xl font-bold text-cyan-400 mb-4 border-b border-slate-600 pb-2">Fysik: Krafter, Rörelse & Gravitation</h2>
+                
+                <div class="space-y-4 text-slate-200">
+                    <div>
+                        <p class="text-sm">En <strong>kraft</strong> drar i eller skjuter på ett föremål (kan ändra fart, riktning, form). Vi ser bara resultatet av kraften. Enhet: <strong>Newton (N)</strong>.</p>
+                    </div>
+
+                    <div class="bg-slate-900/40 p-4 rounded border-l-4 border-cyan-500">
+                        <h3 class="font-bold text-cyan-200 mb-1">Gravitation (Tyngdkraft)</h3>
+                        <p class="text-sm">Kraften som drar kroppar mot varandra. <strong>Isaac Newton</strong> (1600-tal) upptäckte sambandet (äpplet & månen).</p>
+                        <ul class="list-disc pl-5 text-sm mt-2 space-y-1">
+                            <li>Ju större massa och närmare avstånd = starkare kraft.</li>
+                            <li>Håller kvar atmosfären och oss på jorden.</li>
+                            <li>Exempel: En person på 48 kg påverkas av ca <strong>480 Newton</strong>.</li>
+                            <li><strong>Tyngdpunkt:</strong> Mitten av massan. Måste vara ovanför stödytan för balans.</li>
+                        </ul>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="bg-slate-900/40 p-4 rounded border-l-4 border-cyan-500">
+                            <h3 class="font-bold text-cyan-200 mb-1">Friktion</h3>
+                            <p class="text-sm mb-2">Kraft som bromsar när ytor gnids. Skapar värme.</p>
+                            <ul class="list-disc pl-5 text-sm space-y-1">
+                                <li><strong>Hög:</strong> Dubbdäck, fotbollsskor (för fäste).</li>
+                                <li><strong>Låg:</strong> Skridskor, skidor, olja (is har hinna av vatten).</li>
+                                <li>Utan friktion stannar inget.</li>
+                            </ul>
+                        </div>
+                        <div class="bg-slate-900/40 p-4 rounded border-l-4 border-cyan-500">
+                            <h3 class="font-bold text-cyan-200 mb-1">Rörelse</h3>
+                            <ul class="list-disc pl-5 text-sm space-y-1">
+                                <li><strong>Fritt fall:</strong> Endast gravitation (inget luftmotstånd). Galilei visade att tunga/lätta saker faller lika snabbt. Luft bromsar fjädrar.</li>
+                                <li><strong>Cirkelrörelse:</strong> Kräver kraft inåt (centripetalkraft). Om den försvinner åker saken rakt fram.</li>
+                                <li><strong>Kraft & Motkraft:</strong> För varje kraft finns en motkraft (t.ex. en raket eller båt).</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 pt-4 border-t border-slate-600">
+                    <h3 class="font-bold text-lg text-slate-300 mb-3">Fördjupning: Historiska teorier om gravitation</h3>
+                    <ul class="space-y-2 text-xs md:text-sm text-slate-400">
+                        <li><strong>Aristoteles (300 f.Kr):</strong> Trodde saker hade en "vilja" att hitta sin plats. Trodde felaktigt tunga saker föll snabbare.</li>
+                        <li><strong>Galileo Galilei:</strong> Motbevisade Aristoteles. Allt faller lika snabbt i fritt fall.</li>
+                        <li><strong>René Descartes:</strong> Trodde felaktigt på osynliga virvlar i rymden.</li>
+                        <li><strong>Isaac Newton:</strong> Förklarade gravitation som en kraft på avstånd. Hans lagar används än idag.</li>
+                        <li><strong>Georges-Louis Le Sage:</strong> Felaktig "skugg-teori" (partiklar knuffar ihop planeter).</li>
+                        <li><strong>Albert Einstein (1900-tal):</strong> Allmänna relativitetsteorin. Tunga objekt <strong>kröker rummet</strong> (som en studsmatta). Krävs för GPS.</li>
+                        <li><strong>Modern forskning (Erik Verlinde):</strong> Undersöker om gravitation uppstår ur partiklars rörelse.</li>
+                    </ul>
+                </div>
+            </div>
+
+             <div class="bg-slate-800/80 backdrop-blur rounded-2xl p-6 md:p-8 border border-slate-700 shadow-xl">
+                <h2 class="text-2xl font-bold text-teal-400 mb-4 border-b border-slate-600 pb-2">Djur och Hastighet</h2>
+                <div class="flex flex-wrap gap-4 text-sm text-slate-200">
+                    <div class="bg-slate-700/50 px-4 py-2 rounded-full border border-teal-500/30">
+                        <strong>Pilgrimsfalk:</strong> 320 km/h (Världens snabbaste djur, dyker)
+                    </div>
+                    <div class="bg-slate-700/50 px-4 py-2 rounded-full border border-teal-500/30">
+                        <strong>Segelfisk:</strong> 110 km/h (Snabbaste fisken)
+                    </div>
+                    <div class="bg-slate-700/50 px-4 py-2 rounded-full border border-teal-500/30">
+                        <strong>Gepard:</strong> 120 km/h (Snabbaste landdjuret, korta sträckor)
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div x-show="mode === 'cards'" x-transition.opacity.duration.500ms class="flex flex-col items-center justify-center min-h-[60vh]">
+            
+            <div class="w-full flex justify-between items-center mb-6 text-sm text-indigo-300 font-bold uppercase tracking-wider">
+                <span>Kort <span x-text="cardIndex + 1" class="text-white text-lg"></span> / <span x-text="questions.length"></span></span>
+                <button @click="shuffleDeck()" class="flex items-center gap-2 hover:text-white transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                    Blanda högen
+                </button>
+            </div>
+
+            <div class="perspective-1000 w-full h-96 cursor-pointer group select-none" @click="flipCard()">
+                <div class="relative w-full h-full text-center transition-transform duration-500 transform-style-3d" :class="{'rotate-y-180': flipped}">
+                    
+                    <div class="absolute w-full h-full bg-slate-800 rounded-3xl border border-slate-600 shadow-2xl backface-hidden flex flex-col items-center justify-center p-8 hover:border-indigo-500 transition-colors">
+                        <div class="absolute top-6 left-6 w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="absolute top-6 left-12 w-3 h-3 rounded-full bg-yellow-500"></div>
+                        
+                        <span class="text-indigo-400 font-bold tracking-widest text-xs uppercase mb-6 bg-slate-900 px-3 py-1 rounded-full">Fråga</span>
+                        <h3 class="text-xl md:text-3xl font-bold leading-tight" x-text="questions[cardIndex].q"></h3>
+                        
+                        <p class="absolute bottom-6 text-slate-500 text-sm animate-pulse flex items-center gap-2">
+                            Klicka för att vända <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                        </p>
+                    </div>
+
+                    <div class="absolute w-full h-full bg-gradient-to-br from-indigo-600 to-purple-700 rounded-3xl shadow-2xl backface-hidden rotate-y-180 flex flex-col items-center justify-center p-8 border border-indigo-400">
+                        <span class="text-indigo-100 font-bold tracking-widest text-xs uppercase mb-6 bg-white/20 px-3 py-1 rounded-full">Svar</span>
+                        <p class="text-lg md:text-2xl font-medium leading-relaxed text-white" x-text="questions[cardIndex].a"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex gap-4 mt-10 w-full max-w-md">
+                <button @click="prevCard()" class="flex-1 py-4 bg-slate-800 border border-slate-600 rounded-2xl hover:bg-slate-700 hover:border-indigo-500 hover:text-indigo-300 transition font-bold shadow-lg">
+                    ← Föregående
+                </button>
+                <button @click="nextCard()" class="flex-1 py-4 bg-indigo-600 text-white rounded-2xl hover:bg-indigo-500 hover:scale-[1.02] transition font-bold shadow-lg shadow-indigo-900/50">
+                    Nästa fråga →
+                </button>
+            </div>
+
+            <div class="w-full mt-8 h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                <div class="h-full bg-indigo-500 transition-all duration-300 ease-out" :style="`width: ${((cardIndex + 1) / questions.length) * 100}%`"></div>
+            </div>
+        </div>
+
+        <div x-show="mode === 'quiz'" x-cloak>
+            <div class="max-w-3xl mx-auto">
+                
+                <div class="bg-slate-800/80 backdrop-blur border border-indigo-500/30 p-6 rounded-2xl shadow-xl mb-8 flex justify-between items-center sticky top-24 z-20">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Din Poäng</h2>
+                        <p class="text-slate-400 text-sm">Hur många sätter du?</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-4xl font-bold text-indigo-400" x-text="score"></span>
+                        <span class="text-slate-500 text-xl">/ <span x-text="questions.length"></span></span>
+                    </div>
+                </div>
+
+                <div class="space-y-6 pb-20">
+                    <template x-for="(item, index) in questions" :key="index">
+                        <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden shadow-md transition-all duration-300 hover:border-indigo-500/50" :class="{'ring-2 ring-green-500 border-green-500 bg-green-900/10': item.correct === true, 'ring-2 ring-red-500 border-red-500 bg-red-900/10': item.correct === false}">
+                            
+                            <div class="p-6 cursor-pointer flex justify-between items-start gap-4" @click="item.showAnswer = !item.showAnswer">
+                                <div class="flex gap-4">
+                                    <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-slate-700 text-indigo-300 font-bold text-sm" x-text="index + 1"></span>
+                                    <h3 class="text-lg font-medium text-slate-100" x-text="item.q"></h3>
+                                </div>
+                                <button class="text-indigo-400 hover:text-white font-semibold text-sm whitespace-nowrap px-3 py-1 rounded bg-slate-900/50">
+                                    <span x-text="item.showAnswer ? 'Dölj svar' : 'Visa svar'"></span>
+                                </button>
+                            </div>
+
+                            <div x-show="item.showAnswer" x-collapse class="px-6 pb-6 pt-0">
+                                <div class="p-4 bg-slate-900/50 rounded-lg border border-slate-700 mt-2 mb-4">
+                                    <p class="text-lg text-indigo-100 italic" x-text="item.a"></p>
+                                </div>
+
+                                <div x-show="item.correct === null" class="grid grid-cols-2 gap-3">
+                                    <button @click="rateQuestion(index, false)" class="py-3 rounded-lg bg-red-500/10 text-red-400 border border-red-500/50 hover:bg-red-500 hover:text-white font-bold transition">
+                                        Behöver öva mer
+                                    </button>
+                                    <button @click="rateQuestion(index, true)" class="py-3 rounded-lg bg-green-500/10 text-green-400 border border-green-500/50 hover:bg-green-500 hover:text-white font-bold transition">
+                                        Jag kunde den!
+                                    </button>
+                                </div>
+
+                                <div x-show="item.correct !== null" class="text-center font-bold text-lg animate-pulse">
+                                    <span x-show="item.correct" class="text-green-400">Bra jobbat! ⭐</span>
+                                    <span x-show="!item.correct" class="text-red-400">Ingen fara, öva igen! 📚</span>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <div class="text-center">
+                    <button @click="resetQuiz()" class="text-slate-500 hover:text-white underline">Börja om testet</button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="text-center py-6 text-slate-600 text-sm relative z-10">
+        <p>Lycka till på provet!</p>
+    </footer>
+
+    <script>
+        function studyApp() {
+            return {
+                mode: 'text', // Standardläge: Fakta
+                cardIndex: 0,
+                flipped: false,
+                score: 0,
+                
+                // DATA
+                questions: [
+                    { q: "Vad trodde Aristoteles att 'tunga' saker ville göra?", a: "Ta sig till sin 'naturliga plats' (mitten av universum/jorden)", showAnswer: false, correct: null },
+                    { q: "Vad bevisade Galileo Galilei med experimentet med fallande föremål?", a: "Att tunga och lätta saker faller lika snabbt (om man bortser från luftmotstånd)", showAnswer: false, correct: null },
+                    { q: "Vad trodde René Descartes styrde planeternas rörelser?", a: "Osynliga virvlar av partiklar i rymden", showAnswer: false, correct: null },
+                    { q: "Vad upptäckte Isaac Newton när han såg ett äpple falla?", a: "Att samma kraft som drar äpplet till marken håller månen i bana runt jorden", showAnswer: false, correct: null },
+                    { q: "Vad kallas kraften som drar kroppar mot varandra?", a: "Gravitationskraft (eller tyngdkraft)", showAnswer: false, correct: null },
+                    { q: "Hur beskrev Albert Einstein gravitationen?", a: "Att tunga föremål kröker rummet (som en tung kula på en studsmatta)", showAnswer: false, correct: null },
+                    { q: "Vad kallas teorin om hur universum skapades från en punkt?", a: "The Big Bang", showAnswer: false, correct: null },
+                    { q: "Vad är ett vakuum?", a: "Ett tomrum där det inte finns någon luft eller materia", showAnswer: false, correct: null },
+                    { q: "Vad betyder geocentrisk världsbild?", a: "Att man tror att jorden ligger i centrum och allt snurrar runt den", showAnswer: false, correct: null },
+                    { q: "Vad betyder heliocentrisk världsbild?", a: "Att solen ligger i centrum", showAnswer: false, correct: null },
+                    { q: "Vilken enhet mäter man kraft i?", a: "Newton (N)", showAnswer: false, correct: null },
+                    { q: "Vad är skillnaden mellan massa och tyngd?", a: "Massa = hur mycket materia (kg). Tyngd = kraften gravitationen drar med (N)", showAnswer: false, correct: null },
+                    { q: "Vad är friktion?", a: "En kraft som bromsar rörelse när två ytor gnids mot varandra", showAnswer: false, correct: null },
+                    { q: "Ge ett exempel på när man vill ha hög friktion.", a: "Vinterdäck, bromsar eller fotbollsskor", showAnswer: false, correct: null },
+                    { q: "Ge ett exempel på när man vill ha låg friktion.", a: "Skridskoåkning, skidor med valla eller i en motor med olja", showAnswer: false, correct: null },
+                    { q: "Vad är luftmotstånd?", a: "Friktion som uppstår när ett föremål krockar med luftens molekyler", showAnswer: false, correct: null },
+                    { q: "Vad är tyngdpunkt?", a: "Mitten av massan i ett föremål (där gravitationen drar)", showAnswer: false, correct: null },
+                    { q: "Hur ska tyngdpunkten vara för att man ska stå stadigt?", a: "Rakt ovanför stödytan", showAnswer: false, correct: null },
+                    { q: "Vad är 'fritt fall'?", a: "När något faller och bara påverkas av gravitationen (inget luftmotstånd)", showAnswer: false, correct: null },
+                    { q: "Vad händer med farten i fritt fall?", a: "Den ökar hela tiden (det accelererar)", showAnswer: false, correct: null },
+                    { q: "Vad är motkraft?", a: "En lika stor kraft riktad åt motsatt håll", showAnswer: false, correct: null },
+                    { q: "Vad kallas kraften in mot mitten i en cirkelrörelse?", a: "Centripetalkraft (kraft in mot centrum)", showAnswer: false, correct: null },
+                    { q: "Vad är ett dygn?", a: "Ett varv runt jordens egen axel (24 timmar)", showAnswer: false, correct: null },
+                    { q: "Vad är ett år?", a: "Ett varv runt solen (ca 365 dygn)", showAnswer: false, correct: null },
+                    { q: "Varför har vi årstider?", a: "För att jordaxeln lutar", showAnswer: false, correct: null },
+                    { q: "Vad är en månad?", a: "Ungefär tiden för månen att snurra ett varv runt jorden", showAnswer: false, correct: null },
+                    { q: "Hur bildades månen (troligtvis)?", a: "Genom en krock mellan jorden och en annan himlakropp", showAnswer: false, correct: null },
+                    { q: "Varför lyser månen?", a: "Den reflekterar solens ljus", showAnswer: false, correct: null },
+                    { q: "Vad orsakar tidvatten?", a: "Månens dragningskraft på haven", showAnswer: false, correct: null },
+                    { q: "Vad heter vår galax?", a: "Vintergatan (Milky Way)", showAnswer: false, correct: null },
+                    { q: "Vad är ett ljusår?", a: "Sträckan ljuset hinner på ett år (enhet för avstånd)", showAnswer: false, correct: null },
+                    { q: "Hur lång tid tar solljuset till jorden?", a: "8 minuter", showAnswer: false, correct: null },
+                    { q: "Vad är en stjärna?", a: "Ett lysande klot av het gas", showAnswer: false, correct: null },
+                    { q: "Räkna upp planeterna i ordning.", a: "Merkurius, Venus, Jorden, Mars, Jupiter, Saturnus, Uranus, Neptunus", showAnswer: false, correct: null },
+                    { q: "Vilka är de inre planeterna?", a: "Merkurius, Venus, Jorden, Mars (stenplaneter)", showAnswer: false, correct: null },
+                    { q: "Vad kännetecknar de yttre planeterna?", a: "De är gasjättar", showAnswer: false, correct: null },
+                    { q: "Vad är en komet?", a: "Ett klot av is och sten som får en svans nära solen", showAnswer: false, correct: null },
+                    { q: "Vad är en meteor?", a: "En rymdsten som brinner upp i atmosfären (stjärnfall)", showAnswer: false, correct: null },
+                    { q: "Vad är en meteorit?", a: "En rymdsten som slår ner på marken", showAnswer: false, correct: null },
+                    { q: "Vad är en satellit?", a: "Något som rör sig runt en himlakropp (t.ex. månen eller GPS-satelliter)", showAnswer: false, correct: null },
+                    { q: "Vad heter Polstjärnan?", a: "Nordstjärnan (ligger alltid i norr)", showAnswer: false, correct: null },
+                    { q: "Vad är en nebulosa?", a: "Ett moln av gas och stoft där stjärnor bildas", showAnswer: false, correct: null },
+                    { q: "Vad är ett svart hål?", a: "En kollapsad stjärna med så stark gravitation att inte ens ljus kommer ut", showAnswer: false, correct: null },
+                    { q: "Vem var Laika?", a: "Den första hunden i rymden", showAnswer: false, correct: null },
+                    { q: "Vem var Jurij Gagarin?", a: "Första människan i rymden (1961)", showAnswer: false, correct: null },
+                    { q: "När landade man på månen första gången?", a: "1969 (Neil Armstrong)", showAnswer: false, correct: null }
+                ],
+
+                // FUNKTIONER
+                flipCard() {
+                    this.flipped = !this.flipped;
+                },
+                
+                nextCard() {
+                    this.flipped = false;
+                    setTimeout(() => {
+                        this.cardIndex = (this.cardIndex + 1) % this.questions.length;
+                    }, 200);
+                },
+
+                prevCard() {
+                    this.flipped = false;
+                    setTimeout(() => {
+                        this.cardIndex = (this.cardIndex === 0) ? this.questions.length - 1 : this.cardIndex - 1;
+                    }, 200);
+                },
+
+                shuffleDeck() {
+                    this.flipped = false;
+                    // Enkel Fisher-Yates shuffle
+                    for (let i = this.questions.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [this.questions[i], this.questions[j]] = [this.questions[j], this.questions[i]];
+                    }
+                    this.cardIndex = 0;
+                    // Reset quiz status too
+                    this.resetQuiz();
+                },
+
+                rateQuestion(index, isCorrect) {
+                    this.questions[index].correct = isCorrect;
+                    if (isCorrect) this.score++;
+                },
+
+                resetQuiz() {
+                    this.score = 0;
+                    this.questions.forEach(q => {
+                        q.showAnswer = false;
+                        q.correct = null;
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+</html>

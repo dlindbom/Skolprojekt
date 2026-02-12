@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Samhällskunskap: Lag & Rätt</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Space Grotesk', sans-serif; }
+        
+        /* 3D Flip Animation Styles */
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        
+        [x-cloak] { display: none !important; }
+        
+        /* Scrollbar styling */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #60a5fa; }
+    </style>
+</head>
+<body class="bg-[#0f172a] text-slate-100 min-h-screen flex flex-col" x-data="lawApp()">
+
+    <div class="fixed inset-0 z-0 opacity-10 pointer-events-none" style="background-image: linear-gradient(#3b82f6 1px, transparent 1px), linear-gradient(90deg, #3b82f6 1px, transparent 1px); background-size: 50px 50px;"></div>
+
+    <header class="relative z-10 border-b border-slate-700 bg-slate-900/95 backdrop-blur-md sticky top-0 shadow-2xl">
+        <div class="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-blue-600 p-2.5 rounded-xl shadow-lg shadow-blue-500/20">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-wide text-white">Lag & Rätt</h1>
+                    <p class="text-blue-400 text-xs uppercase tracking-widest font-semibold">Instudering Årskurs 6</p>
+                </div>
+            </div>
+
+            <div class="flex bg-slate-800/80 p-1.5 rounded-xl overflow-x-auto max-w-full border border-slate-700">
+                <template x-for="tab in tabs">
+                    <button @click="mode = tab.id" 
+                        :class="{'bg-blue-600 text-white shadow-md': mode === tab.id, 'text-slate-400 hover:text-white hover:bg-slate-700/50': mode !== tab.id}" 
+                        class="px-5 py-2 rounded-lg text-sm font-bold transition-all duration-300 flex items-center gap-2 whitespace-nowrap">
+                        <span x-html="tab.icon"></span>
+                        <span x-text="tab.label"></span>
+                    </button>
+                </template>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-4 py-8 relative z-10 max-w-4xl">
+
+        <div x-show="mode === 'study'" x-transition.opacity.duration.500ms class="space-y-8 pb-12">
+            <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-8 border border-slate-700 shadow-xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-yellow-500/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
+                <h2 class="text-2xl font-bold text-yellow-400 mb-4 flex items-center gap-3">
+                    <span>🧠</span> Hjärnan är som en djungel
+                </h2>
+                <div class="text-slate-300 space-y-4 leading-relaxed relative z-10">
+                    <p>Att lära sig är som att hugga upp en stig i en djungel. Första gången är det svårt. Om du inte repeterar växer stigen igen. Men med repetition och rätt teknik blir stigen en <strong>motorväg</strong> (myelinisering) och signalerna går supersnabbt.</p>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-slate-800/50 backdrop-blur rounded-2xl p-6 border border-slate-700 hover:border-blue-500 transition-colors group">
+                    <h3 class="text-lg font-bold text-blue-300 mb-3 group-hover:text-blue-200">1. Aktiv framplockning</h3>
+                    <p class="text-sm text-slate-400">Det absolut bästa sättet! Tvinga hjärnan att minnas utan att titta i facit. Gör "Brain dumps" (skriv ner allt du minns) eller använd flashcards. Det ska kännas lite jobbigt!</p>
+                </div>
+                <div class="bg-slate-800/50 backdrop-blur rounded-2xl p-6 border border-slate-700 hover:border-green-500 transition-colors group">
+                    <h3 class="text-lg font-bold text-green-300 mb-3 group-hover:text-green-200">2. Sprid ut plugget</h3>
+                    <p class="text-sm text-slate-400">Plugga 15 minuter om dagen istället för "korvstoppning" kvällen innan. Hjärnan behöver sömn för att lagra minnen (konsolidering).</p>
+                </div>
+                <div class="bg-slate-800/50 backdrop-blur rounded-2xl p-6 border border-slate-700 hover:border-purple-500 transition-colors group">
+                    <h3 class="text-lg font-bold text-purple-300 mb-3 group-hover:text-purple-200">3. Interfoliering (Blanda)</h3>
+                    <p class="text-sm text-slate-400">Gör inte samma sak hela tiden. Blanda olika typer av uppgifter. Det tränar hjärnan att välja rätt lösningsmetod.</p>
+                </div>
+                <div class="bg-slate-800/50 backdrop-blur rounded-2xl p-6 border border-slate-700 hover:border-orange-500 transition-colors group">
+                    <h3 class="text-lg font-bold text-orange-300 mb-3 group-hover:text-orange-200">4. Dubbel kodning</h3>
+                    <p class="text-sm text-slate-400">Kombinera ord och bild. Rita tidslinjer och enkla skisser. Hjärnan har två system (verbalt och visuellt) – använd båda!</p>
+                </div>
+            </div>
+
+            <div class="bg-red-900/10 border border-red-500/20 rounded-2xl p-6">
+                <h3 class="font-bold text-red-300 mb-3">🚫 Undvik dessa myter</h3>
+                <ul class="list-disc pl-5 space-y-2 text-sm text-slate-400">
+                    <li><strong>Läsa om texten:</strong> Ger falsk trygghet. Du känner igen texten men kan den inte.</li>
+                    <li><strong>Lärstilar:</strong> Det finns inga bevis för "visuella" eller "auditiva" inlärare. Alla behöver variation.</li>
+                    <li><strong>Inlärningspyramiden:</strong> Siffrorna (10%, 90%) är en myt utan vetenskapligt stöd.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div x-show="mode === 'text'" x-transition.opacity.duration.500ms class="space-y-8 pb-12">
+            
+            <div class="bg-slate-800 rounded-2xl p-8 border border-slate-700 shadow-lg">
+                <h2 class="text-2xl font-bold text-blue-400 mb-4 border-b border-slate-700 pb-2">Lagar, Regler & Normer</h2>
+                <div class="text-slate-300 space-y-4">
+                    <p>I alla samarbeten finns regler. <strong>Lagar</strong> är nedskrivna regler som gäller alla i hela landet. De beskriver rättigheter och skyldigheter.</p>
+                    <ul class="list-disc pl-5 space-y-1 text-sm bg-slate-900/50 p-4 rounded-lg border border-slate-700">
+                        <li>Det finns ca <strong>900 lagar</strong> i Sverige.</li>
+                        <li>Lagarna är samlade i boken <strong>"Sveriges rikes lag"</strong>.</li>
+                        <li>Det är <strong>Riksdagen</strong> som stiftar (beslutar om) lagarna.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-slate-800 rounded-2xl p-8 border border-slate-700 shadow-lg relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-yellow-500/10 rounded-full blur-2xl"></div>
+                <h2 class="text-2xl font-bold text-yellow-400 mb-4 border-b border-slate-700 pb-2 relative z-10">Sveriges 4 Grundlagar</h2>
+                <div class="text-slate-300 space-y-6 relative z-10">
+                    <p class="text-sm italic">Grundlagarna skyddar vår demokrati och står över alla andra lagar. För att ändra en grundlag krävs <strong>två riksdagsbeslut med ett val emellan</strong>.</p>
+                    
+                    <div class="grid gap-4 md:grid-cols-2">
+                        <div class="bg-slate-900/60 p-5 rounded-xl border-l-4 border-yellow-500">
+                            <h3 class="font-bold text-white mb-2">1. Regeringsformen (RF)</h3>
+                            <p class="text-sm text-slate-400">Bestämmer hur Sverige ska styras. "All makt utgår från folket". Garanterar förenings- och religionsfrihet.</p>
+                        </div>
+                        <div class="bg-slate-900/60 p-5 rounded-xl border-l-4 border-yellow-500">
+                            <h3 class="font-bold text-white mb-2">2. Tryckfrihetsförordningen (TF)</h3>
+                            <p class="text-sm text-slate-400">Rätten att uttrycka tankar i skrift (tidningar/böcker) utan censur.</p>
+                        </div>
+                        <div class="bg-slate-900/60 p-5 rounded-xl border-l-4 border-yellow-500">
+                            <h3 class="font-bold text-white mb-2">3. Yttrandefrihetsgrundlagen (YGL)</h3>
+                            <p class="text-sm text-slate-400">Rätten att uttrycka åsikter i radio, TV och på internet.</p>
+                            <div class="mt-2 text-xs bg-red-900/20 text-red-200 p-2 rounded"><strong>Undantag:</strong> Man får ej uttrycka hat mot folkgrupper, förtala någon eller avslöja statshemligheter.</div>
+                        </div>
+                        <div class="bg-slate-900/60 p-5 rounded-xl border-l-4 border-yellow-500">
+                            <h3 class="font-bold text-white mb-2">4. Successionsordningen (SO)</h3>
+                            <p class="text-sm text-slate-400">Regler för monarkin (tronföljden). Det äldsta barnet ärver tronen.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-800 rounded-2xl p-8 border border-slate-700 shadow-lg">
+                <h2 class="text-2xl font-bold text-purple-400 mb-4">Varför lagar förändras</h2>
+                <div class="space-y-4 text-slate-300">
+                    <p>Lagar ändras när samhället utvecklas. Här är tre orsaker:</p>
+                    <ul class="space-y-3">
+                        <li class="flex gap-3 items-start bg-slate-900/50 p-3 rounded-lg">
+                            <span class="text-purple-400 font-bold">Ny kunskap:</span>
+                            <span class="text-sm">T.ex. rökförbud på krogen (hälsorisker) eller lagar för klimatet.</span>
+                        </li>
+                        <li class="flex gap-3 items-start bg-slate-900/50 p-3 rounded-lg">
+                            <span class="text-purple-400 font-bold">Ny teknik:</span>
+                            <span class="text-sm">T.ex. regler för elsparkcyklar eller förbud mot mobil i bilen.</span>
+                        </li>
+                        <li class="flex gap-3 items-start bg-slate-900/50 p-3 rounded-lg">
+                            <span class="text-purple-400 font-bold">Nya synsätt:</span>
+                            <span class="text-sm">Synen på rätt/fel ändras. 1979 förbjöds barnaga (att slå barn). 2009 fick samkönade gifta sig.</span>
+                        </li>
+                    </ul>
+                    <p class="text-sm mt-4 text-slate-400"><em>Medborgare kan påverka genom att rösta, demonstrera, starta namninsamlingar eller kontakta politiker.</em></p>
+                </div>
+            </div>
+
+            <div class="bg-slate-800 rounded-2xl p-8 border border-slate-700 shadow-lg">
+                <h2 class="text-2xl font-bold text-red-400 mb-4">Brott & Straff</h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="font-bold text-white mb-3">Vanliga brott</h3>
+                        <ul class="space-y-2 text-sm text-slate-300">
+                            <li><strong class="text-red-300">Fyndförseelse:</strong> Behålla något man hittat istället för att lämna in det.</li>
+                            <li><strong class="text-red-300">Häleri:</strong> Köpa något som är stulet.</li>
+                            <li><strong class="text-red-300">Olaga intrång:</strong> Ta sig in i låsta utrymmen.</li>
+                            <li><strong class="text-red-300">Misshandel:</strong> Slå/sparka någon.</li>
+                            <li><strong class="text-red-300">Olaga hot:</strong> Hota att slå någon.</li>
+                            <li><strong class="text-red-300">Ringa stöld (Snatteri):</strong> Ta något litet i butik utan att betala.</li>
+                            <li><strong class="text-red-300">Medhjälp:</strong> Hjälpa till eller hålla vakt.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-white mb-3">Konsekvenser</h3>
+                        <div class="space-y-3">
+                            <div class="bg-slate-900/50 p-3 rounded border-l-2 border-red-500">
+                                <span class="block text-red-300 font-bold text-xs uppercase">Under 15 år</span>
+                                <span class="text-sm text-slate-400">Ej straffmyndig. Polisen utreder, Socialtjänsten beslutar om åtgärder. Vårdnadshavare kan få betala skadestånd.</span>
+                            </div>
+                            <div class="bg-slate-900/50 p-3 rounded border-l-2 border-red-500">
+                                <span class="block text-red-300 font-bold text-xs uppercase">Över 15 år</span>
+                                <span class="text-sm text-slate-400">Straffmyndig. Kan dömas till böter, ungdomsvård, samhällstjänst eller fängelse. Hamnar i <strong>belastningsregistret</strong> (svårt att få jobb/körkort).</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-800 rounded-2xl p-8 border border-slate-700 shadow-lg">
+                <h2 class="text-2xl font-bold text-green-400 mb-6">Rättsprocessen – Från brott till dom</h2>
+                <div class="space-y-6 relative border-l-2 border-slate-700 ml-3">
+                    <div class="ml-6 relative">
+                        <span class="absolute -left-[31px] bg-slate-800 border-2 border-green-500 text-green-400 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm">1</span>
+                        <h3 class="font-bold text-white">Anmälan</h3>
+                        <p class="text-sm text-slate-400">Brottet anmäls till polisen.</p>
+                    </div>
+                    <div class="ml-6 relative">
+                        <span class="absolute -left-[31px] bg-slate-800 border-2 border-green-500 text-green-400 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm">2</span>
+                        <h3 class="font-bold text-white">Förundersökning</h3>
+                        <p class="text-sm text-slate-400">Polisen utreder, samlar bevis och håller förhör.</p>
+                    </div>
+                    <div class="ml-6 relative">
+                        <span class="absolute -left-[31px] bg-slate-800 border-2 border-green-500 text-green-400 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm">3</span>
+                        <h3 class="font-bold text-white">Gripande & Häktning</h3>
+                        <p class="text-sm text-slate-400">Polisen griper. Åklagaren kan begära personen <em>häktad</em> (inlåst) om det finns risk för flykt eller förstörda bevis.</p>
+                    </div>
+                    <div class="ml-6 relative">
+                        <span class="absolute -left-[31px] bg-slate-800 border-2 border-green-500 text-green-400 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm">4</span>
+                        <h3 class="font-bold text-white">Åtal</h3>
+                        <p class="text-sm text-slate-400">Åklagaren beslutar att bevisen räcker för att gå till domstol.</p>
+                    </div>
+                    <div class="ml-6 relative">
+                        <span class="absolute -left-[31px] bg-slate-800 border-2 border-green-500 text-green-400 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm">5</span>
+                        <h3 class="font-bold text-white">Rättegång</h3>
+                        <p class="text-sm text-slate-400">Hålls i domstol. En domare och tre nämndemän lyssnar. Den åtalade är oskyldig tills motsatsen bevisats.</p>
+                    </div>
+                    <div class="ml-6 relative">
+                        <span class="absolute -left-[31px] bg-slate-800 border-2 border-green-500 text-green-400 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm">6</span>
+                        <h3 class="font-bold text-white">Dom</h3>
+                        <p class="text-sm text-slate-400">Domstolen avgör om personen är skyldig och vad straffet blir.</p>
+                    </div>
+                    <div class="ml-6 relative">
+                        <span class="absolute -left-[31px] bg-slate-800 border-2 border-slate-600 text-slate-400 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm">7</span>
+                        <h3 class="font-bold text-slate-300">Överklagan</h3>
+                        <p class="text-sm text-slate-500">Båda sidor kan överklaga till en högre domstol.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-800 rounded-2xl p-8 border border-slate-700 shadow-lg">
+                <h2 class="text-2xl font-bold text-orange-400 mb-4">Rättigheter & Likabehandling</h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <div class="bg-slate-900/50 p-4 rounded-lg">
+                            <h3 class="text-white font-bold mb-1">Barnkonventionen</h3>
+                            <p class="text-sm text-slate-400">Lag i Sverige sedan 2020. Gäller alla under 18 år. Alla beslut ska utgå från <strong>barnets bästa</strong>. Rätt till utbildning, vård, skydd och att bli lyssnad på.</p>
+                        </div>
+                        <div class="bg-slate-900/50 p-4 rounded-lg">
+                            <h3 class="text-white font-bold mb-1">Mänskliga rättigheter (FN)</h3>
+                            <p class="text-sm text-slate-400">Gäller alla. Alla föds fria och har lika värde.</p>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-white font-bold mb-2">De 7 Diskrimineringsgrunderna</h3>
+                        <p class="text-xs text-slate-500 mb-2">Det är förbjudet att behandla någon orättvis baserat på:</p>
+                        <ol class="list-decimal pl-5 space-y-1 text-sm text-slate-300">
+                            <li>Kön</li>
+                            <li>Könsidentitet/uttryck</li>
+                            <li>Etnisk tillhörighet</li>
+                            <li>Religion/trosuppfattning</li>
+                            <li>Funktionsnedsättning</li>
+                            <li>Sexuell läggning</li>
+                            <li>Ålder</li>
+                        </ol>
+                        <p class="text-xs text-slate-500 mt-3">Mobbning är förbjudet. Elever kan vända sig till <strong>BEO</strong> (Barn- och elevombudet).</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div x-show="mode === 'cards'" x-transition.opacity.duration.500ms class="flex flex-col items-center justify-center min-h-[60vh]">
+            
+            <div class="w-full flex justify-between items-center mb-6 text-sm text-blue-300 font-bold uppercase tracking-wider">
+                <span>Kort <span x-text="cardIndex + 1" class="text-white text-lg"></span> / <span x-text="flashcards.length"></span></span>
+                <button @click="shuffleDeck()" class="flex items-center gap-2 hover:text-white transition group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 group-hover:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                    Blanda
+                </button>
+            </div>
+
+            <div class="perspective-1000 w-full h-80 cursor-pointer group select-none" @click="flipCard()">
+                <div class="relative w-full h-full text-center transition-transform duration-500 transform-style-3d" :class="{'rotate-y-180': flipped}">
+                    
+                    <div class="absolute w-full h-full bg-slate-800 rounded-3xl border border-slate-600 shadow-2xl backface-hidden flex flex-col items-center justify-center p-8 hover:border-blue-500 transition-colors">
+                        <div class="absolute top-6 left-6 w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="absolute top-6 left-12 w-3 h-3 rounded-full bg-blue-500"></div>
+                        
+                        <span class="text-blue-400 font-bold tracking-widest text-xs uppercase mb-6 bg-slate-900 px-3 py-1 rounded-full border border-slate-700">Fråga</span>
+                        <h3 class="text-xl md:text-2xl font-bold leading-tight text-white" x-text="flashcards[cardIndex].q"></h3>
+                        
+                        <p class="absolute bottom-6 text-slate-500 text-sm animate-pulse flex items-center gap-2">
+                            Klicka för att vända 
+                        </p>
+                    </div>
+
+                    <div class="absolute w-full h-full bg-gradient-to-br from-blue-700 to-slate-900 rounded-3xl shadow-2xl backface-hidden rotate-y-180 flex flex-col items-center justify-center p-8 border border-blue-400">
+                        <span class="text-blue-100 font-bold tracking-widest text-xs uppercase mb-6 bg-white/20 px-3 py-1 rounded-full">Svar</span>
+                        <p class="text-lg md:text-2xl font-medium leading-relaxed text-white" x-text="flashcards[cardIndex].a"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex gap-4 mt-10 w-full max-w-md">
+                <button @click="prevCard()" class="flex-1 py-4 bg-slate-800 border border-slate-600 rounded-2xl hover:bg-slate-700 hover:border-blue-500 hover:text-blue-300 transition font-bold shadow-lg">
+                    ← Föregående
+                </button>
+                <button @click="nextCard()" class="flex-1 py-4 bg-blue-600 text-white rounded-2xl hover:bg-blue-500 hover:scale-[1.02] transition font-bold shadow-lg shadow-blue-900/50">
+                    Nästa fråga →
+                </button>
+            </div>
+            
+            <div class="w-full mt-8 h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                <div class="h-full bg-blue-500 transition-all duration-300 ease-out" :style="`width: ${((cardIndex + 1) / flashcards.length) * 100}%`"></div>
+            </div>
+        </div>
+
+        <div x-show="mode === 'quiz'" x-cloak>
+            <div class="max-w-3xl mx-auto">
+                
+                <div class="bg-slate-800/80 backdrop-blur border border-blue-500/30 p-6 rounded-2xl shadow-xl mb-8 flex justify-between items-center sticky top-24 z-20">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Prov: Lag & Rätt</h2>
+                        <p class="text-slate-400 text-sm">Välj rätt alternativ</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-4xl font-bold text-blue-400" x-text="quizScore"></span>
+                        <span class="text-slate-500 text-xl">/ <span x-text="quizData.length"></span></span>
+                    </div>
+                </div>
+
+                <div class="space-y-6 pb-20">
+                    <template x-for="(item, index) in quizData" :key="index">
+                        <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden shadow-md transition-all duration-300 hover:border-blue-500/50">
+                            
+                            <div class="p-6">
+                                <div class="flex gap-4 mb-4">
+                                    <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-slate-700 text-blue-300 font-bold text-sm border border-slate-600" x-text="index + 1"></span>
+                                    <h3 class="text-lg font-medium text-slate-100" x-text="item.q"></h3>
+                                </div>
+
+                                <div class="space-y-3 pl-12">
+                                    <template x-for="(opt, optIndex) in item.options" :key="optIndex">
+                                        <button 
+                                            @click="checkAnswer(index, optIndex)"
+                                            :disabled="item.answered"
+                                            class="w-full text-left p-4 rounded-lg text-sm font-semibold transition-all duration-200 border relative overflow-hidden"
+                                            :class="{
+                                                'bg-slate-700/50 border-slate-600 hover:bg-slate-700 text-slate-300': !item.answered,
+                                                'bg-green-900/40 border-green-500 text-green-200': item.answered && optIndex === item.correct,
+                                                'bg-red-900/40 border-red-500 text-red-200': item.answered && item.selected === optIndex && item.selected !== item.correct,
+                                                'opacity-50 cursor-not-allowed': item.answered && optIndex !== item.correct && optIndex !== item.selected
+                                            }"
+                                        >
+                                            <span x-text="opt"></span>
+                                            <span x-show="item.answered && optIndex === item.correct" class="absolute right-4 top-1/2 -translate-y-1/2 text-green-400">
+                                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                            </span>
+                                        </button>
+                                    </template>
+                                </div>
+
+                                <div x-show="item.answered" x-collapse class="mt-4 pl-12">
+                                    <p class="text-sm font-bold" :class="item.selected === item.correct ? 'text-green-400' : 'text-red-400'">
+                                        <span x-text="item.selected === item.correct ? 'Rätt svar! Snyggt jobbat. 🎉' : 'Tyvärr fel. Rätt svar var markerat med grönt.'"></span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <div class="text-center pb-8">
+                    <button @click="resetQuiz()" class="px-8 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-full font-bold shadow-lg shadow-blue-600/30 transition transform hover:-translate-y-1">Börja om provet</button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="text-center py-6 text-slate-600 text-sm relative z-10 border-t border-slate-800 bg-slate-900">
+        <p>Lycka till på provet Daniel! | Skapat 2026</p>
+    </footer>
+
+    <script>
+        function lawApp() {
+            return {
+                mode: 'study',
+                cardIndex: 0,
+                flipped: false,
+                quizScore: 0,
+                
+                // Tabs Config
+                tabs: [
+                    { id: 'study', label: 'Studieteknik', icon: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>' },
+                    { id: 'text', label: 'Fakta', icon: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>' },
+                    { id: 'cards', label: 'Flashcards', icon: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>' },
+                    { id: 'quiz', label: 'Prov', icon: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>' },
+                ],
+
+                // FLASHCARDS DATA (Updated based on new text)
+                flashcards: [
+                    { q: "Vad är en lag?", a: "En nedskriven regel som gäller alla i hela landet." },
+                    { q: "Vem stiftar (beslutar om) lagarna?", a: "Riksdagen" },
+                    { q: "Hur många grundlagar har Sverige?", a: "Fyra (4)" },
+                    { q: "Vilken grundlag bestämmer hur Sverige ska styras?", a: "Regeringsformen" },
+                    { q: "Vilken grundlag handlar om rätten att skriva i tidningar?", a: "Tryckfrihetsförordningen" },
+                    { q: "Vad heter boken där alla lagar är samlade?", a: "Sveriges Rikes Lag" },
+                    { q: "Vid vilken ålder blir man straffmyndig?", a: "15 år" },
+                    { q: "Vad krävs för att ändra en grundlag?", a: "Två riksdagsbeslut med ett val emellan." },
+                    { q: "Vad innebär Successionsordningen?", a: "Regler för vem som ska vara kung eller drottning (tronföljden)." },
+                    { q: "Vad kallas brottet att behålla något man hittat?", a: "Fyndförseelse" },
+                    { q: "Vad kallas brottet att köpa något som är stulet?", a: "Häleri" },
+                    { q: "Vad kallas brottet att ta något litet i en butik?", a: "Ringa stöld (Snatteri)" },
+                    { q: "Vad innebär att någon blir häktad?", a: "Den misstänkte låses in av polisen före rättegången." },
+                    { q: "Vem beslutar om den åtalade är skyldig?", a: "Domstolen (Domare och nämndemän)." },
+                    { q: "Vad är målsägande?", a: "Den som blivit utsatt för ett brott (offret)." },
+                    { q: "Vad är belastningsregistret?", a: "Ett register där man hamnar om man dömts för brott." },
+                    { q: "Vad innebär Barnkonventionen?", a: "Att barn har särskilda rättigheter och barnets bästa ska komma först." },
+                    { q: "Nämn en grund för diskriminering.", a: "Kön, ålder, religion, etnicitet, funktionsnedsättning, sexuell läggning eller könsidentitet." },
+                    { q: "Vad är BEO?", a: "Barn- och elevombudet (hjälper vid mobbning)." },
+                    { q: "När blev det förbjudet med barnaga (slå barn)?", a: "1979" },
+                    { q: "Vad kallas det första steget i rättsprocessen?", a: "Anmälan" },
+                    { q: "Vad görs under en förundersökning?", a: "Polisen utreder brottet, samlar bevis och håller förhör." },
+                    { q: "Får man säga vad man vill i Sverige?", a: "Ja, nästan. Undantag är t.ex. hets mot folkgrupp eller förtal." },
+                    { q: "Vad innebär Yttrandefrihetsgrundlagen?", a: "Rätten att uttrycka sig i radio, TV och på internet." },
+                    { q: "Vad är mened?", a: "Att ljuga i domstol när man är vittne." },
+                    { q: "Vad innebär olaga intrång?", a: "Att ta sig in i låsta utrymmen där man inte får vara." },
+                    { q: "Vad är en norm?", a: "En oskriven regel (t.ex. att stå i kö)." },
+                    { q: "Vad innebär myelinisering (studieteknik)?", a: "Att hjärnans 'stigar' isoleras och blir snabba som motorvägar." },
+                    { q: "Vad är aktiv framplockning?", a: "Att tvinga hjärnan minnas utan att titta i facit." },
+                    { q: "Hur många diskrimineringsgrunder finns det?", a: "Sju (7)" }
+                ],
+
+                // QUIZ DATA (Updated based on new text)
+                quizData: [
+                    { q: "Vem stiftar lagarna i Sverige?", options: ["Polisen", "Riksdagen", "Kungen"], correct: 1, answered: false, selected: null },
+                    { q: "Vad skiljer en grundlag från en vanlig lag?", options: ["Grundlagar är svårare att ändra och skyddar demokratin", "Grundlagar gäller bara vuxna", "Grundlagar bestäms av kungen"], correct: 0, answered: false, selected: null },
+                    { q: "Vilken grundlag garanterar att vi får ha val och rösta?", options: ["Tryckfrihetsförordningen", "Regeringsformen", "Successionsordningen"], correct: 1, answered: false, selected: null },
+                    { q: "Du hittar en mobil på marken och behåller den. Vad heter brottet?", options: ["Stöld", "Häleri", "Fyndförseelse"], correct: 2, answered: false, selected: null },
+                    { q: "Vad händer om en 14-åring begår ett brott?", options: ["Fängelse", "Böter", "Socialtjänsten utreder (ej straff)"], correct: 2, answered: false, selected: null },
+                    { q: "Vad kallas det när polisen utreder ett brott och samlar bevis?", options: ["Förundersökning", "Rättegång", "Överklagan"], correct: 0, answered: false, selected: null },
+                    { q: "Vem beslutar om man ska väcka åtal (gå till domstol)?", options: ["Domaren", "Åklagaren", "Polisen"], correct: 1, answered: false, selected: null },
+                    { q: "Vad innebär det att vara häktad?", options: ["Man får sitta i fängelse resten av livet", "Man är inlåst av polisen i väntan på rättegång", "Man måste betala böter"], correct: 1, answered: false, selected: null },
+                    { q: "Vilket år blev Barnkonventionen lag i Sverige?", options: ["1979", "2000", "2020"], correct: 2, answered: false, selected: null },
+                    { q: "Vilken av dessa är en diskrimineringsgrund?", options: ["Musiksmak", "Funktionsnedsättning", "Klädstil"], correct: 1, answered: false, selected: null },
+                    { q: "Vad heter brottet när man hotar att slå någon?", options: ["Olaga hot", "Misshandel", "Förtal"], correct: 0, answered: false, selected: null },
+                    { q: "Vad innebär Tryckfrihetsförordningen?", options: ["Rätt att säga vad som helst på TV", "Rätt att skriva åsikter i tidningar/böcker utan censur", "Rätt att demonstrera"], correct: 1, answered: false, selected: null },
+                    { q: "Varför ändras lagar?", options: ["För att politikerna har tråkigt", "Pga ny kunskap, ny teknik eller nya synsätt", "Lagar ändras aldrig"], correct: 1, answered: false, selected: null },
+                    { q: "Vad innebär att 'överklaga' en dom?", options: ["Man struntar i straffet", "Man ber en högre domstol pröva fallet igen", "Man säger förlåt"], correct: 1, answered: false, selected: null },
+                    { q: "Vad är ett brottsoffer också kallat?", options: ["Målsägande", "Tilltalad", "Vittne"], correct: 0, answered: false, selected: null },
+                    { q: "Vad innebär snatteri (ringa stöld)?", options: ["Att stjäla en bil", "Att ta något litet i en butik utan att betala", "Att lura någon på pengar"], correct: 1, answered: false, selected: null },
+                    { q: "Vad är belastningsregistret?", options: ["En lista på alla som bor i Sverige", "Ett register hos polisen över personer som begått brott", "En bok om lagar"], correct: 1, answered: false, selected: null },
+                    { q: "När förbjöds barnaga (att slå barn)?", options: ["1950", "1979", "1995"], correct: 1, answered: false, selected: null },
+                    { q: "Vad gör en nämndeman?", options: ["Hjälper domaren att döma", "Försvarar den misstänkte", "Skriver ner allt som sägs"], correct: 0, answered: false, selected: null },
+                    { q: "Vad är den bästa studietekniken enligt texten?", options: ["Läsa texten om och om igen", "Aktiv framplockning (förhöra sig själv)", "Skriva av texten"], correct: 1, answered: false, selected: null }
+                ],
+
+                // FUNCTIONS
+                flipCard() {
+                    this.flipped = !this.flipped;
+                },
+                
+                nextCard() {
+                    this.flipped = false;
+                    setTimeout(() => {
+                        this.cardIndex = (this.cardIndex + 1) % this.flashcards.length;
+                    }, 200);
+                },
+
+                prevCard() {
+                    this.flipped = false;
+                    setTimeout(() => {
+                        this.cardIndex = (this.cardIndex === 0) ? this.flashcards.length - 1 : this.cardIndex - 1;
+                    }, 200);
+                },
+
+                shuffleDeck() {
+                    this.flipped = false;
+                    for (let i = this.flashcards.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [this.flashcards[i], this.flashcards[j]] = [this.flashcards[j], this.flashcards[i]];
+                    }
+                    this.cardIndex = 0;
+                },
+
+                // QUIZ LOGIC
+                checkAnswer(qIndex, optIndex) {
+                    if(this.quizData[qIndex].answered) return; // Prevent re-answering
+                    
+                    this.quizData[qIndex].selected = optIndex;
+                    this.quizData[qIndex].answered = true;
+                    
+                    if(optIndex === this.quizData[qIndex].correct) {
+                        this.quizScore++;
+                    }
+                },
+
+                resetQuiz() {
+                    this.quizScore = 0;
+                    this.quizData.forEach(q => {
+                        q.answered = false;
+                        q.selected = null;
+                    });
+                    // Scroll to top of quiz
+                    window.scrollTo({top: 0, behavior: 'smooth'});
+                }
+            }
+        }
+    </script>
+</body>
+</html>

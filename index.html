@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studieportalen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                },
+            },
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-100">
+        <div class="max-w-5xl mx-auto px-6 py-6">
+            <h1 class="text-2xl font-extrabold tracking-tight">Studieportalen</h1>
+            <p class="mt-1 text-sm text-gray-500">Välj vem som ska plugga idag</p>
+        </div>
+    </header>
+
+    <!-- Barnkort -->
+    <main class="max-w-5xl mx-auto px-6 py-12">
+        <div class="grid md:grid-cols-3 gap-6">
+
+            <!-- Alice -->
+            <a href="alice/index.html" class="group block bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-blue-200 transition-all duration-200 overflow-hidden">
+                <div class="h-2 bg-gradient-to-r from-blue-500 to-blue-600"></div>
+                <div class="p-8">
+                    <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center text-2xl font-bold mb-5 group-hover:scale-105 transition-transform">A</div>
+                    <h2 class="text-xl font-bold">Alice</h2>
+                    <p class="text-sm text-gray-500 mt-1">Årskurs 6</p>
+                    <div class="mt-6 flex items-center text-sm text-blue-600 font-medium">
+                        Visa prov
+                        <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Alfred -->
+            <a href="alfred/index.html" class="group block bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-emerald-200 transition-all duration-200 overflow-hidden">
+                <div class="h-2 bg-gradient-to-r from-emerald-500 to-emerald-600"></div>
+                <div class="p-8">
+                    <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center text-2xl font-bold mb-5 group-hover:scale-105 transition-transform">A</div>
+                    <h2 class="text-xl font-bold">Alfred</h2>
+                    <p class="text-sm text-gray-500 mt-1">Årskurs 4</p>
+                    <div class="mt-6 flex items-center text-sm text-emerald-600 font-medium">
+                        Visa prov
+                        <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Astrid -->
+            <a href="astrid/index.html" class="group block bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-violet-200 transition-all duration-200 overflow-hidden">
+                <div class="h-2 bg-gradient-to-r from-violet-500 to-violet-600"></div>
+                <div class="p-8">
+                    <div class="w-16 h-16 bg-violet-100 text-violet-600 rounded-2xl flex items-center justify-center text-2xl font-bold mb-5 group-hover:scale-105 transition-transform">A</div>
+                    <h2 class="text-xl font-bold">Astrid</h2>
+                    <p class="text-sm text-gray-500 mt-1">Årskurs 2</p>
+                    <div class="mt-6 flex items-center text-sm text-violet-600 font-medium">
+                        Visa prov
+                        <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="max-w-5xl mx-auto px-6 py-8">
+        <p class="text-xs text-gray-400 text-center">Studieportalen &mdash; plugga smart inför proven</p>
+    </footer>
+
+</body>
+</html>
