@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livets Utveckling — Årskurs 6</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Space Grotesk', sans-serif; }
+
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+
+        [x-cloak] { display: none !important; }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1a1c2e; }
+        ::-webkit-scrollbar-thumb { background: #16a34a; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #22c55e; }
+    </style>
+</head>
+<body class="bg-[#0f1a14] text-white min-h-screen flex flex-col" x-data="studyApp()">
+
+    <div class="fixed inset-0 z-0 opacity-30 pointer-events-none" style="background-image: radial-gradient(rgba(34,197,94,0.15) 1px, transparent 1px); background-size: 50px 50px;"></div>
+
+    <header class="relative z-10 border-b border-green-900/50 bg-[#0f1a14]/90 backdrop-blur-md sticky top-0">
+        <div class="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-green-600 p-2 rounded-lg shadow-lg shadow-green-600/40">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-wide">Livets Utveckling</h1>
+                    <p class="text-green-400/60 text-xs uppercase tracking-widest">Instudering Årskurs 6</p>
+                </div>
+            </div>
+
+            <div class="flex bg-[#162118] p-1 rounded-lg overflow-x-auto max-w-full">
+                <button @click="mode = 'text'" :class="{'bg-green-600 text-white shadow-lg': mode === 'text', 'text-green-400/60 hover:text-white': mode !== 'text'}" class="px-4 md:px-6 py-2 rounded-md text-sm font-bold transition-all duration-300 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                    Fakta
+                </button>
+                <button @click="mode = 'cards'" :class="{'bg-green-600 text-white shadow-lg': mode === 'cards', 'text-green-400/60 hover:text-white': mode !== 'cards'}" class="px-4 md:px-6 py-2 rounded-md text-sm font-bold transition-all duration-300 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
+                    Flashcards
+                </button>
+                <button @click="mode = 'quiz'" :class="{'bg-green-600 text-white shadow-lg': mode === 'quiz', 'text-green-400/60 hover:text-white': mode !== 'quiz'}" class="px-4 md:px-6 py-2 rounded-md text-sm font-bold transition-all duration-300 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
+                    Quiz
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-4 py-8 relative z-10 max-w-4xl">
+
+        <!-- ===== FAKTA-LÄGE ===== -->
+        <div x-show="mode === 'text'" x-transition.opacity.duration.500ms class="space-y-8 pb-12">
+
+            <!-- 1. Vad är liv -->
+            <div class="bg-[#162118]/80 backdrop-blur rounded-2xl p-6 md:p-8 border border-green-900/40 shadow-xl">
+                <h2 class="text-2xl font-bold text-green-400 mb-4 border-b border-green-800/40 pb-2">1. Vad är liv och hur började det?</h2>
+                <div class="text-slate-200 space-y-4 leading-relaxed">
+                    <p>För att något ska kallas <strong>levande</strong> måste det uppfylla dessa kriterier:</p>
+                    <ul class="list-disc pl-5 space-y-1 text-sm">
+                        <li>Bestå av <strong>celler</strong></li>
+                        <li>Ha <strong>ämnes- och energiomsättning</strong> (äta och omvandla näring till energi)</li>
+                        <li>Kunna <strong>fortplanta sig</strong></li>
+                        <li>Föra vidare <strong>genetisk information</strong></li>
+                        <li>Kunna <strong>utvecklas genom evolution</strong></li>
+                    </ul>
+
+                    <div class="grid md:grid-cols-2 gap-4 mt-4">
+                        <div class="bg-[#0f1a14]/60 p-4 rounded-lg border-l-4 border-green-500">
+                            <h3 class="font-bold text-green-300 mb-2">Växtcellen</h3>
+                            <ul class="text-sm space-y-1 list-disc pl-4">
+                                <li><strong>Klorofyllkorn</strong> — för fotosyntes</li>
+                                <li><strong>Cellvägg</strong> — ger stadga</li>
+                                <li><strong>Cellsaftrum</strong> — lagrar vatten</li>
+                            </ul>
+                        </div>
+                        <div class="bg-[#0f1a14]/60 p-4 rounded-lg border-l-4 border-amber-500">
+                            <h3 class="font-bold text-amber-300 mb-2">Djurcellen</h3>
+                            <ul class="text-sm space-y-1 list-disc pl-4">
+                                <li><strong>Cellmembran</strong> — omsluter cellen</li>
+                                <li><strong>Cellkärna</strong> — innehåller DNA</li>
+                                <li><strong>Mitokondrier</strong> — cellens "kraftverk"</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="bg-[#0f1a14]/60 p-4 rounded-lg mt-4 border border-green-600/20">
+                        <h3 class="font-bold text-green-300 mb-2">Urcellerna — livets början</h3>
+                        <p class="text-sm">För ca <strong>3,5 miljarder år</strong> sedan var jorden en ödslig plats med glödande lava, vulkaner och en atmosfär utan syre. Blixtrar slog ner i de varma haven och fick kemiska ämnen att reagera — de första <strong>urcellerna</strong> bildades.</p>
+                        <p class="text-sm mt-2">Från urcellen grenade livet ut sig i tre spår: <strong>arkéer</strong>, <strong>bakterier</strong> och <strong>eukaryoter</strong> (celler med cellkärna).</p>
+                    </div>
+
+                    <div class="bg-[#0f1a14]/60 p-4 rounded-lg border border-blue-500/20">
+                        <h3 class="font-bold text-blue-300 mb-2">Cyanobakterierna — syrets skapare</h3>
+                        <p class="text-sm">De allra första organismerna var bakterier. <strong>Cyanobakterierna</strong> utvecklade klorofyll och uppfann <strong>fotosyntesen</strong> — de använde solljus och koldioxid för att tillverka syre och druvsocker. Syret de producerade fyllde atmosfären och blev en förutsättning för livet på land.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Fossil -->
+            <div class="bg-[#162118]/80 backdrop-blur rounded-2xl p-6 md:p-8 border border-green-900/40 shadow-xl">
+                <h2 class="text-2xl font-bold text-amber-400 mb-4 border-b border-amber-800/40 pb-2">2. Fossil — Nyckeln till forntiden</h2>
+                <div class="text-slate-200 space-y-4 leading-relaxed">
+                    <p><strong>Fossil</strong> är förstenade spår eller rester av djur och växter som begravts och bevarats under miljontals år. Genom att studera fossil kan forskare se hur livet har utvecklats och förstå hur klimatet sett ut under olika perioder.</p>
+                    <div class="flex flex-wrap gap-3 mt-4">
+                        <div class="bg-amber-900/20 px-4 py-2 rounded-full border border-amber-500/30 text-sm">
+                            <strong>Bärnsten:</strong> Insekter bevarade i fossiliserad kåda
+                        </div>
+                        <div class="bg-amber-900/20 px-4 py-2 rounded-full border border-amber-500/30 text-sm">
+                            <strong>Trilobiter:</strong> Gamla skaldjur bevarade i sten
+                        </div>
+                        <div class="bg-amber-900/20 px-4 py-2 rounded-full border border-amber-500/30 text-sm">
+                            <strong>Dinosaurieägg:</strong> Välbevarade fynd från Kina
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Livet i havet -->
+            <div class="bg-[#162118]/80 backdrop-blur rounded-2xl p-6 md:p-8 border border-green-900/40 shadow-xl">
+                <h2 class="text-2xl font-bold text-blue-400 mb-4 border-b border-blue-800/40 pb-2">3. Livet i havet — från encelligt till flercelligt</h2>
+                <div class="text-slate-200 space-y-4 leading-relaxed">
+                    <p>Under lång tid fanns livet enbart i haven. Celler började samarbeta och blev <strong>flercelliga</strong> — cellerna fick olika specialuppdrag.</p>
+
+                    <div class="space-y-4">
+                        <div class="bg-[#0f1a14]/60 p-4 rounded-lg border-l-4 border-cyan-500">
+                            <h3 class="font-bold text-cyan-300 mb-1">Toffeldjuret</h3>
+                            <p class="text-sm">Ett encelligt urdjur som fortfarande finns idag. Simmar med <strong>flimmerhår (cilier)</strong>, äter bakterier via en cellmun och försvarar sig genom att skjuta ut giftiga pilar.</p>
+                        </div>
+                        <div class="bg-[#0f1a14]/60 p-4 rounded-lg border-l-4 border-pink-500">
+                            <h3 class="font-bold text-pink-300 mb-1">Svampdjur & Nässeldjur</h3>
+                            <p class="text-sm">De första flercelliga djuren var <strong>svampdjur</strong> som filtrerade vatten. Sedan kom <strong>nässeldjur</strong> (maneter, koraller) med giftpilar för att förlama byten. Korallerna byggde yttre kalkskelett som bildat världens korallrev.</p>
+                        </div>
+                        <div class="bg-[#0f1a14]/60 p-4 rounded-lg border-l-4 border-purple-500">
+                            <h3 class="font-bold text-purple-300 mb-1">Blötdjur med skal</h3>
+                            <p class="text-sm">Tidiga bläckfiskar hade långa rörliknande skal som skyddade mot rovdjur. Kräftdjur använder skal som skydd men måste spräcka det för att växa.</p>
+                        </div>
+                        <div class="bg-[#0f1a14]/60 p-4 rounded-lg border-l-4 border-blue-500">
+                            <h3 class="font-bold text-blue-300 mb-1">Fiskarnas tid (~400 miljoner år sedan)</h3>
+                            <p class="text-sm">Många var <strong>broskfiskar</strong> (som pansarhajen, 9 meter lång). <strong>Kvastfeningarna</strong> hade fenor på skaft som fungerade som fötter — vissa hade även lungor. De blev en viktig länk till livet på land.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Djuren erövrar land -->
+            <div class="bg-[#162118]/80 backdrop-blur rounded-2xl p-6 md:p-8 border border-green-900/40 shadow-xl">
+                <h2 class="text-2xl font-bold text-emerald-400 mb-4 border-b border-emerald-800/40 pb-2">4. Djuren erövrar land</h2>
+                <div class="text-slate-200 space-y-4 leading-relaxed">
+                    <p>Först kom <strong>växter</strong> (lummer, ormbunkar), följt av små leddjur (hoppstjärtar, spindeldjur, insekter).</p>
+
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="bg-[#0f1a14]/60 p-4 rounded-lg border-l-4 border-emerald-500">
+                            <h3 class="font-bold text-emerald-300 mb-1">Groddjur (amfibier)</h3>
+                            <p class="text-sm">Första ryggradsdjuren på land. Påminde om fiskar men hade muskulösa ben. <strong>Problem:</strong> Ägg utan skal — måste fortplanta sig i vatten.</p>
+                        </div>
+                        <div class="bg-[#0f1a14]/60 p-4 rounded-lg border-l-4 border-yellow-600">
+                            <h3 class="font-bold text-yellow-300 mb-1">Kräldjur (reptiler)</h3>
+                            <p class="text-sm">Löste äggens problem med hårda <strong>kalkskal</strong> eller läderartade skal. <strong>Växelvarma</strong> — kroppstemperaturen styrs av omgivningen. Vissa hade "ryggfenor" som solfångare.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-[#0f1a14]/60 p-5 rounded-lg border border-orange-500/30 mt-4">
+                        <h3 class="font-bold text-orange-300 mb-2">Dinosaurier & Fåglar</h3>
+                        <p class="text-sm">Dinosaurierna dominerade i miljontals år — från växtätande <strong>Brachiosaurus</strong> till köttätande <strong>Tyrannosaurus rex</strong>.</p>
+                        <p class="text-sm mt-2">Fåglarna härstammar från små tvåbenta dinosaurier. Beviset: <strong>Archaeopteryx</strong> ("Urfågeln") — fjädrar och vingar som en fågel, men tänder och svans som en reptil.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. Däggdjur och människan -->
+            <div class="bg-[#162118]/80 backdrop-blur rounded-2xl p-6 md:p-8 border border-green-900/40 shadow-xl">
+                <h2 class="text-2xl font-bold text-rose-400 mb-4 border-b border-rose-800/40 pb-2">5. Däggdjurens och människans tid</h2>
+                <div class="text-slate-200 space-y-4 leading-relaxed">
+                    <div class="bg-red-900/20 p-4 rounded-lg border border-red-500/20 mb-4">
+                        <p class="text-sm"><strong>För ca 65 miljoner år sedan</strong> utrotades alla dinosaurier, troligen av kraftiga klimatförändringar orsakade av ett enormt <strong>meteoritnedslag</strong> eller extrema vulkanutbrott.</p>
+                    </div>
+
+                    <p>De tidiga däggdjuren — som liknade små näbbmöss — fick nu möjlighet att breda ut sig.</p>
+
+                    <div class="bg-[#0f1a14]/60 p-4 rounded-lg border border-rose-500/20">
+                        <h3 class="font-bold text-rose-300 mb-2">Vad utmärker däggdjur?</h3>
+                        <ul class="text-sm space-y-1 list-disc pl-4">
+                            <li>Har <strong>päls</strong></li>
+                            <li>Är <strong>jämnvarma</strong></li>
+                            <li>Honorna <strong>diar</strong> (ger di) sina ungar</li>
+                        </ul>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-4 mt-2">
+                        <div class="bg-[#0f1a14]/60 p-4 rounded-lg border-l-4 border-rose-500">
+                            <h3 class="font-bold text-rose-300 mb-1">Pungdjur (t.ex. känguru)</h3>
+                            <p class="text-sm">Ungar föds extremt outvecklade, kravlar in i mammans pung och suger sig fast vid en spene.</p>
+                        </div>
+                        <div class="bg-[#0f1a14]/60 p-4 rounded-lg border-l-4 border-rose-500">
+                            <h3 class="font-bold text-rose-300 mb-1">Kloakdjur (t.ex. näbbdjuret)</h3>
+                            <p class="text-sm">Lägger ägg — en kvarleva från de allra tidigaste däggdjuren.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-[#0f1a14]/60 p-5 rounded-lg border border-amber-500/30 mt-4">
+                        <h3 class="font-bold text-amber-300 mb-2">Människans utveckling</h3>
+                        <p class="text-sm">Började i <strong>Afrika</strong>. Äldsta fotspåren: 3,5 miljoner år gamla i vulkanaska i Tanzania. Att gå upprätt frigjorde armarna för att bära saker och använda redskap.</p>
+                        <div class="flex items-start gap-3 mt-3">
+                            <span class="font-mono text-amber-400 font-bold bg-[#0f1a14] px-2 py-1 rounded text-xs flex-shrink-0">Neandertalarna</span>
+                            <p class="text-sm">Korta, kompakta, levde i Europa — dog mystiskt ut.</p>
+                        </div>
+                        <div class="flex items-start gap-3 mt-2">
+                            <span class="font-mono text-amber-400 font-bold bg-[#0f1a14] px-2 py-1 rounded text-xs flex-shrink-0">Homo sapiens</span>
+                            <p class="text-sm">Vår art, vandrade ut från Afrika för ~200 000 år sedan. Hade avancerade redskap och konstnärliga förmågor (t.ex. grottmålningarna i Lascaux, ~20 000 år gamla).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. Systematik & Evolution -->
+            <div class="bg-[#162118]/80 backdrop-blur rounded-2xl p-6 md:p-8 border border-green-900/40 shadow-xl">
+                <h2 class="text-2xl font-bold text-teal-400 mb-4 border-b border-teal-800/40 pb-2">6. Systematik & Evolutionsteori</h2>
+                <div class="text-slate-200 space-y-4 leading-relaxed">
+
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="bg-[#0f1a14]/60 p-4 rounded-lg border-l-4 border-teal-500">
+                            <h3 class="font-bold text-teal-300 mb-1">Carl von Linné (1700-talet)</h3>
+                            <p class="text-sm">Svensk vetenskapsman som skapade systemet för att namnge arter: varje art fick <strong>två latinska namn</strong> (släktnamn + artnamn), t.ex. <em>Linnea borealis</em>. Latin gör att forskare i hela världen förstår varandra.</p>
+                        </div>
+                        <div class="bg-[#0f1a14]/60 p-4 rounded-lg border-l-4 border-teal-500">
+                            <h3 class="font-bold text-teal-300 mb-1">Charles Darwin (1800-talet)</h3>
+                            <p class="text-sm">Engelsk naturforskare som formulerade <strong>evolutionsteorin</strong> efter en fem år lång världsomsegling där han studerade djur och fossil.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-[#0f1a14]/60 p-5 rounded-lg border border-teal-500/20 mt-4">
+                        <h3 class="font-bold text-teal-300 mb-3">Så fungerar evolutionen</h3>
+                        <ul class="text-sm space-y-2 list-none">
+                            <li class="flex gap-2"><span class="text-teal-400 font-bold">1.</span> Det föds <strong>fler ungar</strong> än det finns mat till → konkurrens ("kamp för tillvaron")</li>
+                            <li class="flex gap-2"><span class="text-teal-400 font-bold">2.</span> Inom en art finns <strong>variation</strong> — alla är lite olika</li>
+                            <li class="flex gap-2"><span class="text-teal-400 font-bold">3.</span> <strong>Naturligt urval:</strong> de med bäst egenskaper överlever och får ungar</li>
+                            <li class="flex gap-2"><span class="text-teal-400 font-bold">4.</span> Egenskaperna förs vidare via <strong>arvsanlag</strong></li>
+                        </ul>
+                        <p class="text-sm mt-3 italic bg-teal-900/20 p-3 rounded">Exempel: På en torr savann överlever hjortdjur med längre halsar (når bladen i träden). De för sina anlag vidare → med tiden utvecklas giraffer.</p>
+                    </div>
+
+                    <div class="bg-[#0f1a14]/60 p-4 rounded-lg border border-green-500/20 mt-4">
+                        <h3 class="font-bold text-green-300 mb-2">Stamträd — livets släktskap</h3>
+                        <div class="grid md:grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <p class="font-bold text-green-200 mb-1">Djurriket</p>
+                                <p><strong>Ryggradslösa:</strong> blötdjur, leddjur</p>
+                                <p><strong>Ryggradsdjur:</strong> fiskar, groddjur, fåglar, däggdjur</p>
+                            </div>
+                            <div>
+                                <p class="font-bold text-green-200 mb-1">Växtriket</p>
+                                <p><strong>Mossor</strong> → <strong>Sporväxter</strong> (ormbunkar) → <strong>Fröväxter</strong></p>
+                                <p class="mt-1"><strong>Lavar</strong> = en svamp + en alg i <strong>symbios</strong></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="text-sm">Evolution pågår hela tiden och påverkas av miljöförändringar (klimat, vulkanutbrott) och mänsklig aktivitet (skogsskövling, gifter, jordbruk).</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ===== FLASHCARDS-LÄGE ===== -->
+        <div x-show="mode === 'cards'" x-transition.opacity.duration.500ms class="flex flex-col items-center justify-center min-h-[60vh]">
+
+            <div class="w-full flex justify-between items-center mb-6 text-sm text-green-300 font-bold uppercase tracking-wider">
+                <span>Kort <span x-text="cardIndex + 1" class="text-white text-lg"></span> / <span x-text="flashcards.length"></span></span>
+                <button @click="shuffleDeck()" class="flex items-center gap-2 hover:text-white transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                    Blanda högen
+                </button>
+            </div>
+
+            <div class="perspective-1000 w-full h-96 cursor-pointer group select-none" @click="flipCard()">
+                <div class="relative w-full h-full text-center transition-transform duration-500 transform-style-3d" :class="{'rotate-y-180': flipped}">
+
+                    <div class="absolute w-full h-full bg-[#162118] rounded-3xl border border-green-800/40 shadow-2xl backface-hidden flex flex-col items-center justify-center p-8 hover:border-green-500 transition-colors">
+                        <div class="absolute top-6 left-6 w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="absolute top-6 left-12 w-3 h-3 rounded-full bg-yellow-500"></div>
+
+                        <span class="text-green-400 font-bold tracking-widest text-xs uppercase mb-6 bg-[#0f1a14] px-3 py-1 rounded-full">Fråga</span>
+                        <h3 class="text-xl md:text-3xl font-bold leading-tight" x-text="flashcards[cardIndex].q"></h3>
+
+                        <p class="absolute bottom-6 text-slate-500 text-sm animate-pulse flex items-center gap-2">
+                            Klicka för att vända <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                        </p>
+                    </div>
+
+                    <div class="absolute w-full h-full bg-gradient-to-br from-green-600 to-emerald-700 rounded-3xl shadow-2xl backface-hidden rotate-y-180 flex flex-col items-center justify-center p-8 border border-green-400">
+                        <span class="text-green-100 font-bold tracking-widest text-xs uppercase mb-6 bg-white/20 px-3 py-1 rounded-full">Svar</span>
+                        <p class="text-lg md:text-2xl font-medium leading-relaxed text-white" x-text="flashcards[cardIndex].a"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex gap-4 mt-10 w-full max-w-md">
+                <button @click="prevCard()" class="flex-1 py-4 bg-[#162118] border border-green-800/40 rounded-2xl hover:bg-[#1a2d1f] hover:border-green-500 hover:text-green-300 transition font-bold shadow-lg">
+                    ← Föregående
+                </button>
+                <button @click="nextCard()" class="flex-1 py-4 bg-green-600 text-white rounded-2xl hover:bg-green-500 hover:scale-[1.02] transition font-bold shadow-lg shadow-green-900/50">
+                    Nästa fråga →
+                </button>
+            </div>
+
+            <div class="w-full mt-8 h-1.5 bg-[#162118] rounded-full overflow-hidden">
+                <div class="h-full bg-green-500 transition-all duration-300 ease-out" :style="`width: ${((cardIndex + 1) / flashcards.length) * 100}%`"></div>
+            </div>
+        </div>
+
+        <!-- ===== QUIZ-LÄGE ===== -->
+        <div x-show="mode === 'quiz'" x-cloak>
+            <div class="max-w-3xl mx-auto">
+
+                <div class="bg-[#162118]/80 backdrop-blur border border-green-500/30 p-6 rounded-2xl shadow-xl mb-8 flex justify-between items-center sticky top-24 z-20">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Din Poäng</h2>
+                        <p class="text-green-400/60 text-sm">Hur många sätter du?</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-4xl font-bold text-green-400" x-text="score"></span>
+                        <span class="text-slate-500 text-xl">/ <span x-text="quizData.length"></span></span>
+                    </div>
+                </div>
+
+                <div class="space-y-6 pb-20">
+                    <template x-for="(item, index) in quizData" :key="index">
+                        <div class="bg-[#162118] border border-green-900/40 rounded-xl overflow-hidden shadow-md transition-all duration-300 hover:border-green-500/50" :class="{'ring-2 ring-green-500 border-green-500': item.answered && item.selected === item.correct, 'ring-2 ring-red-500 border-red-500': item.answered && item.selected !== item.correct}">
+
+                            <div class="p-6">
+                                <div class="flex gap-4 mb-4">
+                                    <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-[#0f1a14] text-green-300 font-bold text-sm" x-text="index + 1"></span>
+                                    <h3 class="text-lg font-medium text-slate-100" x-text="item.q"></h3>
+                                </div>
+
+                                <div class="space-y-2 ml-12">
+                                    <template x-for="(option, optIdx) in item.options" :key="optIdx">
+                                        <button
+                                            @click="answerQuiz(index, optIdx)"
+                                            :disabled="item.answered"
+                                            :class="{
+                                                'bg-green-600/30 border-green-500 text-green-200': item.answered && optIdx === item.correct,
+                                                'bg-red-600/20 border-red-500 text-red-300': item.answered && optIdx === item.selected && optIdx !== item.correct,
+                                                'bg-[#0f1a14]/60 border-green-800/30 hover:border-green-500 hover:bg-[#0f1a14]': !item.answered,
+                                                'opacity-50': item.answered && optIdx !== item.correct && optIdx !== item.selected
+                                            }"
+                                            class="w-full text-left px-4 py-3 rounded-lg border transition-all duration-200 text-sm font-medium"
+                                            x-text="option">
+                                        </button>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <div class="text-center mt-6">
+                    <button @click="resetQuiz()" class="text-slate-500 hover:text-white underline">Börja om quizet</button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="text-center py-6 text-green-900 text-sm relative z-10">
+        <p>Lycka till på provet!</p>
+    </footer>
+
+    <script>
+        function studyApp() {
+            return {
+                mode: 'text',
+                cardIndex: 0,
+                flipped: false,
+                score: 0,
+
+                // === 50 FLASHCARDS ===
+                flashcards: [
+                    { q: "Vilka fem kriterier måste uppfyllas för att något ska kallas levande?", a: "Bestå av celler, ha ämnes-/energiomsättning, kunna fortplanta sig, föra vidare genetisk information, kunna utvecklas genom evolution." },
+                    { q: "Vad är skillnaden mellan en växtcell och en djurcell?", a: "Växtcellen har klorofyllkorn, cellvägg och cellsaftrum — djurcellen saknar dessa men har cellmembran, cellkärna och mitokondrier." },
+                    { q: "Vad är mitokondrier?", a: "Cellens 'kraftverk' — de omvandlar näring till energi i djurcellen." },
+                    { q: "När bildades de första urcellerna?", a: "För ungefär 3,5 miljarder år sedan." },
+                    { q: "Hur tror forskare att de första urcellerna bildades?", a: "Blixtrar slog ner i de varma haven och fick kemiska ämnen att reagera." },
+                    { q: "Vilka tre grenar utvecklades från urcellen?", a: "Arkéer, bakterier och eukaryoter (celler med cellkärna)." },
+                    { q: "Vad var speciellt med cyanobakterierna?", a: "De utvecklade klorofyll och uppfann fotosyntesen — producerade syre och druvsocker med hjälp av solljus och koldioxid." },
+                    { q: "Varför var cyanobakteriernas syre så viktigt?", a: "Syret fyllde atmosfären och blev en förutsättning för att livet kunde flytta upp på land." },
+                    { q: "Vad är ett fossil?", a: "Förstenade spår eller rester av djur och växter som bevarats under miljontals år." },
+                    { q: "Ge tre exempel på fossil.", a: "Insekter i bärnsten, trilobiter i sten och dinosaurieägg." },
+                    { q: "Vad kan forskare lära sig av fossil?", a: "Hur livet har utvecklats och hur klimatet sett ut under olika tidsperioder." },
+                    { q: "Vad är toffeldjuret?", a: "Ett encelligt urdjur som fortfarande finns idag — simmar med flimmerhår och äter bakterier." },
+                    { q: "Hur försvarar sig toffeldjuret?", a: "Det skjuter ut giftiga pilar." },
+                    { q: "Vad var de första enkla flercelliga djuren?", a: "Svampdjur, som filtrerade vatten för att få näring." },
+                    { q: "Vad är nässeldjur? Ge exempel.", a: "Djur med giftpilar som förlamar byten — t.ex. maneter och koraller." },
+                    { q: "Vad har koraller byggt upp med sina kalkskelett?", a: "Världens korallrev." },
+                    { q: "Hur skiljde sig tidiga bläckfiskar från dagens?", a: "De hade långa rörliknande skal som skydd — nutida bläckfiskar saknar skal." },
+                    { q: "Varför är det en nackdel att ha skal?", a: "Djuret måste spräcka sitt skal för att kunna växa." },
+                    { q: "Vad utmärkte fiskarnas tid?", a: "Den inträffade för ca 400 miljoner år sedan med många broskfiskar och kvastfeningar." },
+                    { q: "Vad var en kvastfening?", a: "En fisk med fenor på skaft som kunde användas som fötter — vissa hade lungor. Viktig länk till livet på land." },
+                    { q: "Vilka var de första organismerna som etablerade sig på land?", a: "Växter som lummer och ormbunkar, följt av leddjur som hoppstjärtar, spindeldjur och insekter." },
+                    { q: "Vad var de första ryggradsdjuren på land?", a: "Groddjuren (amfibier)." },
+                    { q: "Varför måste groddjur fortplanta sig i vatten?", a: "Deras ägg saknar skal och torkar ut på land." },
+                    { q: "Hur löste kräldjuren groddjurens ägg-problem?", a: "De utvecklade ägg med hårda kalkskal (eller läderartade skal) som kunde läggas på land." },
+                    { q: "Vad betyder växelvarm?", a: "Att kroppstemperaturen styrs av omgivningen — kräldjur är växelvarma." },
+                    { q: "Vad var Archaeopteryx (Urfågeln)?", a: "Ett fossilfynd med fjädrar och vingar som en fågel, men tänder och svans som en reptil — bevis för att fåglar härstammar från dinosaurier." },
+                    { q: "Nämn två kända dinosaurier.", a: "Brachiosaurus (växtätare) och Tyrannosaurus rex (köttätare)." },
+                    { q: "Vad hände för ca 65 miljoner år sedan?", a: "Alla dinosaurier dog ut, troligen p.g.a. klimatförändringar orsakade av meteoritnedslag eller vulkanutbrott." },
+                    { q: "Vilka tre saker utmärker däggdjur?", a: "De har päls, är jämnvarma och honorna diar sina ungar." },
+                    { q: "Vad är skillnaden mellan jämnvarm och växelvarm?", a: "Jämnvarma djur (däggdjur) har konstant kroppstemperatur, växelvarma (reptiler) styrs av omgivningens temperatur." },
+                    { q: "Vad är ett pungdjur? Ge exempel.", a: "Däggdjur vars ungar föds outvecklade och växer färdigt i mammans pung — t.ex. känguru." },
+                    { q: "Vad är ett kloakdjur? Ge exempel.", a: "Däggdjur som lägger ägg — t.ex. näbbdjuret. Kvarleva från de tidigaste däggdjuren." },
+                    { q: "Var började människans utveckling?", a: "I Afrika." },
+                    { q: "Hur gamla är de äldsta fotspåren av förmänniskor?", a: "3,5 miljoner år — hittade i vulkanaska i Tanzania." },
+                    { q: "Varför var det en fördel att gå upprätt?", a: "Det frigjorde armarna till att bära saker och använda redskap." },
+                    { q: "Vilka var neandertalarna?", a: "Korta, kompakta människor som levde i Europa och dog mystiskt ut." },
+                    { q: "Vad heter vår art och när vandrade vi ut från Afrika?", a: "Homo sapiens — för ca 200 000 år sedan." },
+                    { q: "Vad vittnar grottmålningarna i Lascaux om?", a: "Homo sapiens konstnärliga förmågor — de är ca 20 000 år gamla och visar djur." },
+                    { q: "Vem var Carl von Linné?", a: "Svensk vetenskapsman (1700-talet) som skapade systemet för att namnge arter med två latinska namn." },
+                    { q: "Varför använde Linné latin?", a: "Så att forskare i hela världen kunde förstå varandra." },
+                    { q: "Vem var Charles Darwin?", a: "Engelsk naturforskare (1800-talet) som formulerade evolutionsteorin efter en fem år lång världsomsegling." },
+                    { q: "Vad innebär 'naturligt urval'?", a: "Individer med bäst anpassade egenskaper överlever och får ungar — de för sina anlag vidare." },
+                    { q: "Förklara Darwins giraffexempel.", a: "På en torr savann överlever djur med längre hals (når blad i träden), för vidare anlaget → arten utvecklas till giraffer." },
+                    { q: "Vad menas med 'kamp för tillvaron'?", a: "Det föds fler ungar än det finns mat till, vilket leder till konkurrens." },
+                    { q: "Vad driver evolutionen?", a: "Miljöförändringar (klimat, vulkanutbrott) och mänsklig aktivitet (skogsskövling, gifter, jordbruk)." },
+                    { q: "Vad är ett stamträd inom biologi?", a: "En illustration som visar hur allt levande hänger ihop genom biologiskt släktskap." },
+                    { q: "Hur delas djurriket upp i stamträdet?", a: "I ryggradslösa djur (blötdjur, leddjur) och ryggradsdjur (fiskar, groddjur, fåglar, däggdjur)." },
+                    { q: "Hur delas växtriket in?", a: "I mossor, sporväxter (ormbunkar) och fröväxter." },
+                    { q: "Vad är en lav?", a: "En svamp och en alg som lever i symbios (samspel) med varandra." },
+                    { q: "Vad är fotosyntes?", a: "Processen där växter/cyanobakterier använder solljus och koldioxid för att tillverka syre och druvsocker." }
+                ],
+
+                // === 50 QUIZ-FRÅGOR (flerval) ===
+                quizData: [
+                    { q: "Vilket av följande är INTE ett kriterium för liv?", options: ["Bestå av celler", "Kunna röra sig snabbt", "Ha ämnesomsättning", "Kunna fortplanta sig"], correct: 1, answered: false, selected: null },
+                    { q: "Vad är mitokondrier?", options: ["Cellens 'kraftverk'", "Cellens vägg", "Ett grönt färgämne", "Cellens kärna"], correct: 0, answered: false, selected: null },
+                    { q: "Hur gammal är den äldsta kända livsformen på jorden?", options: ["1 miljon år", "500 miljoner år", "3,5 miljarder år", "14 miljarder år"], correct: 2, answered: false, selected: null },
+                    { q: "Vad bildade cyanobakterierna som ändrade atmosfären?", options: ["Koldioxid", "Kväve", "Syre", "Metan"], correct: 2, answered: false, selected: null },
+                    { q: "Vilken process uppfann cyanobakterierna?", options: ["Celldelning", "Fotosyntesen", "Evolution", "Fermentering"], correct: 1, answered: false, selected: null },
+                    { q: "Vad är ett fossil?", options: ["En levande bakterie", "Förstenade rester av forntida organismer", "En typ av mineral", "Ett verktyg från stenåldern"], correct: 1, answered: false, selected: null },
+                    { q: "Vad kan bevaras i bärnsten?", options: ["Dinosaurier", "Insekter", "Fiskar", "Träd"], correct: 1, answered: false, selected: null },
+                    { q: "Vilka tre grupper uppstod från urcellen?", options: ["Djur, växter, svampar", "Arkéer, bakterier, eukaryoter", "Virus, bakterier, alger", "Fiskar, grodor, reptiler"], correct: 1, answered: false, selected: null },
+                    { q: "Vad saknar en växtcell som en djurcell har?", options: ["Cellkärna", "DNA", "Mitokondrier", "Växtcellen saknar inget av dessa"], correct: 3, answered: false, selected: null },
+                    { q: "Vad har en växtcell som en djurcell saknar?", options: ["Cellmembran", "Klorofyllkorn och cellvägg", "Mitokondrier", "Cellkärna"], correct: 1, answered: false, selected: null },
+                    { q: "Hur simmar toffeldjuret?", options: ["Med fenor", "Med flageller", "Med flimmerhår (cilier)", "Det simmar inte"], correct: 2, answered: false, selected: null },
+                    { q: "Vilka var de första flercelliga djuren?", options: ["Fiskar", "Koraller", "Svampdjur", "Insekter"], correct: 2, answered: false, selected: null },
+                    { q: "Vad använder nässeldjur för att fånga byten?", options: ["Klor", "Giftpilar", "Nät", "Snabbhet"], correct: 1, answered: false, selected: null },
+                    { q: "Vad byggde korallerna med sina kalkskelett?", options: ["Öar", "Korallrev", "Grottor", "Berg"], correct: 1, answered: false, selected: null },
+                    { q: "Varför är det en nackdel att ha skal?", options: ["Det är tungt", "Man måste spräcka det för att växa", "Det är för varmt", "Det gör djuret synligt"], correct: 1, answered: false, selected: null },
+                    { q: "Vad var speciellt med kvastfeningar?", options: ["De var extremt stora", "De hade fenor på skaft och vissa hade lungor", "De levde på land", "De var rovdjur"], correct: 1, answered: false, selected: null },
+                    { q: "När inträffade 'fiskarnas tid'?", options: ["För 100 miljoner år sedan", "För 400 miljoner år sedan", "För 65 miljoner år sedan", "För 1 miljard år sedan"], correct: 1, answered: false, selected: null },
+                    { q: "Vilka var de första ryggradsdjuren på land?", options: ["Kräldjur", "Däggdjur", "Groddjur (amfibier)", "Fåglar"], correct: 2, answered: false, selected: null },
+                    { q: "Varför måste groddjur tillbaka till vattnet?", options: ["De kan inte andas på land", "Deras ägg saknar skal", "De äter bara fisk", "De fryser på land"], correct: 1, answered: false, selected: null },
+                    { q: "Hur löste kräldjuren ägg-problemet?", options: ["De grävde ner äggen", "De utvecklade ägg med kalkskal", "De fick levande ungar", "De lade äggen i träd"], correct: 1, answered: false, selected: null },
+                    { q: "Vad betyder 'växelvarm'?", options: ["Att kroppen alltid är varm", "Att temperaturen styrs av omgivningen", "Att man byter temperatur med andra djur", "Att man har feber"], correct: 1, answered: false, selected: null },
+                    { q: "Vad bevisar Archaeopteryx?", options: ["Att fiskar blev grodor", "Att fåglar härstammar från dinosaurier", "Att däggdjur kom från reptiler", "Att insekter kunde flyga först"], correct: 1, answered: false, selected: null },
+                    { q: "Vilken typ av dinosaurie var Brachiosaurus?", options: ["Köttätare", "Allätare", "Växtätare", "Fiskätare"], correct: 2, answered: false, selected: null },
+                    { q: "Vad orsakade troligen dinosauriernas utdöende?", options: ["Istid", "Meteoritnedslag eller vulkanutbrott", "Jakt av människor", "Sjukdomar"], correct: 1, answered: false, selected: null },
+                    { q: "När dog dinosaurierna ut?", options: ["För 200 miljoner år sedan", "För 65 miljoner år sedan", "För 10 miljoner år sedan", "För 1 miljon år sedan"], correct: 1, answered: false, selected: null },
+                    { q: "Vilka tre saker utmärker däggdjur?", options: ["Fjädrar, flyga, ägg", "Päls, jämnvarma, diar ungar", "Skal, växelvarma, ägg", "Fenor, gälar, rom"], correct: 1, answered: false, selected: null },
+                    { q: "Vilket djur är ett kloakdjur?", options: ["Känguru", "Näbbdjuret", "Varg", "Val"], correct: 1, answered: false, selected: null },
+                    { q: "Vad gör kloakdjur annorlunda jämfört med andra däggdjur?", options: ["De har fjädrar", "De lägger ägg", "De lever i vatten", "De saknar päls"], correct: 1, answered: false, selected: null },
+                    { q: "Hur utvecklas pungdjurens ungar?", options: ["I ägg utanför kroppen", "Helt inne i livmodern", "Föds outvecklade och växer i mammans pung", "Helt självständiga från födseln"], correct: 2, answered: false, selected: null },
+                    { q: "Var började människans utveckling?", options: ["Europa", "Asien", "Afrika", "Sydamerika"], correct: 2, answered: false, selected: null },
+                    { q: "Hur gamla är de äldsta fotspåren av förmänniskor?", options: ["500 000 år", "1 miljon år", "3,5 miljoner år", "10 miljoner år"], correct: 2, answered: false, selected: null },
+                    { q: "Vilken fördel gav det att gå upprätt?", options: ["Man sprang snabbare", "Armarna frigjordes för redskap", "Man syntes bättre", "Man behövde mindre mat"], correct: 1, answered: false, selected: null },
+                    { q: "Var levde neandertalarna?", options: ["Afrika", "Asien", "Sydamerika", "Europa"], correct: 3, answered: false, selected: null },
+                    { q: "Vad heter vår art?", options: ["Homo erectus", "Homo sapiens", "Homo neanderthalensis", "Homo habilis"], correct: 1, answered: false, selected: null },
+                    { q: "Hur gamla är grottmålningarna i Lascaux?", options: ["5 000 år", "20 000 år", "100 000 år", "1 miljon år"], correct: 1, answered: false, selected: null },
+                    { q: "Vem skapade systemet att namnge arter?", options: ["Charles Darwin", "Albert Einstein", "Carl von Linné", "Isaac Newton"], correct: 2, answered: false, selected: null },
+                    { q: "Varför använde Linné latin?", options: ["Det lät fint", "Forskare i hela världen kunde förstå varandra", "Svenska var för svårt", "Kungen krävde det"], correct: 1, answered: false, selected: null },
+                    { q: "Vem formulerade evolutionsteorin?", options: ["Carl von Linné", "Isaac Newton", "Charles Darwin", "Galileo Galilei"], correct: 2, answered: false, selected: null },
+                    { q: "Vad innebär 'naturligt urval'?", options: ["Människor väljer vilka djur som får leva", "De bäst anpassade överlever och förökar sig", "Alla djur utvecklas likadant", "Slumpen avgör helt"], correct: 1, answered: false, selected: null },
+                    { q: "Vad menas med 'variation' inom en art?", options: ["Alla ser exakt likadana ut", "Alla individer är lite olika", "De lever på olika platser", "De äter olika mat"], correct: 1, answered: false, selected: null },
+                    { q: "I giraffexemplet — vad överlever bäst på savannen?", options: ["De snabbaste", "De med kortast hals", "De med längst hals", "De tyngsta"], correct: 2, answered: false, selected: null },
+                    { q: "Vad driver evolutionen framåt?", options: ["Bara slumpen", "Miljöförändringar och naturligt urval", "Gudomlig vilja", "Djurens egna önskemål"], correct: 1, answered: false, selected: null },
+                    { q: "Vad visar ett biologiskt stamträd?", options: ["Var djur bor", "Hur arter är släkt med varandra", "Hur gamla djur blir", "Vad djur äter"], correct: 1, answered: false, selected: null },
+                    { q: "Vilka hör till ryggradslösa djur?", options: ["Fiskar och fåglar", "Blötdjur och leddjur", "Grodor och ormar", "Däggdjur och reptiler"], correct: 1, answered: false, selected: null },
+                    { q: "Hur sprids sporväxter som ormbunkar?", options: ["Med frön", "Med sporer", "Med lökar", "Med frukter"], correct: 1, answered: false, selected: null },
+                    { q: "Vad är en lav?", options: ["En sorts mossa", "En svamp och en alg i symbios", "En liten buske", "En parasitisk växt"], correct: 1, answered: false, selected: null },
+                    { q: "Vad betyder symbios?", options: ["Konkurrens", "Samspel mellan arter som gynnar varandra", "Att ett djur äter ett annat", "Att arter lever åtskilda"], correct: 1, answered: false, selected: null },
+                    { q: "Vilka var de första växterna på land?", options: ["Ekar och tallar", "Lummer och ormbunkar", "Rosor och tulpaner", "Gräs och vete"], correct: 1, answered: false, selected: null },
+                    { q: "Vad kallas den stora skillnaden mellan växter och djur?", options: ["Växter kan röra sig", "Djur kan fotosyntetisera", "Växter tillverkar sin egen mat, djur måste äta andra", "Djur har cellvägg"], correct: 2, answered: false, selected: null },
+                    { q: "Hur påverkar människan evolutionen idag?", options: ["Inte alls", "Genom skogsskövling, gifter och jordbruk", "Bara positivt", "Genom att skapa nya arter"], correct: 1, answered: false, selected: null }
+                ],
+
+                // FUNKTIONER
+                flipCard() {
+                    this.flipped = !this.flipped;
+                },
+
+                nextCard() {
+                    this.flipped = false;
+                    setTimeout(() => {
+                        this.cardIndex = (this.cardIndex + 1) % this.flashcards.length;
+                    }, 200);
+                },
+
+                prevCard() {
+                    this.flipped = false;
+                    setTimeout(() => {
+                        this.cardIndex = (this.cardIndex === 0) ? this.flashcards.length - 1 : this.cardIndex - 1;
+                    }, 200);
+                },
+
+                shuffleDeck() {
+                    this.flipped = false;
+                    for (let i = this.flashcards.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [this.flashcards[i], this.flashcards[j]] = [this.flashcards[j], this.flashcards[i]];
+                    }
+                    this.cardIndex = 0;
+                },
+
+                answerQuiz(qIndex, optIndex) {
+                    if (this.quizData[qIndex].answered) return;
+                    this.quizData[qIndex].answered = true;
+                    this.quizData[qIndex].selected = optIndex;
+                    if (optIndex === this.quizData[qIndex].correct) {
+                        this.score++;
+                    }
+                },
+
+                resetQuiz() {
+                    this.score = 0;
+                    this.quizData.forEach(q => {
+                        q.answered = false;
+                        q.selected = null;
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+</html>
