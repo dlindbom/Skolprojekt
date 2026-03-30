@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geografi — Klimat, Världsdelar & Hållbarhet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Space Grotesk', sans-serif; }
+
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+
+        [x-cloak] { display: none !important; }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f1420; }
+        ::-webkit-scrollbar-thumb { background: #2563eb; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3b82f6; }
+    </style>
+</head>
+<body class="bg-[#0f1420] text-white min-h-screen flex flex-col" x-data="geoApp()">
+
+    <div class="fixed inset-0 z-0 opacity-30 pointer-events-none" style="background-image: radial-gradient(rgba(59,130,246,0.15) 1px, transparent 1px); background-size: 50px 50px;"></div>
+
+    <header class="relative z-10 border-b border-blue-900/50 bg-[#0f1420]/90 backdrop-blur-md sticky top-0">
+        <div class="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-blue-600 p-2 rounded-lg shadow-lg shadow-blue-600/40">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-wide">Geografi</h1>
+                    <p class="text-blue-400/60 text-xs uppercase tracking-widest">Klimat, Världsdelar & Hållbarhet</p>
+                </div>
+            </div>
+
+            <div class="flex bg-[#161e2e] p-1 rounded-lg overflow-x-auto max-w-full">
+                <button @click="mode = 'text'" :class="{'bg-blue-600 text-white shadow-lg': mode === 'text', 'text-blue-400/60 hover:text-white': mode !== 'text'}" class="px-4 md:px-6 py-2 rounded-md text-sm font-bold transition-all duration-300 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                    Fakta
+                </button>
+                <button @click="mode = 'cards'" :class="{'bg-blue-600 text-white shadow-lg': mode === 'cards', 'text-blue-400/60 hover:text-white': mode !== 'cards'}" class="px-4 md:px-6 py-2 rounded-md text-sm font-bold transition-all duration-300 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
+                    Flashcards
+                </button>
+                <button @click="mode = 'quiz'" :class="{'bg-blue-600 text-white shadow-lg': mode === 'quiz', 'text-blue-400/60 hover:text-white': mode !== 'quiz'}" class="px-4 md:px-6 py-2 rounded-md text-sm font-bold transition-all duration-300 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
+                    Quiz
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-4 py-8 relative z-10 max-w-4xl">
+
+        <!-- ===== FAKTA-LÄGE ===== -->
+        <div x-show="mode === 'text'" x-transition.opacity.duration.500ms class="space-y-8 pb-12">
+
+            <!-- 1. Klimat & Väder -->
+            <div class="bg-[#161e2e]/80 backdrop-blur rounded-2xl p-6 md:p-8 border border-blue-900/40 shadow-xl">
+                <h2 class="text-2xl font-bold text-blue-400 mb-4 border-b border-blue-800/40 pb-2">1. Klimat och väder</h2>
+                <div class="text-slate-200 space-y-4 leading-relaxed">
+                    <p><strong>Klimat</strong> = det genomsnittliga vädret under en längre period (minst 30 år). <strong>Väder</strong> = det som sker just nu (regn, sol, vind).</p>
+                    <p>Atmosfären fungerar som ett skyddande glashus som håller kvar värmen — en förutsättning för liv på jorden.</p>
+
+                    <h3 class="font-bold text-blue-300 mt-4 mb-2">Fyra faktorer som styr temperaturen</h3>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="bg-[#0f1420]/60 p-4 rounded-lg border-l-4 border-yellow-500">
+                            <h4 class="font-bold text-yellow-300 mb-1">1. Avstånd från ekvatorn</h4>
+                            <p class="text-sm">Vid ekvatorn träffar solstrålarna rakt och ger mest värme. Ju närmare polerna, desto snedare infallsvinkel och mindre värme.</p>
+                        </div>
+                        <div class="bg-[#0f1420]/60 p-4 rounded-lg border-l-4 border-cyan-500">
+                            <h4 class="font-bold text-cyan-300 mb-1">2. Höjd över havet</h4>
+                            <p class="text-sm">Luften blir kallare ju högre upp man kommer. Därför kan det ligga snö på berg även nära ekvatorn.</p>
+                        </div>
+                        <div class="bg-[#0f1420]/60 p-4 rounded-lg border-l-4 border-teal-500">
+                            <h4 class="font-bold text-teal-300 mb-1">3. Närhet till havet</h4>
+                            <p class="text-sm">Vatten värms och kyls långsammare än land. Kustklimat ger mildare vintrar och svalare somrar. Inlandsklimat ger extrema skillnader.</p>
+                        </div>
+                        <div class="bg-[#0f1420]/60 p-4 rounded-lg border-l-4 border-red-500">
+                            <h4 class="font-bold text-red-300 mb-1">4. Vindar och havsströmmar</h4>
+                            <p class="text-sm">Transporterar värme eller kyla. Golfströmmen för varmt vatten från Mexikanska golfen till norra Europa och ger oss milt klimat.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-[#0f1420]/60 p-4 rounded-lg border border-slate-500/20 mt-2">
+                        <h4 class="font-bold text-slate-300 mb-1">Regnskugga</h4>
+                        <p class="text-sm">När fuktig luft pressas upp mot ett berg, kyls den och släpper sitt regn på vindsidan. På andra sidan berget (läsidan) blir det torrt — detta kallas <strong>regnskugga</strong>. Bergskedjor som Klippiga bergen och Anderna skapar tydliga regnskuggor.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Klimatzoner -->
+            <div class="bg-[#161e2e]/80 backdrop-blur rounded-2xl p-6 md:p-8 border border-blue-900/40 shadow-xl">
+                <h2 class="text-2xl font-bold text-emerald-400 mb-4 border-b border-emerald-800/40 pb-2">2. Jordens klimatzoner</h2>
+                <div class="text-slate-200 space-y-4 leading-relaxed">
+
+                    <div class="bg-[#0f1420]/60 p-5 rounded-lg border border-green-500/20">
+                        <h3 class="font-bold text-green-300 mb-2">Tropiska zonen</h3>
+                        <p class="text-sm">Nära ekvatorn. Varmt året om (medeltemperatur över 18&deg;C). <strong>Regnskogsklimat</strong> innebär regn nästan varje dag, medan <strong>savannklimat</strong> har tydliga torr- och regnperioder. <strong>Monsunvindar</strong> styr nederbörden i Sydostasien — sommarmonsunen drar in fuktig luft från havet och ger kraftiga regn, medan vintermonsunen blåser från land och är torr och kall.</p>
+                        <p class="text-sm mt-2"><strong>Vegetation:</strong> Tät regnskog med enorm artrikedom, eller savann med högt gräs och spridda träd. Hotas av storskaliga plantageodlingar (t.ex. palmolja) som förstör biologisk mångfald.</p>
+                    </div>
+
+                    <div class="bg-[#0f1420]/60 p-5 rounded-lg border border-amber-500/20">
+                        <h3 class="font-bold text-amber-300 mb-2">Subtropiska zonen</h3>
+                        <p class="text-sm">Torrt och varmt. Högtryckscentrum ger molnfri himmel och stark sol. Här finns världens stora öknar (t.ex. Sahara) med <strong>öken-</strong> och <strong>stäppklimat</strong> (torra grässlätter). Vid kuster som Medelhavet: <strong>medelhavsklimat</strong> med torra somrar och regniga vintrar.</p>
+                        <p class="text-sm mt-2"><strong>Vegetation:</strong> Sparsam i öknar (sand, klippor). Medelhavsvegetation med tåliga växter som olivträd och korkek. I torra områden använder människor oaser eller konstbevattning, vilket kan sänka grundvattennivåerna.</p>
+                    </div>
+
+                    <div class="bg-[#0f1420]/60 p-5 rounded-lg border border-blue-500/20">
+                        <h3 class="font-bold text-blue-300 mb-2">Tempererade zonen</h3>
+                        <p class="text-sm">Tydliga årstidsväxlingar. <strong>Kustklimat:</strong> jämna temperaturer, mycket regn (t.ex. Bergen i Norge). <strong>Inlandsklimat:</strong> kalla vintrar, varma somrar, stora temperaturskillnader (t.ex. Jakutsk i Ryssland).</p>
+                        <p class="text-sm mt-2"><strong>Vegetation:</strong> Barrskog (taiga) eller lövskog. Tätbefolkat med effektivt jordbruk som kräver konstgödsel och bekämpningsmedel.</p>
+                    </div>
+
+                    <div class="bg-[#0f1420]/60 p-5 rounded-lg border border-purple-500/20">
+                        <h3 class="font-bold text-purple-300 mb-2">Polarzonen</h3>
+                        <p class="text-sm">Extrem kyla vid polerna. <strong>Permafrost</strong> = ständigt frusen mark. Polarnatt på vintern, midnattssol på sommaren.</p>
+                        <p class="text-sm mt-2"><strong>Vegetation:</strong> Tundra med lavar och mossor. Isarna smälter snabbare på grund av klimatförändringar.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Europa -->
+            <div class="bg-[#161e2e]/80 backdrop-blur rounded-2xl p-6 md:p-8 border border-blue-900/40 shadow-xl">
+                <h2 class="text-2xl font-bold text-blue-400 mb-4 border-b border-blue-800/40 pb-2">3. Världsdelarna</h2>
+                <div class="text-slate-200 space-y-4 leading-relaxed">
+
+                    <div class="bg-[#0f1420]/60 p-5 rounded-lg border border-blue-500/20">
+                        <h3 class="font-bold text-blue-300 mb-2">Europa</h3>
+                        <p class="text-sm">Liten men tätbefolkad (ca 750 miljoner). Varierat klimat — <strong>Golfströmmen</strong> ger norra Europa mildare klimat än breddgraden antyder. Rikt på skog, jordmån och metaller men importerar mycket råvaror. De flesta arbetar inom tjänstesektorn (IT, transport, handel).</p>
+                    </div>
+
+                    <div class="bg-[#0f1420]/60 p-5 rounded-lg border border-red-500/20">
+                        <h3 class="font-bold text-red-300 mb-2">Asien</h3>
+                        <p class="text-sm">Störst och folkrikast (4,6 miljarder). Extrema kontraster: Sibiriens kyla i norr, <strong>Himalaya</strong> (världens högsta berg), torra öknar i inlandet och tropiska monsunregn i söder. Täcker alla klimatzoner. Cherrapunji i Indien är en av världens regnigaste platser. Snabb ekonomisk tillväxt (särskilt Kina och Indien). Stora oljetillgångar i Persiska viken.</p>
+                    </div>
+
+                    <div class="bg-[#0f1420]/60 p-5 rounded-lg border border-amber-500/20">
+                        <h3 class="font-bold text-amber-300 mb-2">Afrika</h3>
+                        <p class="text-sm">Näst störst, genomskuren av ekvatorn. Stora regnskogar, savanner och Sahara (världens största öken). <strong>Great Rift Valley</strong> (Stora gravsänkan) sträcker sig genom östra Afrika. Befolkning 1,4 miljarder, främst längs kuster och floder (<strong>Nilen</strong>). Rika på mineraler (kobolt, litium för batterier, guld, diamanter) men många länder kämpar med fattigdom. Jordbruk är viktigaste försörjningen för mer än hälften av befolkningen.</p>
+                    </div>
+
+                    <div class="bg-[#0f1420]/60 p-5 rounded-lg border border-cyan-500/20">
+                        <h3 class="font-bold text-cyan-300 mb-2">Nordamerika</h3>
+                        <p class="text-sm">Från Arktis till tropikerna. 590 miljoner invånare, främst i USA och södra Kanada. <strong>Klippiga bergen</strong> (Rocky Mountains) påverkar nederbörden kraftigt och skapar regnskugga. Stora tillgångar på skog, jordbruksmark och fossila bränslen. Södra delarna drabbas ofta av orkaner. USA och Kanada är ekonomiska stormakter med högteknologisk industri.</p>
+                    </div>
+
+                    <div class="bg-[#0f1420]/60 p-5 rounded-lg border border-emerald-500/20">
+                        <h3 class="font-bold text-emerald-300 mb-2">Sydamerika</h3>
+                        <p class="text-sm"><strong>Amazonas</strong> regnskog (världens största) och bergskedjan <strong>Anderna</strong>. 430 miljoner invånare, mest längs kuster. Atacamaöknen på västkusten — extremt torr p.g.a. kalla havsströmmar (<strong>Humboldtströmmen</strong>). Rikt på järnmalm, koppar, olja (särskilt Venezuela) och gas. Jordbruk med export av kaffe och kött.</p>
+                    </div>
+
+                    <div class="bg-[#0f1420]/60 p-5 rounded-lg border border-pink-500/20">
+                        <h3 class="font-bold text-pink-300 mb-2">Oceanien</h3>
+                        <p class="text-sm">Minsta världsdelen: Australien + tusentals öar. Australien till stora delar öken. Många låglänta öar hotas av stigande havsnivåer. Australien/Nya Zeeland ekonomiskt rika (gruvdrift, tjänster). Turism avgörande för Stilla havs-öarna.</p>
+                    </div>
+
+                    <div class="bg-[#0f1420]/60 p-5 rounded-lg border border-slate-500/20">
+                        <h3 class="font-bold text-slate-300 mb-2">Antarktis</h3>
+                        <p class="text-sm">Obebott, täckt av tjock inlandsis. Bara forskare och turister besöker. Fredad genom internationella avtal för miljöns skull.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Hållbar utveckling -->
+            <div class="bg-[#161e2e]/80 backdrop-blur rounded-2xl p-6 md:p-8 border border-blue-900/40 shadow-xl">
+                <h2 class="text-2xl font-bold text-teal-400 mb-4 border-b border-teal-800/40 pb-2">4. Hållbar utveckling</h2>
+                <div class="text-slate-200 space-y-4 leading-relaxed">
+                    <p>Hållbar utveckling = tillgodose dagens behov <strong>utan att skada framtida generationer</strong>. Tre dimensioner:</p>
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="bg-[#0f1420]/60 p-4 rounded-lg border-l-4 border-green-500 text-center">
+                            <h4 class="font-bold text-green-300 mb-1">Ekologisk</h4>
+                            <p class="text-sm">Skydda natur och klimat</p>
+                        </div>
+                        <div class="bg-[#0f1420]/60 p-4 rounded-lg border-l-4 border-yellow-500 text-center">
+                            <h4 class="font-bold text-yellow-300 mb-1">Social</h4>
+                            <p class="text-sm">Rättvisa och mänskliga rättigheter</p>
+                        </div>
+                        <div class="bg-[#0f1420]/60 p-4 rounded-lg border-l-4 border-blue-500 text-center">
+                            <h4 class="font-bold text-blue-300 mb-1">Ekonomisk</h4>
+                            <p class="text-sm">Hållbar ekonomi och resurser</p>
+                        </div>
+                    </div>
+                    <p class="text-sm">FN:s <strong>17 globala mål</strong> (Agenda 2030) är en plan för att lösa extrem fattigdom, klimatförändringar och andra globala problem. <strong>Extrem fattigdom</strong> = att leva på mindre än 1,9 dollar per dag.</p>
+                </div>
+            </div>
+
+            <!-- 5. Klimatförändringar -->
+            <div class="bg-[#161e2e]/80 backdrop-blur rounded-2xl p-6 md:p-8 border border-blue-900/40 shadow-xl">
+                <h2 class="text-2xl font-bold text-red-400 mb-4 border-b border-red-800/40 pb-2">5. Klimatförändringar</h2>
+                <div class="text-slate-200 space-y-4 leading-relaxed">
+                    <p>Människans användning av <strong>fossila bränslen</strong> (kol, olja, gas) har förstärkt <strong>växthuseffekten</strong>. Konsekvenser:</p>
+                    <div class="flex flex-wrap gap-3">
+                        <div class="bg-red-900/20 px-4 py-2 rounded-full border border-red-500/30 text-sm">Smältande isar</div>
+                        <div class="bg-red-900/20 px-4 py-2 rounded-full border border-red-500/30 text-sm">Extremväder</div>
+                        <div class="bg-red-900/20 px-4 py-2 rounded-full border border-red-500/30 text-sm">Värmeböljor & torka</div>
+                        <div class="bg-red-900/20 px-4 py-2 rounded-full border border-red-500/30 text-sm">Skyfall & översvämningar</div>
+                        <div class="bg-red-900/20 px-4 py-2 rounded-full border border-red-500/30 text-sm">Hotad matproduktion</div>
+                        <div class="bg-red-900/20 px-4 py-2 rounded-full border border-red-500/30 text-sm">Klimatflyktingar</div>
+                    </div>
+                    <div class="bg-[#0f1420]/60 p-4 rounded-lg border border-amber-500/20 mt-2">
+                        <p class="text-sm"><strong>Pollinatörer som bin</strong> är avgörande för vår matförsörjning. Utan dem kan inte många grödor producera frukt och frön.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. Resurser & cirkulär ekonomi -->
+            <div class="bg-[#161e2e]/80 backdrop-blur rounded-2xl p-6 md:p-8 border border-blue-900/40 shadow-xl">
+                <h2 class="text-2xl font-bold text-emerald-400 mb-4 border-b border-emerald-800/40 pb-2">6. Resurser och cirkulär ekonomi</h2>
+                <div class="text-slate-200 space-y-4 leading-relaxed">
+                    <p>Dagens "slit-och-släng"-samhälle är ohållbart. Lösningen: <strong>cirkulär ekonomi</strong>.</p>
+                    <div class="bg-[#0f1420]/60 p-5 rounded-lg border border-emerald-500/20">
+                        <div class="flex flex-wrap gap-3 justify-center text-sm font-bold">
+                            <span class="bg-emerald-900/30 px-3 py-1.5 rounded-full border border-emerald-500/30">Råmaterial</span>
+                            <span class="text-emerald-400">&rarr;</span>
+                            <span class="bg-emerald-900/30 px-3 py-1.5 rounded-full border border-emerald-500/30">Hållbar design</span>
+                            <span class="text-emerald-400">&rarr;</span>
+                            <span class="bg-emerald-900/30 px-3 py-1.5 rounded-full border border-emerald-500/30">Tillverkning</span>
+                            <span class="text-emerald-400">&rarr;</span>
+                            <span class="bg-emerald-900/30 px-3 py-1.5 rounded-full border border-emerald-500/30">Användning</span>
+                            <span class="text-emerald-400">&rarr;</span>
+                            <span class="bg-emerald-900/30 px-3 py-1.5 rounded-full border border-emerald-500/30">Återvinning</span>
+                            <span class="text-emerald-400">&rarr;</span>
+                            <span class="text-emerald-300">&#x21BB; Nytt kretslopp</span>
+                        </div>
+                    </div>
+                    <p class="text-sm"><strong>Delningsekonomi</strong> (låna, hyra istället för att köpa) är en del av lösningen.</p>
+                </div>
+            </div>
+
+            <!-- 7. Vatten -->
+            <div class="bg-[#161e2e]/80 backdrop-blur rounded-2xl p-6 md:p-8 border border-blue-900/40 shadow-xl">
+                <h2 class="text-2xl font-bold text-cyan-400 mb-4 border-b border-cyan-800/40 pb-2">7. Vatten och rättvisa</h2>
+                <div class="text-slate-200 space-y-4 leading-relaxed">
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="bg-[#0f1420]/60 p-4 rounded-lg border-l-4 border-cyan-500">
+                            <h4 class="font-bold text-cyan-300 mb-1">Sötvatten: bara 2,5%</h4>
+                            <p class="text-sm">Av allt vatten på jorden är bara 2,5% sötvatten. Miljontals människor saknar rent vatten — en mänsklig rättighet.</p>
+                        </div>
+                        <div class="bg-[#0f1420]/60 p-4 rounded-lg border-l-4 border-pink-500">
+                            <h4 class="font-bold text-pink-300 mb-1">Flickor drabbas hårdast</h4>
+                            <p class="text-sm">I många länder ansvarar flickor för vattenhämtning, vilket hindrar dem från att gå i skolan.</p>
+                        </div>
+                    </div>
+                    <div class="bg-[#0f1420]/60 p-4 rounded-lg border border-cyan-500/20">
+                        <h4 class="font-bold text-cyan-300 mb-1">Mikroplaster</h4>
+                        <p class="text-sm">Små plastpartiklar (från bildäck, kläder m.m.) som hamnar i haven och skadar djurlivet. Ett växande globalt problem.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8. Mat och hunger -->
+            <div class="bg-[#161e2e]/80 backdrop-blur rounded-2xl p-6 md:p-8 border border-blue-900/40 shadow-xl">
+                <h2 class="text-2xl font-bold text-orange-400 mb-4 border-b border-orange-800/40 pb-2">8. Mat, hunger och globalisering</h2>
+                <div class="text-slate-200 space-y-4 leading-relaxed">
+                    <p class="text-sm">Vi producerar tillräckligt med mat för alla — ändå råder hunger p.g.a. <strong>krig, fattigdom och klimatförändringar</strong>. Matsvinn är ett enormt problem i rika länder.</p>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="bg-[#0f1420]/60 p-4 rounded-lg border-l-4 border-orange-500">
+                            <h4 class="font-bold text-orange-300 mb-1">Globalisering</h4>
+                            <p class="text-sm">Vi kan köpa mat från hela världen, men transporterna har stor miljöpåverkan.</p>
+                        </div>
+                        <div class="bg-[#0f1420]/60 p-4 rounded-lg border-l-4 border-green-500">
+                            <h4 class="font-bold text-green-300 mb-1">Ekoturism</h4>
+                            <p class="text-sm">Hållbar turism som ger lokala samhällen inkomster samtidigt som naturen skyddas.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 9. Människa och natur -->
+            <div class="bg-[#161e2e]/80 backdrop-blur rounded-2xl p-6 md:p-8 border border-blue-900/40 shadow-xl">
+                <h2 class="text-2xl font-bold text-violet-400 mb-4 border-b border-violet-800/40 pb-2">9. Människa och natur i samspel</h2>
+                <div class="text-slate-200 space-y-4 leading-relaxed">
+                    <p class="text-sm">Vårt agerande får konsekvenser för ekosystemen. Ohållbart fiske och handel med vilda djur kan leda till ekologiska kriser och till och med <strong>pandemier</strong> (virus som sprids från djur till människa).</p>
+                    <div class="bg-[#0f1420]/60 p-4 rounded-lg border border-green-500/20">
+                        <h4 class="font-bold text-green-300 mb-1">Positiva exempel</h4>
+                        <p class="text-sm"><strong>Ekoturism</strong> kan skydda regnskogar och ge lokalbefolkningen inkomster utan att förstöra naturen. T.ex. guidade vandringar i Guyanas regnskog.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ===== FLASHCARDS-LÄGE ===== -->
+        <div x-show="mode === 'cards'" x-transition.opacity.duration.500ms class="flex flex-col items-center justify-center min-h-[60vh]">
+
+            <div class="w-full flex justify-between items-center mb-6 text-sm text-blue-300 font-bold uppercase tracking-wider">
+                <span>Kort <span x-text="cardIndex + 1" class="text-white text-lg"></span> / <span x-text="flashcards.length"></span></span>
+                <button @click="shuffleDeck()" class="flex items-center gap-2 hover:text-white transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                    Blanda kort
+                </button>
+            </div>
+
+            <div class="perspective-1000 w-full h-96 cursor-pointer group select-none" @click="flipCard()">
+                <div class="relative w-full h-full text-center transition-transform duration-500 transform-style-3d" :class="{'rotate-y-180': flipped}">
+
+                    <div class="absolute w-full h-full bg-[#161e2e] rounded-3xl border border-blue-800/40 shadow-2xl backface-hidden flex flex-col items-center justify-center p-8 hover:border-blue-500 transition-colors">
+                        <div class="absolute top-6 left-6 w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="absolute top-6 left-12 w-3 h-3 rounded-full bg-yellow-500"></div>
+
+                        <span class="text-blue-400 font-bold tracking-widest text-xs uppercase mb-6 bg-[#0f1420] px-3 py-1 rounded-full">Fråga</span>
+                        <h3 class="text-xl md:text-3xl font-bold leading-tight" x-text="flashcards[cardIndex].q"></h3>
+
+                        <p class="absolute bottom-6 text-slate-500 text-sm animate-pulse flex items-center gap-2">
+                            Klicka för att vända <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                        </p>
+                    </div>
+
+                    <div class="absolute w-full h-full bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl shadow-2xl backface-hidden rotate-y-180 flex flex-col items-center justify-center p-8 border border-blue-400">
+                        <span class="text-blue-100 font-bold tracking-widest text-xs uppercase mb-6 bg-white/20 px-3 py-1 rounded-full">Svar</span>
+                        <p class="text-lg md:text-2xl font-medium leading-relaxed text-white" x-text="flashcards[cardIndex].a"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex gap-4 mt-10 w-full max-w-md">
+                <button @click="prevCard()" class="flex-1 py-4 bg-[#161e2e] border border-blue-800/40 rounded-2xl hover:bg-[#1a2540] hover:border-blue-500 hover:text-blue-300 transition font-bold shadow-lg">
+                    &larr; Föregående
+                </button>
+                <button @click="nextCard()" class="flex-1 py-4 bg-blue-600 text-white rounded-2xl hover:bg-blue-500 hover:scale-[1.02] transition font-bold shadow-lg shadow-blue-900/50">
+                    Nästa fråga &rarr;
+                </button>
+            </div>
+
+            <div class="w-full mt-8 h-1.5 bg-[#161e2e] rounded-full overflow-hidden">
+                <div class="h-full bg-blue-500 transition-all duration-300 ease-out" :style="`width: ${((cardIndex + 1) / flashcards.length) * 100}%`"></div>
+            </div>
+        </div>
+
+        <!-- ===== QUIZ-LÄGE ===== -->
+        <div x-show="mode === 'quiz'" x-cloak>
+            <div class="max-w-3xl mx-auto">
+
+                <div class="bg-[#161e2e]/80 backdrop-blur border border-blue-500/30 p-6 rounded-2xl shadow-xl mb-8 flex justify-between items-center sticky top-24 z-20">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Din Poäng</h2>
+                        <p class="text-blue-400/60 text-sm">Hur många sätter du?</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-4xl font-bold text-blue-400" x-text="score"></span>
+                        <span class="text-slate-500 text-xl">/ <span x-text="quizData.length"></span></span>
+                    </div>
+                </div>
+
+                <div class="space-y-6 pb-20">
+                    <template x-for="(item, index) in quizData" :key="index">
+                        <div class="bg-[#161e2e] border border-blue-900/40 rounded-xl overflow-hidden shadow-md transition-all duration-300 hover:border-blue-500/50" :class="{'ring-2 ring-blue-500 border-blue-500': item.answered && item.selected === item.correct, 'ring-2 ring-red-500 border-red-500': item.answered && item.selected !== item.correct}">
+
+                            <div class="p-6">
+                                <div class="flex gap-4 mb-4">
+                                    <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-[#0f1420] text-blue-300 font-bold text-sm" x-text="index + 1"></span>
+                                    <h3 class="text-lg font-medium text-slate-100" x-text="item.q"></h3>
+                                </div>
+
+                                <div class="space-y-2 ml-12">
+                                    <template x-for="(option, optIdx) in item.options" :key="optIdx">
+                                        <button
+                                            @click="answerQuiz(index, optIdx)"
+                                            :disabled="item.answered"
+                                            :class="{
+                                                'bg-blue-600/30 border-blue-500 text-blue-200': item.answered && optIdx === item.correct,
+                                                'bg-red-600/20 border-red-500 text-red-300': item.answered && optIdx === item.selected && optIdx !== item.correct,
+                                                'bg-[#0f1420]/60 border-blue-800/30 hover:border-blue-500 hover:bg-[#0f1420]': !item.answered,
+                                                'opacity-50': item.answered && optIdx !== item.correct && optIdx !== item.selected
+                                            }"
+                                            class="w-full text-left px-4 py-3 rounded-lg border transition-all duration-200 text-sm font-medium"
+                                            x-text="option">
+                                        </button>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <div class="text-center mt-6">
+                    <button @click="resetQuiz()" class="text-slate-500 hover:text-white underline">Börja om quizet</button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="text-center py-6 text-blue-900 text-sm relative z-10">
+        <p>Lycka till på provet!</p>
+    </footer>
+
+    <script>
+        function geoApp() {
+            return {
+                mode: 'text',
+                cardIndex: 0,
+                flipped: false,
+                score: 0,
+
+                flashcards: [
+                    // --- Klimat & Väder ---
+                    { q: "Vad är skillnaden mellan klimat och väder?", a: "Klimat är det genomsnittliga vädret under minst 30 år. Väder är det som händer just nu — regn, sol, vind, temperatur." },
+                    { q: "Vilka fyra faktorer styr temperaturen på en plats?", a: "1) Avstånd från ekvatorn, 2) Höjd över havet, 3) Närhet till havet, 4) Vindar och havsströmmar." },
+                    { q: "Varför är det varmare vid ekvatorn än vid polerna?", a: "Vid ekvatorn träffar solstrålarna jorden rakt framifrån och koncentrerar värmen. Vid polerna träffar de snett och sprids ut över en större yta." },
+                    { q: "Varför blir det kallare ju högre upp man kommer?", a: "Luften blir tunnare och kan inte hålla kvar lika mycket värme. Därför kan det ligga snö på höga berg även nära ekvatorn." },
+                    { q: "Vad menas med kustklimat och inlandsklimat?", a: "Kustklimat: mildare vintrar och svalare somrar (havet jämnar ut). Inlandsklimat: kalla vintrar och varma somrar med stora temperaturskillnader." },
+                    { q: "Vad är Golfströmmen och varför är den viktig?", a: "En varm havsström som för varmt vatten från Mexikanska golfen till norra Europa. Den gör att Skandinavien har mildare klimat än andra platser på samma breddgrad." },
+                    { q: "Hur fungerar atmosfären som ett skydd för jorden?", a: "Atmosfären fungerar som ett glashus som håller kvar värmen från solen. Utan den skulle jorden vara för kall för liv." },
+
+                    // --- Klimatzoner ---
+                    { q: "Vilka fyra huvudsakliga klimatzoner finns det?", a: "Tropisk zon, subtropisk zon, tempererad zon och polarzon." },
+                    { q: "Beskriv den tropiska zonen.", a: "Nära ekvatorn, varmt året om (över 18°C i medeltemperatur). Regnskogsklimat med regn nästan varje dag, eller savannklimat med torr- och regnperiod." },
+                    { q: "Vad är monsun och hur påverkar den Sydostasien?", a: "Säsongsvindar som byter riktning. Sommarmonsunen drar in fuktig luft från havet och ger kraftiga regn. Vintermonsunen blåser från land och är torr och kall." },
+                    { q: "Vad kännetecknar den subtropiska zonen?", a: "Torrt och varmt. Högtryckscentrum ger molnfri himmel. Här finns världens stora öknar. Vid kuster som Medelhavet: torra somrar och regniga vintrar." },
+                    { q: "Vad menas med medelhavsklimat?", a: "Torra, varma somrar och milda, regniga vintrar. Typiskt för områden runt Medelhavet men även delar av Kalifornien och Sydafrika." },
+                    { q: "Beskriv den tempererade zonen.", a: "Tydliga årstider. Kustklimat (jämna temperaturer, mycket regn) eller inlandsklimat (extrema temperaturskillnader). Vegetation: barr- och lövskog." },
+                    { q: "Vad menas med permafrost?", a: "Ständigt frusen mark i polarzonen. Marken tinar aldrig helt, även på sommaren. Klimatförändringar gör att permafrosten börjar smälta." },
+                    { q: "Vad är tundra?", a: "Vegetationstypen i polarzonen. Träd kan inte växa — bara lavar, mossor och låga buskar. Marken är permafrost." },
+                    { q: "Förklara skillnaden mellan polarnatt och midnattssol.", a: "Polarnatt: solen går inte upp alls under vintern nära polerna. Midnattssol: solen går aldrig ner under sommaren. Beror på jordens lutning." },
+
+                    // --- Världsdelarna ---
+                    { q: "Varför har norra Europa mildare klimat än andra platser på samma breddgrad?", a: "Tack vare Golfströmmen som transporterar varmt vatten från tropikerna till Nordatlanten och värmer luften." },
+                    { q: "Hur stor är Europas befolkning och vad arbetar de flesta med?", a: "Ca 750 miljoner. De flesta arbetar inom tjänstesektorn — IT, transport, handel, vård." },
+                    { q: "Varför är Asien speciellt bland världsdelarna?", a: "Det är världens största och folkrikaste världsdel med 4,6 miljarder människor. Har extrema kontraster: från arktisk kyla till tropisk monsun." },
+                    { q: "Var finns stora oljetillgångar i Asien?", a: "I och runt Persiska viken, i länder som Saudiarabien, Irak, Iran, Kuwait och Förenade Arabemiraten." },
+                    { q: "Vad är Sahara och var ligger den?", a: "Världens största öken, belägen i norra Afrika. Den täcker stora delar av kontinenten och ligger i den subtropiska zonen." },
+                    { q: "Varför bor de flesta i Afrika längs kuster och floder?", a: "Tillgång till vatten är avgörande för jordbruk, dricksvatten och transport. Inlandet är ofta öken eller svårtillgänglig terräng." },
+                    { q: "Vilka naturresurser är Afrika rikt på?", a: "Mineraler som används i bl.a. batteritillverkning (kobolt, litium), samt guld, diamanter och olja." },
+                    { q: "Varför drabbas södra Nordamerika ofta av orkaner?", a: "Varmt havsvatten i tropikerna ger energi till kraftiga stormar (orkaner) som drar in mot kustområdena i Mexikanska golfen och Karibien." },
+                    { q: "Vad är Atacamaöknen och varför är den så torr?", a: "En öken på Sydamerikas västkust (Chile). Den är extremt torr på grund av kalla havsströmmar utanför kusten som kyler luften och hindrar regn." },
+                    { q: "Varför hotas många öar i Oceanien?", a: "De är låglänta och hotas av stigande havsnivåer orsakade av klimatförändringar. Även små höjningar kan översvämma hela öar." },
+                    { q: "Varför är Antarktis speciellt?", a: "Det är obebott (utom forskare), täckt av tjock inlandsis och fredad genom internationella avtal. Ingen får utvinna mineraler eller förstöra miljön." },
+
+                    // --- Hållbar utveckling ---
+                    { q: "Vad menas med hållbar utveckling?", a: "Att tillgodose dagens behov utan att förstöra för kommande generationer. Bygger på tre dimensioner: ekologisk, social och ekonomisk hållbarhet." },
+                    { q: "Vad är de tre dimensionerna av hållbar utveckling?", a: "Ekologisk (skydda natur och klimat), social (rättvisa och mänskliga rättigheter) och ekonomisk (hållbar resursanvändning och ekonomi)." },
+                    { q: "Vad är FN:s Agenda 2030?", a: "17 globala mål som världens länder enats om. En plan för att lösa fattigdom, hunger, klimatförändringar och andra globala utmaningar till 2030." },
+
+                    // --- Klimatförändringar ---
+                    { q: "Vad är växthuseffekten?", a: "Atmosfären fångar värme från solen, som ett växthus. Det är naturligt och nödvändigt för liv. Problemet är att människans utsläpp förstärker effekten." },
+                    { q: "Vad är fossila bränslen och varför är de ett problem?", a: "Kol, olja och naturgas — bildade av döda organismer under miljontals år. När de förbränns frigörs koldioxid som förstärker växthuseffekten." },
+                    { q: "Vad är en klimatflykting?", a: "En person som tvingas fly från sitt hem på grund av klimatförändringar — till exempel torka, översvämningar eller stigande havsnivåer." },
+                    { q: "Varför är pollinatörer som bin så viktiga?", a: "De pollinerar växter så att frukt och frön kan bildas. Utan bin och andra pollinatörer skulle mycket av vår matproduktion kollapsa." },
+
+                    // --- Resurser & ekonomi ---
+                    { q: "Vad menas med cirkulär ekonomi?", a: "Ett system där material återanvänds, repareras och återvinns i ett kretslopp — istället för att slängas (slit-och-släng). Minskar avfall och resursförbrukning." },
+                    { q: "Ge exempel på delningsekonomi.", a: "Att låna, hyra eller dela saker istället för att alla köper nytt. T.ex. bilpooler, verktygsbibliotek, second hand-butiker." },
+                    { q: "Vad är naturresurser? Ge exempel.", a: "Tillgångar från naturen som människan använder: skog, vatten, mineraler, jordbruksmark, olja, gas, fisk." },
+
+                    // --- Vatten ---
+                    { q: "Hur stor del av jordens vatten är sötvatten?", a: "Bara 2,5%. Resten är saltvatten i haven. Av sötvattnet är dessutom det mesta bundet i glaciärer och is." },
+                    { q: "Hur påverkar vattenbrist flickors utbildning?", a: "I många utvecklingsländer ansvarar flickor för att hämta vatten, ofta långa sträckor. Det tar tid som annars kunde läggas på skolgång." },
+                    { q: "Vad är mikroplaster och var kommer de ifrån?", a: "Mycket små plastpartiklar som hamnar i haven och skadar djurlivet. De kommer bl.a. från bildäck, syntetiska kläder och nedbruten plast." },
+
+                    // --- Mat & hunger ---
+                    { q: "Varför finns hunger trots att vi producerar tillräckligt med mat?", a: "Maten är ojämnt fördelad. Krig, fattigdom och klimatförändringar hindrar att mat når alla. I rika länder slängs enorma mängder mat." },
+                    { q: "Vad menas med matsvinn?", a: "Mat som slängs istället för att ätas. Ett enormt problem i rika länder — mat kastas i butiker, restauranger och hem." },
+                    { q: "Vad är ekoturism?", a: "Hållbar turism som skyddar naturen och ger lokala samhällen inkomster. T.ex. guidade vandringar i regnskog där pengarna går till lokalbefolkningen." },
+                    { q: "Hur påverkar globaliseringen vår mat?", a: "Vi kan köpa mat från hela världen året runt. Men långa transporter (flyg, båt, lastbil) har stor miljöpåverkan genom utsläpp av koldioxid." },
+                    { q: "Varför är konstbevattning både bra och problematiskt?", a: "Bra: gör det möjligt att odla mat i torra områden. Problematiskt: kan sänka grundvattennivåerna och på sikt göra marken obrukbar." },
+                    { q: "Vad kan hända om ohållbart fiske och handel med vilda djur fortsätter?", a: "Det kan leda till ekologiska kriser och till och med pandemier. Virus kan spridas från vilda djur till människor. Vårt agerande påverkar hela ekosystemet." },
+                    { q: "Vad menas med regnskugga?", a: "När fuktig luft pressas upp mot ett berg släpper den sitt regn på vindsidan. På andra sidan (läsidan) blir det torrt. Bergskedjor som Klippiga bergen och Anderna skapar tydliga regnskuggor." },
+                    { q: "Vad är Humboldtströmmen?", a: "En kall havsström utanför Sydamerikas västkust. Den kyler luften och hindrar regn, vilket gör Atacamaöknen till en av världens torraste platser." },
+                    { q: "Vad är Great Rift Valley?", a: "Stora gravsänkan — en enorm geologisk spricka som sträcker sig genom östra Afrika. Där finns sjöar, vulkaner och unika ekosystem." },
+                    { q: "Vad menas med stäpp?", a: "Torra grässlätter i den subtropiska zonen, mellan öken och mer bördig mark. Gräs dominerar men få träd växer." },
+                    { q: "Vad menas med extrem fattigdom?", a: "Att leva på mindre än 1,9 dollar (ca 20 kronor) per dag. Innebär brist på mat, rent vatten, sjukvård och utbildning." },
+                    { q: "Nämn några specifika bergskedjor och var de ligger.", a: "Himalaya (Asien — världens högsta), Alperna (Europa), Klippiga bergen/Rocky Mountains (Nordamerika), Anderna (Sydamerika — världens längsta)." }
+                ],
+
+                quizData: [
+                    { q: "Vad är klimat?", options: ["Vädret just nu", "Genomsnittligt väder under minst 30 år", "Temperaturen en viss dag", "Vindens styrka under en vecka"], correct: 1, answered: false, selected: null },
+                    { q: "Vilken havsström gör att norra Europa har mildare klimat?", options: ["Labradorströmmen", "Benguelaströmmen", "Golfströmmen", "Humboldtströmmen"], correct: 2, answered: false, selected: null },
+                    { q: "Varför är det kallare på höga berg?", options: ["Solen når inte dit", "Luften är tunnare och håller sämre värme", "Vinden blåser bort värmen", "Bergen blockerar solen"], correct: 1, answered: false, selected: null },
+                    { q: "Vad kännetecknar kustklimat?", options: ["Extremt varma somrar och kalla vintrar", "Mildare vintrar och svalare somrar", "Torrt och varmt året om", "Ingen nederbörd"], correct: 1, answered: false, selected: null },
+                    { q: "I vilken klimatzon ligger regnskogarna?", options: ["Tempererade zonen", "Subtropiska zonen", "Polarzonen", "Tropiska zonen"], correct: 3, answered: false, selected: null },
+                    { q: "Vad är monsun?", options: ["En typ av vulkan", "Säsongsvindar som byter riktning och styr nederbörden", "En varm havsström", "Ett berg i Asien"], correct: 1, answered: false, selected: null },
+                    { q: "Var finns världens stora öknar?", options: ["I polarzonen", "I den tempererade zonen", "I den subtropiska zonen", "I den tropiska zonen"], correct: 2, answered: false, selected: null },
+                    { q: "Vad menas med medelhavsklimat?", options: ["Kallt och blåsigt hela året", "Torra varma somrar och milda regniga vintrar", "Regn varje dag", "Extremt kallt på vintern"], correct: 1, answered: false, selected: null },
+                    { q: "Vad är permafrost?", options: ["Is som flyter i havet", "Ständigt frusen mark", "Tjock snö på berg", "Glaciärer vid kusten"], correct: 1, answered: false, selected: null },
+                    { q: "Vilken vegetation finns i polarzonen?", options: ["Tät regnskog", "Lövskog", "Tundra med lavar och mossor", "Savann"], correct: 2, answered: false, selected: null },
+                    { q: "Vilken är världens största och folkrikaste världsdel?", options: ["Afrika", "Europa", "Nordamerika", "Asien"], correct: 3, answered: false, selected: null },
+                    { q: "Ungefär hur stor är Europas befolkning?", options: ["200 miljoner", "750 miljoner", "1,4 miljarder", "4,6 miljarder"], correct: 1, answered: false, selected: null },
+                    { q: "Vad heter världens största öken?", options: ["Gobi", "Atacama", "Sahara", "Kalahari"], correct: 2, answered: false, selected: null },
+                    { q: "Var bor de flesta i Afrika?", options: ["I öknen", "På berg", "Längs kuster och floder", "I regnskogen"], correct: 2, answered: false, selected: null },
+                    { q: "Varför drabbas södra Nordamerika ofta av orkaner?", options: ["Det finns många berg", "Varmt havsvatten ger energi till stormar", "Det regnar hela tiden", "Golfströmmen stoppar"], correct: 1, answered: false, selected: null },
+                    { q: "Vad gör Atacamaöknen så torr?", options: ["Den ligger högt upp", "Kalla havsströmmar kyler luften och hindrar regn", "Den är nära ekvatorn", "Inga vindar når dit"], correct: 1, answered: false, selected: null },
+                    { q: "Vilken världsdel är minst?", options: ["Europa", "Antarktis", "Oceanien", "Sydamerika"], correct: 2, answered: false, selected: null },
+                    { q: "Varför hotas låglänta öar i Oceanien?", options: ["Vulkaner", "Orkaner", "Stigande havsnivåer", "Jordbävningar"], correct: 2, answered: false, selected: null },
+                    { q: "Vad gäller för Antarktis enligt internationella avtal?", options: ["Alla får utvinna mineraler", "Kontinenten är fredad för miljöns skull", "Bara USA får forska där", "Turism är förbjudet"], correct: 1, answered: false, selected: null },
+                    { q: "Vilka är de tre dimensionerna av hållbar utveckling?", options: ["Ekonomisk, teknisk och kulturell", "Ekologisk, social och ekonomisk", "Politisk, social och digital", "Nationell, regional och global"], correct: 1, answered: false, selected: null },
+                    { q: "Vad är FN:s Agenda 2030?", options: ["En militärallians", "17 globala mål för hållbar utveckling", "Ett handelsavtal", "En klimatlag"], correct: 1, answered: false, selected: null },
+                    { q: "Vad förstärker växthuseffekten?", options: ["Solenergi", "Förbränning av fossila bränslen", "Vattenkraft", "Vindkraft"], correct: 1, answered: false, selected: null },
+                    { q: "Vilka är fossila bränslen?", options: ["Ved, halm och gödsel", "Kol, olja och naturgas", "Sol, vind och vatten", "Uran och plutonium"], correct: 1, answered: false, selected: null },
+                    { q: "Vad menas med klimatflykting?", options: ["En person som forskar om klimat", "En som flyttar för bättre väder", "En person som tvingas fly p.g.a. klimatförändringar", "En turist som reser till varmare länder"], correct: 2, answered: false, selected: null },
+                    { q: "Varför är bin viktiga för matproduktionen?", options: ["De äter skadedjur", "De pollinerar växter så att frukt och frön bildas", "De producerar socker", "De sprider frön med vinden"], correct: 1, answered: false, selected: null },
+                    { q: "Vad är cirkulär ekonomi?", options: ["Att sälja så mycket som möjligt", "Att material återanvänds och återvinns i ett kretslopp", "Att köpa billigt och slänga snabbt", "Att bara handla lokalt"], correct: 1, answered: false, selected: null },
+                    { q: "Hur stor del av jordens vatten är sötvatten?", options: ["25%", "10%", "50%", "2,5%"], correct: 3, answered: false, selected: null },
+                    { q: "Vad är mikroplaster?", options: ["Små plastleksaker", "Mycket små plastpartiklar som skadar djurlivet i haven", "Återvunnen plast", "Biologiskt nedbrytbar plast"], correct: 1, answered: false, selected: null },
+                    { q: "Varför finns hunger i världen trots tillräcklig matproduktion?", options: ["Maten är giftig", "Krig, fattigdom och ojämn fördelning", "Det finns för få bönder", "Alla länder har torka"], correct: 1, answered: false, selected: null },
+                    { q: "Vad menas med matsvinn?", options: ["Mat som transporteras långt", "Mat som slängs istället för att ätas", "Mat som är ekologisk", "Mat som säljs billigt"], correct: 1, answered: false, selected: null },
+                    { q: "Vad är ekoturism?", options: ["Charterresor med flyg", "Hållbar turism som skyddar natur och ger lokala inkomster", "Turism i storstäder", "Att resa gratis"], correct: 1, answered: false, selected: null },
+                    { q: "Varför kan konstbevattning vara problematiskt?", options: ["Det är för dyrt", "Det kan sänka grundvattennivåerna", "Det ger för mycket regn", "Vattnet smakar illa"], correct: 1, answered: false, selected: null },
+                    { q: "Vad menas med delningsekonomi?", options: ["Att alla delar på samma lön", "Att låna, hyra eller dela istället för att köpa nytt", "Att handla bara på nätet", "Att staten äger allt"], correct: 1, answered: false, selected: null },
+                    { q: "Vilket problem hotar palmoljeplantager i tropikerna?", options: ["De producerar för lite", "De tar för lång tid att växa", "De hotar den biologiska mångfalden", "De kräver för mycket vatten"], correct: 2, answered: false, selected: null },
+                    { q: "Var ligger Cherrapunji — en av världens regnigaste platser?", options: ["Brasilien", "Kongo", "Indien", "Indonesien"], correct: 2, answered: false, selected: null },
+                    { q: "Vad arbetar de flesta européer med idag?", options: ["Jordbruk", "Gruvdrift", "Tjänstesektorn (IT, handel, transport)", "Fiske"], correct: 2, answered: false, selected: null },
+                    { q: "Vad menas med regnskugga?", options: ["Skuggan under ett stort träd", "Torrt klimat på läsidan av ett berg", "Regn som faller i skuggan", "Moln som blockerar solen"], correct: 1, answered: false, selected: null },
+                    { q: "Vilken kall havsström gör Atacamaöknen extremt torr?", options: ["Golfströmmen", "Benguelaströmmen", "Humboldtströmmen", "Labradorströmmen"], correct: 2, answered: false, selected: null },
+                    { q: "Vad är extrem fattigdom enligt FN?", options: ["Att leva på mindre än 10 dollar/dag", "Att leva på mindre än 1,9 dollar/dag", "Att inte ha bil", "Att bo i en liten lägenhet"], correct: 1, answered: false, selected: null },
+                    { q: "Var ligger Himalaya?", options: ["Sydamerika", "Afrika", "Europa", "Asien"], correct: 3, answered: false, selected: null }
+                ],
+
+                flipCard() { this.flipped = !this.flipped; },
+                nextCard() { this.flipped = false; this.cardIndex = (this.cardIndex + 1) % this.flashcards.length; },
+                prevCard() { this.flipped = false; this.cardIndex = (this.cardIndex - 1 + this.flashcards.length) % this.flashcards.length; },
+                shuffleDeck() {
+                    this.flipped = false;
+                    this.cardIndex = 0;
+                    for (let i = this.flashcards.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [this.flashcards[i], this.flashcards[j]] = [this.flashcards[j], this.flashcards[i]];
+                    }
+                },
+                answerQuiz(qIndex, optIndex) {
+                    if (this.quizData[qIndex].answered) return;
+                    this.quizData[qIndex].answered = true;
+                    this.quizData[qIndex].selected = optIndex;
+                    if (optIndex === this.quizData[qIndex].correct) this.score++;
+                },
+                resetQuiz() {
+                    this.score = 0;
+                    this.quizData.forEach(q => { q.answered = false; q.selected = null; });
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>
