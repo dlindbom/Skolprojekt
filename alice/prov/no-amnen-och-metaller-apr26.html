@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ämnen runt omkring oss — NO · Kemi · Alice · Åk 6 · Apr 26</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-base: #0f172a;
+            --bg-card: #1e293b;
+            --accent: #3b82f6;
+            --accent-strong: #2563eb;
+            --accent-muted: rgba(59, 130, 246, 0.6);
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: rgba(59, 130, 246, 0.2);
+            --text-scale: 1;
+        }
+
+        body[data-barn="astrid"] {
+            --bg-base: #1a0f1a;
+            --bg-card: #2a1a2a;
+            --accent: #a855f7;
+            --accent-strong: #9333ea;
+            --accent-muted: rgba(168, 85, 247, 0.6);
+            --border: rgba(168, 85, 247, 0.2);
+            --text-scale: 1.15;
+        }
+        body[data-barn="alfred"] {
+            --bg-base: #0f1a14;
+            --bg-card: #162118;
+            --accent: #22c55e;
+            --accent-strong: #16a34a;
+            --accent-muted: rgba(34, 197, 94, 0.6);
+            --border: rgba(34, 197, 94, 0.2);
+            --text-scale: 1;
+        }
+        body[data-barn="alice"] {
+            --bg-base: #0f172a;
+            --bg-card: #1e293b;
+            --accent: #3b82f6;
+            --accent-strong: #2563eb;
+            --accent-muted: rgba(59, 130, 246, 0.6);
+            --border: rgba(59, 130, 246, 0.2);
+            --text-scale: 1;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            font-size: calc(1rem * var(--text-scale));
+            min-height: 100vh;
+        }
+
+        .bg-card { background-color: var(--bg-card); }
+        .bg-base { background-color: var(--bg-base); }
+        .text-accent { color: var(--accent); }
+        .text-accent-muted { color: var(--accent-muted); }
+        .bg-accent { background-color: var(--accent); }
+        .bg-accent-strong { background-color: var(--accent-strong); }
+        .border-accent { border-color: var(--border); }
+        .ring-accent { --tw-ring-color: var(--accent); }
+
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+
+        [x-cloak] { display: none !important; }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-card); }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+
+        .dot-pattern {
+            background-image: radial-gradient(var(--accent-muted) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.15;
+        }
+
+        .self-explain-prompt {
+            background: color-mix(in srgb, var(--accent) 8%, transparent);
+            border-left: 4px solid var(--accent);
+            padding: 0.75rem 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+            color: var(--text-muted);
+        }
+
+        .self-explain-prompt::before {
+            content: "⏸ ";
+            font-style: normal;
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        .tts-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: var(--accent);
+            color: var(--bg-base);
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            margin-bottom: 1rem;
+        }
+        .tts-btn:hover { background: var(--accent-strong); }
+        .tts-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    </style>
+</head>
+
+<body data-barn="alice" x-data="studyApp()" x-init="init()">
+
+    <div class="fixed inset-0 z-0 dot-pattern pointer-events-none"></div>
+
+    <header class="relative z-10 border-b border-accent bg-base/90 backdrop-blur-md sticky top-0">
+        <div class="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-accent p-2 rounded-lg shadow-lg">
+                    <span class="text-2xl">🧪</span>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-wide">Ämnen runt omkring oss</h1>
+                    <p class="text-accent-muted text-xs uppercase tracking-widest">NO · Kemi · Alice · Åk 6 · Apr 26</p>
+                </div>
+            </div>
+
+            <div class="flex bg-card p-1 rounded-lg overflow-x-auto max-w-full">
+                <button @click="mode = 'text'"
+                        :class="mode === 'text' ? 'bg-accent text-white shadow-lg' : 'text-accent-muted hover:text-white'"
+                        class="px-4 md:px-6 py-2 rounded-md text-sm font-bold transition-all duration-300">
+                    📖 Fakta
+                </button>
+                <button @click="mode = 'cards'"
+                        :class="mode === 'cards' ? 'bg-accent text-white shadow-lg' : 'text-accent-muted hover:text-white'"
+                        class="px-4 md:px-6 py-2 rounded-md text-sm font-bold transition-all duration-300">
+                    🎴 Flashcards
+                </button>
+                <button @click="mode = 'quiz'"
+                        :class="mode === 'quiz' ? 'bg-accent text-white shadow-lg' : 'text-accent-muted hover:text-white'"
+                        class="px-4 md:px-6 py-2 rounded-md text-sm font-bold transition-all duration-300">
+                    ✅ Quiz
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-4 py-8 relative z-10 max-w-4xl">
+
+        <!-- ===== FAKTA-LÄGE ===== -->
+        <div x-show="mode === 'text'" x-transition.opacity.duration.500ms class="space-y-8 pb-12">
+
+            <!-- Intro: så här är provet designat + vikten av att öva själv först -->
+            <div class="bg-card rounded-2xl border-2 border-accent overflow-hidden">
+                <button @click="showIntro = !showIntro"
+                        class="w-full flex justify-between items-center p-4 text-left hover:bg-accent-strong/10 transition">
+                    <span class="font-bold text-accent flex items-center gap-2">
+                        <span>🧠</span>
+                        <span x-text="intro.title"></span>
+                    </span>
+                    <span class="text-accent text-xl" x-text="showIntro ? '▾' : '▸'"></span>
+                </button>
+                <div x-show="showIntro" x-collapse class="px-5 pb-5 text-sm md:text-base leading-relaxed" x-html="intro.html"></div>
+            </div>
+
+            <template x-if="config.tts_enabled">
+                <button @click="speakAll()" class="tts-btn" :disabled="tts.speaking">
+                    <span x-show="!tts.speaking">🔊 Läs upp</span>
+                    <span x-show="tts.speaking">⏸ Stoppa</span>
+                </button>
+            </template>
+
+            <template x-for="(section, sIdx) in faktatext" :key="sIdx">
+                <div class="bg-card rounded-2xl p-6 md:p-8 border border-accent shadow-xl">
+                    <h2 class="text-2xl font-bold text-accent mb-4 border-b border-accent pb-2" x-text="section.heading"></h2>
+                    <div class="space-y-4 leading-relaxed" x-html="section.html"></div>
+                </div>
+            </template>
+        </div>
+
+        <!-- ===== FLASHCARDS-LÄGE ===== -->
+        <div x-show="mode === 'cards'" x-transition.opacity.duration.500ms class="pb-12" x-cloak>
+
+            <div class="mb-6 text-center">
+                <p class="text-accent-muted text-sm">Kort <span x-text="cardIndex + 1"></span> av <span x-text="flashcards.length"></span></p>
+                <div class="w-full bg-card rounded-full h-2 mt-2">
+                    <div class="bg-accent h-2 rounded-full transition-all duration-300"
+                         :style="'width: ' + ((cardIndex + 1) / flashcards.length * 100) + '%'"></div>
+                </div>
+            </div>
+
+            <div class="perspective-1000 mb-8">
+                <div class="relative w-full min-h-[320px] transform-style-3d transition-transform duration-700 cursor-pointer"
+                     :class="{ 'rotate-y-180': flipped }"
+                     @click="!flipped && (flipped = true)">
+
+                    <!-- FRAMSIDA: fråga + gissnings-prompt -->
+                    <div class="absolute inset-0 backface-hidden bg-card rounded-2xl p-8 border-2 border-accent shadow-2xl flex flex-col justify-center items-center text-center">
+                        <p class="text-accent-muted text-xs uppercase tracking-widest mb-4">Fråga</p>
+                        <p class="text-xl md:text-2xl font-semibold mb-6" x-text="flashcards[cardIndex].q"></p>
+                        <template x-if="flashcards[cardIndex].bild">
+                            <img :src="flashcards[cardIndex].bild" alt="" class="max-h-32 rounded-lg mb-4">
+                        </template>
+                        <p class="text-accent-muted text-sm italic mt-auto">🧠 Gissa i huvudet först — klicka sedan för att vända</p>
+                    </div>
+
+                    <!-- BAKSIDA: svar -->
+                    <div class="absolute inset-0 backface-hidden rotate-y-180 bg-accent rounded-2xl p-8 border-2 border-accent shadow-2xl flex flex-col justify-center items-center text-center">
+                        <p class="text-white/70 text-xs uppercase tracking-widest mb-4">Svar</p>
+                        <p class="text-lg md:text-xl text-white leading-relaxed" x-text="flashcards[cardIndex].a"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex gap-3 justify-center flex-wrap">
+                <button @click="prevCard()" class="bg-card hover:bg-accent-strong px-5 py-2 rounded-lg font-semibold border border-accent transition">← Föregående</button>
+                <button @click="flipped = !flipped" class="bg-accent hover:bg-accent-strong text-white px-5 py-2 rounded-lg font-semibold transition" x-text="flipped ? '↺ Vänd tillbaka' : '🔄 Vänd kort'"></button>
+                <button @click="nextCard()" class="bg-card hover:bg-accent-strong px-5 py-2 rounded-lg font-semibold border border-accent transition">Nästa →</button>
+                <button @click="shuffleDeck()" class="bg-card hover:bg-accent-strong px-5 py-2 rounded-lg font-semibold border border-accent transition">🎲 Blanda</button>
+            </div>
+        </div>
+
+        <!-- ===== QUIZ-LÄGE ===== -->
+        <div x-show="mode === 'quiz'" x-transition.opacity.duration.500ms class="pb-12" x-cloak>
+
+            <div class="mb-6 bg-card rounded-xl p-4 border border-accent flex justify-between items-center">
+                <div>
+                    <p class="text-accent-muted text-sm">Poäng: <span class="text-accent font-bold text-lg" x-text="score"></span> / <span x-text="quiz.length"></span></p>
+                </div>
+                <div x-show="answeredCount === quiz.length" class="text-right">
+                    <p class="text-accent font-bold" x-text="Math.round(score/quiz.length*100) + '%'"></p>
+                </div>
+            </div>
+
+            <!-- Metakognitiv feedback (Alice) -->
+            <template x-if="config.metacognitive_feedback && answeredCount === quiz.length">
+                <div class="mb-6 bg-card rounded-xl p-5 border-2 border-accent">
+                    <h3 class="font-bold text-accent mb-2">🎯 Självreflektion</h3>
+                    <p class="text-sm" x-text="metacognitiveMessage()"></p>
+                </div>
+            </template>
+
+            <div class="space-y-6">
+                <template x-for="(item, qIdx) in quiz" :key="qIdx">
+                    <div class="bg-card rounded-xl p-5 border border-accent">
+                        <p class="text-accent-muted text-xs mb-2">Fråga <span x-text="qIdx + 1"></span></p>
+                        <p class="font-semibold text-lg mb-4" x-text="item.q"></p>
+
+                        <!-- FLERVAL -->
+                        <template x-if="item.typ === 'flerval'">
+                            <div class="space-y-2">
+                                <template x-for="(option, oIdx) in item.options" :key="oIdx">
+                                    <button @click="answerFlerval(qIdx, oIdx)"
+                                            :disabled="item.answered"
+                                            :class="{
+                                                'bg-green-600/30 border-green-500': item.answered && oIdx === item.correct,
+                                                'bg-red-600/20 border-red-500': item.answered && oIdx === item.selected && oIdx !== item.correct,
+                                                'bg-base border-accent hover:border-accent hover:bg-accent-strong': !item.answered,
+                                                'opacity-50': item.answered && oIdx !== item.correct && oIdx !== item.selected
+                                            }"
+                                            class="w-full text-left px-4 py-3 rounded-lg border transition-all"
+                                            x-text="option"></button>
+                                </template>
+                            </div>
+                        </template>
+
+                        <!-- FRITEXT -->
+                        <template x-if="item.typ === 'fritext'">
+                            <div>
+                                <div x-show="!item.answered" class="flex gap-2">
+                                    <input type="text"
+                                           x-model="item.userAnswer"
+                                           @keydown.enter="answerFritext(qIdx)"
+                                           placeholder="Skriv ditt svar..."
+                                           class="flex-grow bg-base border border-accent rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 ring-accent">
+                                    <button @click="answerFritext(qIdx)"
+                                            class="bg-accent hover:bg-accent-strong text-white px-4 py-2 rounded-lg font-semibold transition">Svara</button>
+                                </div>
+                                <div x-show="item.answered" class="space-y-2">
+                                    <div :class="item.correct_answer ? 'bg-green-600/20 border-green-500' : 'bg-red-600/20 border-red-500'" class="border rounded-lg p-3">
+                                        <p class="text-xs text-accent-muted mb-1">Ditt svar:</p>
+                                        <p x-text="item.userAnswer"></p>
+                                    </div>
+                                    <div class="bg-base border border-accent rounded-lg p-3">
+                                        <p class="text-xs text-accent-muted mb-1">Facit:</p>
+                                        <p x-text="item.accepted[0]"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+            </div>
+
+            <div class="text-center mt-8">
+                <button @click="resetQuiz()" class="text-accent-muted hover:text-white underline">Börja om quizet</button>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="text-center py-6 text-accent-muted text-sm relative z-10">
+        <p>Lycka till på provet! 💪</p>
+    </footer>
+
+    <script>
+        // ============================================================
+        // PROV-DATA — fylls av studieportal-prov-skillen vid generering
+        // ============================================================
+
+        const PROV_CONFIG = {
+            title: "Ämnen runt omkring oss",
+            subtitle: "NO · Kemi · Alice · Åk 6 · Apr 26",
+            barn: "alice",           // "astrid" | "alfred" | "alice"
+            alder: 13,
+            tts_enabled: false,         // true för Astrid
+            metacognitive_feedback: true,  // true för Alice
+            emoji: "🧪"
+        };
+
+        const FAKTATEXT = [
+            // Fylls in vid generering. Format:
+            // { heading: "...", html: "<p>...</p>" }
+            // html kan innehålla <div class='self-explain-prompt'>Förklara varför...</div>
+            {"heading": "Atomer, molekyler och grundämnen", "html": "<p>Allting du känner till är uppbyggt av <strong>atomer</strong>. En atom är så liten att vi inte kan se enskilda atomer ens i starka optiska mikroskop. Trots det har vi kartlagt deras struktur med stor precision.</p>\n<p>En atom har en kärna av <strong>protoner</strong> och <strong>neutroner</strong>, och runt kärnan rör sig <strong>elektroner</strong>. Det är hur atomernas elektronskal möter varandra som avgör om ämnen reagerar eller inte — all kemi handlar i grunden om elektronernas beteende.</p>\n<p>Ett <strong>grundämne</strong> är ett ämne där alla atomer är av samma slag. Guld består bara av guldatomer, syre bara av syreatomer. En <strong>molekyl</strong> bildas när två eller flera atomer binder sig till varandra. Det kan vara två likadana (en syremolekyl, O₂) eller olika (vatten, H₂O).</p>\n<div class='self-explain-prompt'>Förklara med egna ord varför all kemi — från rost till fotosyntes — i grunden är samma sorts händelse.</div>\n<p>Ämnen finns i tre vanliga <strong>aggregationsformer</strong>: fast, flytande och gas. Samma ämne kan finnas i alla tre — is, vatten och vattenånga är samma H₂O-molekyler som bara rör sig olika snabbt.</p>"},
+            {"heading": "Kemiska föreningar och kemins språk", "html": "<p>När olika grundämnen binder sig till varandra uppstår en <strong>kemisk förening</strong>. Vatten är en förening av väte och syre, koldioxid av kol och syre, vanligt bordsalt av natrium och klor. Egenskaperna i föreningen kan skilja sig radikalt från grundämnena var för sig — natrium är en reaktiv metall, klor en giftig gas, men tillsammans blir de oskadligt salt.</p>\n<p>För att beskriva detta kort utvecklade den svenske kemisten <strong>Jöns Jacob Berzelius</strong> ett system med bokstäver som kemiska tecken, baserat på ämnenas latinska eller grekiska namn. H står för hydrogen (väte), O för oxygen (syre), Au för aurum (guld). Systemet används idag i hela världen.</p>\n<p>En <strong>kemisk formel</strong> beskriver både vilka ämnen en molekyl består av och i vilka antal. H₂O innebär att två väteatomer sitter ihop med en syreatom. Detta är avgörande: ändras förhållandena blir det en annan förening. H₂O₂ (väteperoxid) har en syreatom extra och är en helt annan substans.</p>\n<div class='self-explain-prompt'>Varför förändras egenskaperna så dramatiskt när natrium och klor bildar salt? Vad säger det om skillnaden mellan ett grundämne och en förening?</div>"},
+            {"heading": "Kolets kretslopp", "html": "<p><strong>Kol</strong> är ett grundämne vars atomer har en ovanlig förmåga att binda till sig själva och många andra grundämnen i långa kedjor. Det är därför kol är byggstenen för allt levande — DNA, proteiner, socker, fett; alla kolbaserade föreningar.</p>\n<p>Kolatomerna rör sig i ett ständigt <strong>kretslopp</strong> mellan atmosfär, hav, mark och levande organismer. I luften finns kol främst som <strong>koldioxid</strong>, CO₂. Växter tar upp koldioxiden via <strong>fotosyntesen</strong>: med hjälp av solljus kombinerar de koldioxid och vatten till socker (en kolkedja) och släpper ut syre som restprodukt. Kolet bygger in sig i växten.</p>\n<p>När växten dör och bryts ner frisätts kolet igen — antingen som koldioxid till luften eller som kolatomer lagrade i marken. När djur äter växter tar de upp kolet, använder det som byggmaterial, och andas ut koldioxid när de omvandlar näring till energi. Haven löser också stora mängder koldioxid; havsalger binder det via fotosyntes på precis samma sätt som landväxter.</p>\n<p>Under miljontals år kan begravda växt- och djurrester omvandlas till <strong>fossila bränslen</strong> — stenkol, olja, naturgas — under högt tryck. Detta är kol som har lämnat det snabba kretsloppet och lagrats ur systemet under geologiska tidsskalor.</p>\n<div class='self-explain-prompt'>Förklara kedjan: solljus → fotosyntes → djurens andning → koldioxid. Vad skulle hända om växtligheten försvann från jorden?</div>"},
+            {"heading": "Människans påverkan och växthuseffekten", "html": "<p>Jordens atmosfär har en naturlig <strong>växthuseffekt</strong>: vissa gaser, särskilt koldioxid, vattenånga och metan, släpper igenom solljus på väg in men hindrar en del av värmestrålningen från att lämna jorden. Utan denna naturliga effekt skulle jorden vara mycket kallare — en frusen planet utan liv som vi känner det.</p>\n<p>Problemet uppstår när balansen rubbas. När människan förbränner <strong>fossila bränslen</strong> — olja, kol och gas — frisätts på några hundra år kol som naturen lagt i marken under hundratals miljoner år. Halten koldioxid i atmosfären stiger, växthuseffekten förstärks, och jordens medeltemperatur ökar.</p>\n<p>Nedbrytning, skogsbränder och vulkanutbrott bidrar också med koldioxid, men dessa har balanserats av naturens upptag. Det är hastigheten och volymen av den fossila förbränningen som skapar obalansen — kol som naturen bundit för 100 miljoner år sedan släpps på 100 år. När man eldar ved frisätts däremot kol som trädet band in från dagens atmosfär; det är samma kol som var i luften nyligen, så nettotillskottet är litet om ny skog växer upp.</p>\n<p>Åtgärder som fungerar: ersätta fossila bränslen med energi från sol, vind och vatten; plantera och bevara skog (träd binder koldioxid i trädmassan medan de växer); återvinna material istället för att utvinna nytt (metallframställning är energikrävande).</p>\n<div class='self-explain-prompt'>Förklara varför förbränning av ved inte påverkar klimatet på samma sätt som förbränning av olja — trots att båda frisätter koldioxid.</div>"},
+            {"heading": "Bergarter, mineraler och malmer", "html": "<p>Jordskorpan är uppbyggd av <strong>bergarter</strong>. En bergart är inte ett enda ämne utan en blandning av flera <strong>mineraler</strong> — kemiska föreningar som ofta är kristallina. Ungefär 3000 olika mineraler är kända, men i praktiken dominerar ett dussintal de vanligaste bergarterna.</p>\n<p><strong>Granit</strong> — en vanlig bergart i Skandinavien — består exempelvis av mineraler som kvarts, fältspat och glimmer. <strong>Kalksten</strong>, som Öland till stora delar består av, är uppbyggd av mineralet kalcit. Geologiska krafter skapar bergarterna genom processer som stelning av magma, sedimentering eller omvandling av tidigare bergarter under högt tryck och värme.</p>\n<p>Vissa mineraler är <strong>ädelstenar</strong> — hårda och ovanligt vackra. Ametist är violett från små mängder järn i bergkristall (kvarts). Färgen i en ädelsten är ofta signaturen av ett specifikt grundämne i liten koncentration — en metallspårs-stämpel i kristallen.</p>\n<p>En <strong>malm</strong> är en bergart som innehåller så hög halt av en viss metall att det är ekonomiskt meningsfullt att bryta den. Järnmalm förekommer främst som magnetit (svart, magnetisk, Fe₃O₄) eller hematit (rödaktig, Fe₂O₃). Båda är <strong>järnoxider</strong> — järnatomer bundna till syre. Metallen finns alltså inte i ren form utan som förening med andra ämnen.</p>\n<div class='self-explain-prompt'>Varför finns de flesta metaller i naturen som oxider eller andra föreningar — inte som ren metall?</div>"},
+            {"heading": "Metallframställning och legeringar", "html": "<p>Att framställa en metall ur sin malm är i grunden ett <strong>reduktionsproblem</strong>: man måste ta bort det syre eller andra ämnen som metallen är bunden till. För järn innebär det att vända på oxidreaktionen.</p>\n<p>Malmen bryts antingen i <strong>dagbrott</strong> (ytnära brytning) eller i <strong>underjordsgruvor</strong> (djupa tunnelsystem). I Sverige har järnet från Bergslagen och senare Norrland drivit en stor del av industrialiseringen. Dagens gruvdrift är maskinintensiv; förr krävdes det handkraft och sprängämnen i stor skala.</p>\n<p>I en <strong>masugn</strong> smälts järnmalmen tillsammans med kol (koks) och kalksten. Den kemiska reaktionen är ungefär: <strong>järnoxid + kol → järn + koldioxid</strong>. Kolet \"stjäl\" syret från järnet och släpps ut som koldioxid — järnet reduceras till ren metall och rinner ner i botten av ugnen. Kalkstenen binder föroreningar och flyter ovanpå som <strong>slagg</strong>.</p>\n<p>Rent järn är mjukt och rostar lätt. Genom att blanda det med andra ämnen skapas <strong>legeringar</strong> med förbättrade egenskaper: <strong>stål</strong> är järn med en liten mängd kol, vilket gör det hårdare; <strong>rostfritt stål</strong> har dessutom krom som skyddar mot rost. Andra viktiga legeringar: <strong>brons</strong> (koppar + tenn — starkare än ren koppar), <strong>mässing</strong> (koppar + zink), <strong>amalgam</strong> (kvicksilver med andra metaller).</p>\n<div class='self-explain-prompt'>Förklara varför masugnen kräver just kol som tillsats — inte andra grundämnen. Vad är det kol gör?</div>"},
+            {"heading": "Metaller i vardagen och återvinning", "html": "<p>Olika metaller har olika egenskaper som styr deras användning. <strong>Guld</strong> reagerar knappt alls med andra ämnen — därför behåller guldsmycken sitt glans i generationer, och därför kunde Tutankhamuns gravmask (ca 1300 f.Kr.) hittas intakt år 1922. <strong>Silver</strong> är vackert men reagerar med svavel; därför svartnar silverbestick långsamt.</p>\n<p><strong>Koppar</strong> leder elektricitet mycket bra, är segt nog att dras till tunna trådar, och rostar inte. Det är därför koppar finns i elkablar världen över. <strong>Aluminium</strong> utvinns ur mineralet bauxit och är så lätt (en tredjedel av stålets vikt) att det dominerar i flygplan, läskburkar och fönsterkarmar. <strong>Titan</strong> är starkt, lätt och — avgörande för medicin — biokompatibelt: kroppen stöter inte bort det, vilket gör det ideellt för höftleder och skruvar i benbrott.</p>\n<p>Metaller som ingår i människokroppen har precisa roller: <strong>järn</strong> i hemoglobin transporterar syre i blodet; <strong>kalcium</strong> bygger skelett och tänder och krävs för att muskler ska kunna dra ihop sig; <strong>magnesium</strong> är kritiskt för många enzymer och för nervsystemets funktion; <strong>zink</strong> ingår i många enzymer och i immunförsvaret.</p>\n<p>Malmer är en ändlig resurs. Varje ton metall som bryts minskar de lättåtkomliga tillgångarna — resten ligger djupare, i lägre koncentration, och kräver mer energi att framställa. <strong>Återvinning</strong> är därför inte bara miljöargumentation utan också ekonomi: att återvinna aluminium kräver cirka 5 % av energin som ny framställning, och återvunnet järn kan sparas in på gruvdrift, masugn och transport.</p>\n<div class='self-explain-prompt'>Välj en metall och förklara varför dess specifika egenskaper gör den omöjlig att ersätta i sitt främsta användningsområde.</div>"}
+        ];
+
+        const FLASHCARDS = [
+            // Fylls in vid generering. Format:
+            // { q: "Vad var en träl?", a: "En slav som ägdes av husbonden.", bild: null }
+            {"q": "Vad består en atom av, och vad skiljer dem åt mellan olika grundämnen?", "a": "En kärna med protoner och neutroner, och elektroner i skal runt kärnan. Antalet protoner avgör vilket grundämne det är.", "bild": null},
+            {"q": "Vad är skillnaden mellan ett grundämne och en kemisk förening?", "a": "Ett grundämne består av en sorts atomer. En kemisk förening består av två eller flera olika grundämnen bundna till varandra.", "bild": null},
+            {"q": "Varför har is, vatten och vattenånga samma kemiska formel?", "a": "De består alla av H₂O-molekyler. Skillnaden är hur molekylerna rör sig — fasta, flytande eller gas — inte vilka de är.", "bild": null},
+            {"q": "Vad innebär siffran 2 i H₂O — och varför är det viktigt att skilja H₂O från H₂O₂?", "a": "2:an säger att det sitter två väteatomer per molekyl. Antalet är inte kosmetiskt: H₂O är vatten, H₂O₂ (väteperoxid med en syreatom extra) är en helt annan substans. Den kemiska formeln definierar identiteten.", "bild": null},
+            {"q": "Varför skiljer sig egenskaperna hos en kemisk förening från grundämnena den är gjord av?", "a": "I en förening bildar atomerna nya bindningar. Natrium (reaktiv metall) och klor (giftig gas) blir tillsammans oskadligt salt.", "bild": null},
+            {"q": "Vad är skillnaden mellan en atom och en molekyl?", "a": "En atom är minsta enheten av ett grundämne. En molekyl är två eller flera atomer som binds samman — antingen av samma slag (O₂) eller olika (H₂O). Molekyler är alltså atomer i förbund.", "bild": null},
+            {"q": "Vem uppfann de kemiska tecknen, och vad var hans nationalitet?", "a": "Jöns Jacob Berzelius, svensk kemist.", "bild": null},
+            {"q": "Varför använder kemister i hela världen samma kemiska tecken?", "a": "För att kommunikationen ska vara språkoberoende — H₂O betyder samma sak överallt, oavsett lokalt språk för ämnena.", "bild": null},
+            {"q": "Vad står Au för, och varifrån kommer förkortningen?", "a": "Guld. Au kommer från latinets aurum.", "bild": null},
+            {"q": "Varför är kol byggstenen för allt levande?", "a": "Kolatomer kan binda till sig själva och andra grundämnen i långa kedjor, vilket möjliggör komplicerade molekyler som DNA, proteiner och kolhydrater.", "bild": null},
+            {"q": "Förklara kedjan solljus → fotosyntes → djurens andning.", "a": "Solljus driver fotosyntesen, där växter omvandlar koldioxid och vatten till socker och syre. Djur äter växterna och andas in syre, bryter ner sockret för energi och andas ut koldioxid — som växterna åter tar upp.", "bild": null},
+            {"q": "Hur bildas fossila bränslen?", "a": "Växt- och djurrester begravs, utsätts för högt tryck under miljontals år och omvandlas gradvis till stenkol, olja eller naturgas.", "bild": null},
+            {"q": "Vad händer med kolet i en växt när den dör och bryts ner?", "a": "Det frisätts antingen som koldioxid till luften eller lagras som kolatomer i marken, där det kan återanvändas av nya växter.", "bild": null},
+            {"q": "Varför kallas kolets rörelser mellan luft, hav, mark och liv för ett 'kretslopp'?", "a": "För att samma kolatomer rör sig fram och tillbaka mellan reservoarerna — inget kol försvinner, bara byter plats.", "bild": null},
+            {"q": "Vilka tre reservoarer lagrar kol i stora mängder på jorden?", "a": "Atmosfären (som koldioxid), haven (löst koldioxid och marint liv), och marken/berggrunden (lagrat organiskt material och fossila bränslen).", "bild": null},
+            {"q": "Vad är koldioxid skrivet med kemiskt tecken — och varför är det den centrala molekylen i kolets kretslopp?", "a": "CO₂: en kolatom bunden till två syreatomer. Det är formen kol oftast tar i atmosfären, och det är CO₂ växterna tar upp i fotosyntesen och djuren andas ut. Hela kretsloppets gas-stadium är denna molekyl.", "bild": null},
+            {"q": "Vad är växthuseffekten, och varför behövs den?", "a": "Vissa gaser i atmosfären släpper igenom solljus men hindrar värmestrålning att lämna jorden. Utan den naturliga effekten skulle jorden vara ca 33 °C kallare — för kall för liv.", "bild": null},
+            {"q": "Varför rubbar fossil förbränning balansen i kolets kretslopp?", "a": "För att kol som lagrats i marken i miljoner år frisläpps på hundratals år. Hastigheten överstiger naturens förmåga att ta upp koldioxiden.", "bild": null},
+            {"q": "Varför räknas förbränning av ved inte som fossil förbränning?", "a": "Trädet band koldioxiden från dagens atmosfär när det växte. Elden frisätter samma kol som var i luften nyss — det är ett snabbt kretslopp, inte återutvinning av fossilt kol.", "bild": null},
+            {"q": "Nämn tre åtgärder som minskar människans påverkan på klimatet.", "a": "Ersätta fossila bränslen med förnybar energi; bevara och plantera skog som binder koldioxid; återvinna material istället för att utvinna nytt.", "bild": null},
+            {"q": "Vad är skillnaden mellan en bergart och ett mineral?", "a": "Ett mineral är en kemisk förening med bestämd sammansättning. En bergart är en blandning av ett eller flera mineraler.", "bild": null},
+            {"q": "Vilka är de vanligaste mineralerna i granit?", "a": "Kvarts, fältspat och glimmer.", "bild": null},
+            {"q": "Vad ger ametisten dess violetta färg?", "a": "Spår av järn i bergkristallens (kvartsens) struktur.", "bild": null},
+            {"q": "Vad är en malm?", "a": "En bergart som innehåller tillräckligt hög halt av en viss metall för att det ska vara ekonomiskt att bryta och utvinna den.", "bild": null},
+            {"q": "Vilka två mineraler är viktigast i svensk järnmalm?", "a": "Magnetit (svart, magnetisk, Fe₃O₄) och hematit (rödaktig, Fe₂O₃).", "bild": null},
+            {"q": "Vad har magnetit och hematit gemensamt?", "a": "Båda är järnoxider — järnatomer bundna till syre.", "bild": null},
+            {"q": "Varför hittas de flesta metaller inte i ren form i naturen?", "a": "De flesta metaller reagerar lätt med syre eller andra ämnen. Endast ädelmetaller (guld, platina) är så oreaktiva att de kan finnas rena.", "bild": null},
+            {"q": "Vad är den grundläggande kemiska reaktionen i en masugn?", "a": "Järnoxid + kol → järn + koldioxid. Kolet binder syret från järnet, så metallen frigörs i ren form.", "bild": null},
+            {"q": "Vad gör kalkstenen för nytta i masugnen?", "a": "Den binder föroreningar och flyter ovanpå det smälta järnet som slagg, som kan tappas av separat.", "bild": null},
+            {"q": "Vad är skillnaden mellan dagbrott och gruva?", "a": "Dagbrott är brytning nära markytan, i ett stort öppet hål. Gruva innebär tunnelsystem som följer malmen ner i berget.", "bild": null},
+            {"q": "Vad betyder det att anrika järnmalm?", "a": "Att mala malmen till pulver och skilja ut de järnhaltiga partiklarna, ofta med magnet eftersom magnetit är magnetisk. Det höjer järnhalten innan smältningen.", "bild": null},
+            {"q": "Vad är en legering?", "a": "En blandning av en metall med ett eller flera andra ämnen, som förändrar och ofta förbättrar metallens egenskaper.", "bild": null},
+            {"q": "Vad skiljer rostfritt stål från vanligt stål?", "a": "Rostfritt stål har krom tillsatt, vilket bildar ett oxidskikt som skyddar järnet från att rosta.", "bild": null},
+            {"q": "Hur bildades brons, och varför var det ett tekniskt genombrott?", "a": "Brons är en legering av koppar och tenn. Den är starkare och hårdare än ren koppar, vilket gav bättre vapen och verktyg under bronsåldern.", "bild": null},
+            {"q": "Varför är guld så vanligt i smycken och historiska föremål?", "a": "Guld reagerar knappt med andra ämnen, så det behåller sin glans i tusentals år — därför hittades Tutankhamuns gravmask intakt efter 3000 år.", "bild": null},
+            {"q": "Varför är koppar den vanligaste metallen i elkablar?", "a": "Koppar leder elektrisk ström mycket bra, är segt nog att dras till tunna trådar utan att brista, och rostar inte.", "bild": null},
+            {"q": "Varför passar aluminium i flygplan och läskburkar?", "a": "Aluminium är mycket lätt (cirka en tredjedel av stålets vikt) och tål både korrosion och formning bra.", "bild": null},
+            {"q": "Varför används titan i höftleder och benbrott-skruvar?", "a": "Titan är starkt och lätt, men framför allt biokompatibelt — kroppen stöter inte bort det och bygger istället direkt mot titanets yta.", "bild": null},
+            {"q": "Vilken roll har järn i människokroppen?", "a": "Järnet binder syre i hemoglobinet i röda blodkroppar och transporterar syret från lungorna till kroppens celler.", "bild": null},
+            {"q": "Varför är återvinning av aluminium särskilt viktigt ur energi­perspektiv?", "a": "Att återvinna aluminium kräver cirka 5 % av energin som ny framställning från bauxit. Varje återvunnen burk sparar mycket energi.", "bild": null}
+        ];
+
+        const QUIZ = [
+            // Fylls in vid generering. Format för flerval:
+            // { typ: "flerval", q: "...", options: [...], correct: 1, answered: false, selected: null }
+            // Format för fritext:
+            // { typ: "fritext", q: "...", accepted: ["fornnordiska", "fornsvenska"], answered: false, userAnswer: "", correct_answer: false }
+            {"typ": "flerval", "q": "Vad är det som avgör vilket grundämne en atom tillhör?", "options": ["Antalet elektroner", "Antalet protoner i kärnan", "Atomens storlek", "Antalet neutroner"], "correct": 1, "answered": false, "selected": null},
+            {"typ": "fritext", "q": "Vad kallas den svenska kemist som uppfann systemet med kemiska tecken?", "accepted": ["berzelius", "jöns jacob berzelius", "jons jacob berzelius"], "answered": false, "userAnswer": "", "correct_answer": false},
+            {"typ": "fritext", "q": "Förklara varför egenskaperna hos natriumklorid (bordsalt) skiljer sig dramatiskt från natrium och klor var för sig.", "accepted": ["bildar förening", "bildar kemisk förening", "kemisk förening", "kemisk bindning", "atomerna binder", "nya bindningar", "atomerna bildar bindningar", "ny förening", "bildar en förening"], "answered": false, "userAnswer": "", "correct_answer": false},
+            {"typ": "flerval", "q": "Vad innebär siffran 2 i den kemiska formeln H₂O?", "options": ["Vattenmolekylen väger 2 gram", "Det finns två syreatomer", "Det finns två väteatomer", "Molekylen har två laddningar"], "correct": 2, "answered": false, "selected": null},
+            {"typ": "fritext", "q": "Beskriv kolets kretslopp i ett par meningar: hur tas koldioxid upp av växter, och hur kommer kolet tillbaka till atmosfären?", "accepted": ["fotosyntes", "växter tar upp", "djur andas ut", "nedbrytning", "växter andas", "djurens andning", "djuren andas", "förbränns", "vid förbränning"], "answered": false, "userAnswer": "", "correct_answer": false},
+            {"typ": "flerval", "q": "Vad är koldioxid, uttryckt som kemisk formel?", "options": ["CO", "CO₂", "C₂O", "C₂O₂"], "correct": 1, "answered": false, "selected": null},
+            {"typ": "fritext", "q": "Hur bildas fossila bränslen? Beskriv processen kort.", "accepted": ["växt- och djurrester", "tryck", "miljoner år", "begravda", "begravda rester", "högt tryck", "växtrester"], "answered": false, "userAnswer": "", "correct_answer": false},
+            {"typ": "fritext", "q": "Förklara skillnaden mellan att elda ved och att elda olja ur klimatsynpunkt — båda frisätter ju koldioxid.", "accepted": ["ved band", "snabbt kretslopp", "träd band", "nyss i luften", "kort tid", "trädet tog upp", "träd tar upp", "ved binder"], "answered": false, "userAnswer": "", "correct_answer": false},
+            {"typ": "fritext", "q": "Vad är växthuseffekten? Förklara kort vad som händer i atmosfären.", "accepted": ["fångar värme", "hindrar värme", "släpper in solljus", "värme stannar", "släpper igenom solljus", "håller kvar värme", "atmosfären fångar"], "answered": false, "userAnswer": "", "correct_answer": false},
+            {"typ": "flerval", "q": "Vilket av följande räknas som ett fossilt bränsle?", "options": ["Olja", "Ved", "Etanol", "Solceller"], "correct": 0, "answered": false, "selected": null},
+            {"typ": "fritext", "q": "Vad är skillnaden mellan en bergart och ett mineral?", "accepted": ["blandning av mineraler", "bergart består av", "bergarten består av flera", "bergart är en blandning", "flera mineraler", "bergart är blandning", "bergarter är blandningar", "består av flera mineraler", "består av olika mineraler"], "answered": false, "userAnswer": "", "correct_answer": false},
+            {"typ": "flerval", "q": "Vilka tre mineraler ingår typiskt i granit?", "options": ["Järn, kol, koppar", "Kvarts, fältspat, glimmer", "Ametist, rubin, diamant", "Magnetit, hematit, bauxit"], "correct": 1, "answered": false, "selected": null},
+            {"typ": "fritext", "q": "Vilka två järnoxidmineraler är viktiga i svensk järnmalm?", "accepted": ["magnetit", "hematit", "magnetit och hematit", "magnetit, hematit"], "answered": false, "userAnswer": "", "correct_answer": false},
+            {"typ": "fritext", "q": "Skriv den förenklade kemiska reaktionen för järnframställning i en masugn.", "accepted": ["järnoxid + kol", "järnoxid + kol → järn + koldioxid", "jarnoxid + kol", "fe + co2", "järnoxid plus kol"], "answered": false, "userAnswer": "", "correct_answer": false},
+            {"typ": "fritext", "q": "Vad gör kolet (koksen) för nytta i masugnen?", "accepted": ["binder syret", "tar bort syret", "stjäl syret", "reducerar", "lösgör järnet", "tar syret från järnet"], "answered": false, "userAnswer": "", "correct_answer": false},
+            {"typ": "fritext", "q": "Vad är en legering? Ge ett exempel.", "accepted": ["blandning av metall", "metall blandad", "metall och annat", "metall med annat", "metall och en annan", "blandning där en metall", "metaller blandas"], "answered": false, "userAnswer": "", "correct_answer": false},
+            {"typ": "flerval", "q": "Vilka två metaller blandas för att bilda brons?", "options": ["Järn och kol", "Koppar och zink", "Koppar och tenn", "Järn och krom"], "correct": 2, "answered": false, "selected": null},
+            {"typ": "flerval", "q": "Vad skiljer rostfritt stål från vanligt stål?", "options": ["Det innehåller mindre kol", "Det har krom tillsatt som skyddar mot rost", "Det är gjort av aluminium", "Det är mjukare"], "correct": 1, "answered": false, "selected": null},
+            {"typ": "fritext", "q": "Varför används koppar i elkablar?", "accepted": ["leder ström", "leder elektricitet", "leder el", "dras i tunna trådar", "rostar inte i", "koppar rostar inte", "leder bra", "god ledare"], "answered": false, "userAnswer": "", "correct_answer": false},
+            {"typ": "fritext", "q": "Varför är aluminium så vanlig i flygplan och läskburkar?", "accepted": ["aluminium är lätt", "lätt metall", "låg vikt", "tredjedel", "väger lite", "lättare än stål", "låg densitet"], "answered": false, "userAnswer": "", "correct_answer": false},
+            {"typ": "fritext", "q": "Varför är titan idealiskt för höftleder och för att spika ihop benbrott?", "accepted": ["stöter inte bort", "biokompatibel", "kroppen accepterar", "kroppen inte stöter bort", "inte bortstöts", "biokompatibelt"], "answered": false, "userAnswer": "", "correct_answer": false},
+            {"typ": "flerval", "q": "Vilken roll spelar järnet i människokroppen?", "options": ["Bygger skelettet", "Ingår i enzymer för nedbrytning av mat", "Binder syre i hemoglobinet i blodet", "Skyddar huden mot UV-strålning"], "correct": 2, "answered": false, "selected": null},
+            {"typ": "fritext", "q": "Varför är återvinning av aluminium så energieffektivt jämfört med nyframställning?", "accepted": ["5 procent", "5 %", "bråkdel", "mycket mindre energi", "cirka 5", "5%"], "answered": false, "userAnswer": "", "correct_answer": false},
+            {"typ": "flerval", "q": "Vilket av följande är INTE ett grundämne?", "options": ["Syre", "Järn", "Vatten", "Koppar"], "correct": 2, "answered": false, "selected": null},
+            {"typ": "fritext", "q": "Nämn en ädelsten och förklara vad som ger den dess färg.", "accepted": ["ametist", "spår av järn", "järnspår", "små mängder järn", "ametist får färg från järn", "metallspår", "spår av metall"], "answered": false, "userAnswer": "", "correct_answer": false},
+            {"typ": "fritext", "q": "Varför finns de flesta metaller i naturen inte som ren metall utan som oxider eller andra föreningar?", "accepted": ["reagerar med syre", "reagerar lätt", "oxideras", "bildar föreningar", "reagerar", "inte oreaktiva"], "answered": false, "userAnswer": "", "correct_answer": false},
+            {"typ": "fritext", "q": "Nämn två åtgärder som kan minska människans påverkan på klimatet.", "accepted": ["återvinna", "förnybar", "sol", "vind", "plantera", "skog", "mindre fossila", "ersätta fossila", "återvinning"], "answered": false, "userAnswer": "", "correct_answer": false},
+            {"typ": "flerval", "q": "Vad gör kalkstenen i masugnen?", "options": ["Smälter järnet snabbare", "Binder föroreningar och flyter ovanpå som slagg", "Ger färg åt järnet", "Kyler ner ugnen"], "correct": 1, "answered": false, "selected": null}
+        ];
+
+        // ============================================================
+        // Intro per barn — förklarar hur provet är designat + vikten av
+        // att öva själv först (Foundation before leverage + Dunlosky).
+        // Hårdkodad här, samma för alla prov per barn.
+        // ============================================================
+
+        const INTROS = {
+            astrid: {
+                title: "Så här övar du bäst",
+                html: `
+                    <p class="mb-3">Det här provet är gjort så att hjärnan lär sig på riktigt — inte bara låtsas.</p>
+                    <ul class="list-disc pl-5 space-y-2 mb-4">
+                        <li>Börja med att läsa faktan. Tryck på <strong>🔊 Läs upp</strong> om du vill lyssna.</li>
+                        <li>Öva flashcards. Försök <strong>gissa först</strong> i huvudet innan du vänder på kortet!</li>
+                        <li>Ta quizet. Det är okej att gissa fel — hjärnan lär sig av det.</li>
+                    </ul>
+                    <p class="mb-2"><strong>Viktigast:</strong> öva själv först. Fråga inte AI och inte syskonen om svaren.</p>
+                    <p>Det är när du <em>kämpar lite</em> som hjärnan blir starkare — precis som när du tränar.</p>
+                `
+            },
+            alfred: {
+                title: "Så här är provet gjort",
+                html: `
+                    <p class="mb-3">Forskare har testat vilka studiemetoder som faktiskt funkar. Det här provet är byggt på de tre som vinner:</p>
+                    <ul class="list-disc pl-5 space-y-2 mb-4">
+                        <li><strong>Hämta fram fakta ur huvudet</strong> — inte bara läsa om. Det är därför vi har flashcards och quiz, inte bara text.</li>
+                        <li><strong>Gissa innan du ser svaret</strong> — även om du gissar fel hjälper det hjärnan att minnas när du sen ser rätt svar.</li>
+                        <li><strong>Öva lite åt gången i flera dagar</strong> — slår en lång plugg-kväll före provet. Även 10 minuter räknas.</li>
+                    </ul>
+                    <p class="mb-2"><strong>En regel som betyder mest:</strong> försök själv först. Fråga inte ChatGPT eller syskonen om svaren innan du har tänkt.</p>
+                    <p>Det är själva <em>kämpandet</em> som gör att hjärnan faktiskt lär sig. Om du får svaret direkt missar du träningen — ungefär som om någon lyfte vikterna åt dig på gymmet.</p>
+                `
+            },
+            alice: {
+                title: "Om det här provet — hur det är designat",
+                html: `
+                    <p class="mb-3">Provet är byggt på kognitionsvetenskapens konsensus om vad som faktiskt fungerar när man vill lära sig något på djupet (Dunlosky et al. 2013; Roediger &amp; Karpicke; Bjork). Tre principer styr formatet:</p>
+                    <ul class="list-disc pl-5 space-y-2 mb-4">
+                        <li><strong>Retrieval practice (testing-effekten):</strong> att hämta fram kunskap ur huvudet — via flashcards och quiz — stärker inlärningen <em>mycket</em> mer än att läsa om samma text flera gånger. Det känns inte så, men forskningen är tydlig.</li>
+                        <li><strong>Spacing:</strong> korta pass över flera dagar slår cramming kvällen före. 15 minuter idag + 15 imorgon är bättre än 60 minuter kvällen före.</li>
+                        <li><strong>Desirable difficulties (Bjork):</strong> det ska kännas lite svårt. Den känslan betyder inte att du misslyckas — det är signalen att hjärnan faktiskt arbetar. Flyt och igenkänning lurar dig att tro att du kan något du inte kan.</li>
+                    </ul>
+                    <p class="mb-2"><strong>Principen framför alla andra: gör det själv först.</strong> AI kan hjälpa dig förstå <em>efter</em> du kämpat — men om du hoppar över kämpandet förlorar du själva träningen.</p>
+                    <p>Att fråga AI direkt är som att be någon lyfta vikterna åt dig. Hjärnan behöver motstånd för att utvecklas. Verktyget här är designat att ge dig motståndet — ta vara på det.</p>
+                `
+            }
+        };
+
+        // ============================================================
+        // Applogik
+        // ============================================================
+
+        function studyApp() {
+            return {
+                config: PROV_CONFIG,
+                faktatext: FAKTATEXT,
+                flashcards: FLASHCARDS,
+                quiz: QUIZ,
+                intro: INTROS[PROV_CONFIG.barn] || INTROS.alfred,
+                showIntro: true,
+                mode: 'text',
+                cardIndex: 0,
+                flipped: false,
+                score: 0,
+                tts: { speaking: false, utterance: null },
+
+                init() {
+                    // Ingen speciell init-logik för tillfället
+                },
+
+                // --- Flashcards ---
+                nextCard() {
+                    this.flipped = false;
+                    setTimeout(() => {
+                        this.cardIndex = (this.cardIndex + 1) % this.flashcards.length;
+                    }, 200);
+                },
+                prevCard() {
+                    this.flipped = false;
+                    setTimeout(() => {
+                        this.cardIndex = this.cardIndex === 0 ? this.flashcards.length - 1 : this.cardIndex - 1;
+                    }, 200);
+                },
+                shuffleDeck() {
+                    this.flipped = false;
+                    for (let i = this.flashcards.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [this.flashcards[i], this.flashcards[j]] = [this.flashcards[j], this.flashcards[i]];
+                    }
+                    this.cardIndex = 0;
+                },
+
+                // --- Quiz ---
+                answerFlerval(qIdx, oIdx) {
+                    const item = this.quiz[qIdx];
+                    if (item.answered) return;
+                    item.answered = true;
+                    item.selected = oIdx;
+                    if (oIdx === item.correct) this.score++;
+                },
+                answerFritext(qIdx) {
+                    const item = this.quiz[qIdx];
+                    if (item.answered || !item.userAnswer?.trim()) return;
+                    const user = item.userAnswer.trim().toLowerCase();
+                    const isCorrect = item.accepted.some(acc => {
+                        const accepted = acc.toLowerCase();
+                        return user === accepted || user.includes(accepted) || accepted.includes(user);
+                    });
+                    item.answered = true;
+                    item.correct_answer = isCorrect;
+                    if (isCorrect) this.score++;
+                },
+                resetQuiz() {
+                    this.score = 0;
+                    this.quiz.forEach(q => {
+                        q.answered = false;
+                        q.selected = null;
+                        q.userAnswer = "";
+                        q.correct_answer = false;
+                    });
+                },
+
+                get answeredCount() {
+                    return this.quiz.filter(q => q.answered).length;
+                },
+
+                metacognitiveMessage() {
+                    const pct = this.score / this.quiz.length;
+                    if (pct >= 0.9) return "Fantastiskt! Du har stark förståelse av materialet. Återgå bara till frågorna du fick fel på — de visar exakt vad som ska vässas.";
+                    if (pct >= 0.7) return "Bra jobbat! Du har bra grund men några luckor. Gå tillbaka till flashcards och fokusera på frågorna du fick fel — det är din mest effektiva repetition nu.";
+                    if (pct >= 0.5) return "Du är halvvägs. Gå igenom faktatexten igen och öva flashcards innan du tar quizet nästa gång. Korten som är svåra för dig just nu är guldet.";
+                    return "Mycket kvar att öva. Börja med faktatexten och ta det lugnt. Öva flashcards i små pass — 5–10 minuter räcker — och ta quizet igen när du känner dig tryggare.";
+                },
+
+                // --- TTS (för Astrid) ---
+                speakAll() {
+                    if (!('speechSynthesis' in window)) {
+                        alert("Din webbläsare stöder inte uppläsning.");
+                        return;
+                    }
+                    if (this.tts.speaking) {
+                        window.speechSynthesis.cancel();
+                        this.tts.speaking = false;
+                        return;
+                    }
+                    const text = this.faktatext.map(s => {
+                        const tmp = document.createElement('div');
+                        tmp.innerHTML = s.html;
+                        return s.heading + ". " + (tmp.textContent || "");
+                    }).join(" ");
+                    const u = new SpeechSynthesisUtterance(text);
+                    u.lang = 'sv-SE';
+                    u.rate = 0.95;
+                    u.onstart = () => this.tts.speaking = true;
+                    u.onend = () => this.tts.speaking = false;
+                    u.onerror = () => this.tts.speaking = false;
+                    this.tts.utterance = u;
+                    window.speechSynthesis.speak(u);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
